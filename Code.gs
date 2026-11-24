@@ -58,6 +58,47 @@ function getTargetSheet_(forceRecreate) {
   return sheet;
 }
 
+function getFormattedRecords_(sheet) {
+  const rows = sheet.getDataRange().getValues();
+  if (rows.length <= 1) {
+    return { records: [], registeredKeys: [] };
+  }
+
+  const records = [];
+  const registeredKeys = [];
+  for (let i = 1; i < rows.length; i++) {
+    const r = rows[i];
+    if (!r[0]) continue;
+    const className = String(r[2] || "");
+    const studentNo = String(r[3] || "");
+    registeredKeys.push(className + "_" + studentNo);
+
+    let vrIds = [];
+    try {
+      vrIds = JSON.parse(r[15] || "[]");
+    } catch (_) {
+      vrIds = [];
+    }
+
+    records.push({
+      id: String(r[0]),
+      updatedAt: String(r[1] || ""),
+      className: className,
+      studentNo: studentNo,
+      studentName: String(r[4] || ""),
+      vrTitles: [r[5], r[6], r[7], r[8], r[9]].filter(Boolean).map(String),
+      vrIds: vrIds,
+      paymentStatus: String(r[10]).indexOf("Ödendi") !== -1 ? "paid" : "pending",
+      amount: Number(r[11] || 0),
+      parentName: String(r[12] || ""),
+      parentPhone: String(r[13] || ""),
+      paymentNote: String(r[14] || "")
+    });
+  }
+
+  return { records: records.reverse(), registeredKeys: registeredKeys };
+}
+
 function parseIncomingPayload_(e) {
   if (e && e.parameter && e.parameter.payload) {
     return JSON.parse(e.parameter.payload);
@@ -75,6 +116,7 @@ function processPayload_(payload) {
   const action = payload.action || "upsert";
 
   if (
+    action === "list" ||
     action === "delete" ||
     action === "toggle_payment" ||
     action === "backup_drive" ||
@@ -91,6 +133,12 @@ function processPayload_(payload) {
   }
 
   const sheet = getTargetSheet_(false);
+
+  if (action === "list") {
+    const data = getFormattedRecords_(sheet);
+    return { ok: true, records: data.records };
+  }
+
   const rows = sheet.getDataRange().getValues();
 
   if (action === "delete") {
@@ -199,46 +247,10 @@ function doGet(e) {
 
     const action = (e && e.parameter && e.parameter.action) ? e.parameter.action : "list";
     const sheet = getTargetSheet_(false);
-    const rows = sheet.getDataRange().getValues();
-
-    if (rows.length <= 1) {
-      return outputResponse_({ ok: true, records: [], registeredKeys: [] }, callback);
-    }
-
-    const records = [];
-    const registeredKeys = [];
-    for (let i = 1; i < rows.length; i++) {
-      const r = rows[i];
-      if (!r[0]) continue;
-      const className = String(r[2] || "");
-      const studentNo = String(r[3] || "");
-      registeredKeys.push(className + "_" + studentNo);
-
-      let vrIds = [];
-      try {
-        vrIds = JSON.parse(r[15] || "[]");
-      } catch (_) {
-        vrIds = [];
-      }
-
-      records.push({
-        id: String(r[0]),
-        updatedAt: String(r[1] || ""),
-        className: className,
-        studentNo: studentNo,
-        studentName: String(r[4] || ""),
-        vrTitles: [r[5], r[6], r[7], r[8], r[9]].filter(Boolean).map(String),
-        vrIds: vrIds,
-        paymentStatus: String(r[10]).indexOf("Ödendi") !== -1 ? "paid" : "pending",
-        amount: Number(r[11] || 0),
-        parentName: String(r[12] || ""),
-        parentPhone: String(r[13] || ""),
-        paymentNote: String(r[14] || "")
-      });
-    }
+    const data = getFormattedRecords_(sheet);
 
     if (action === "public_check") {
-      return outputResponse_({ ok: true, registeredKeys: registeredKeys }, callback);
+      return outputResponse_({ ok: true, registeredKeys: data.registeredKeys }, callback);
     }
 
     const sifre = (e && e.parameter && e.parameter.sifre) ? String(e.parameter.sifre).trim() : "";
@@ -246,7 +258,7 @@ function doGet(e) {
       return outputResponse_({ ok: false, mesaj: "Yetkisiz erişim: Sayman şifresi doğrulanamadı." }, callback);
     }
 
-    return outputResponse_({ ok: true, records: records.reverse() }, callback);
+    return outputResponse_({ ok: true, records: data.records }, callback);
   } catch (err) {
     return outputResponse_({ ok: false, mesaj: err.message }, callback);
   }
