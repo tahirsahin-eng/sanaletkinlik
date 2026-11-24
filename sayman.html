@@ -206,3 +206,295 @@
 
         function showToast(type, title, message) {
             const box = document.getElementById("toastBox");
+            const content = document.getElementById("toastContent");
+            const iconEl = document.getElementById("toastIcon");
+            if (type === "success") {
+                content.className = "rounded-2xl p-4 shadow-2xl border flex items-start gap-3 backdrop-blur-md bg-emerald-950/90 border-emerald-400 text-emerald-100";
+                iconEl.textContent = "✅";
+            } else if (type === "warning") {
+                content.className = "rounded-2xl p-4 shadow-2xl border flex items-start gap-3 backdrop-blur-md bg-amber-950/90 border-amber-400 text-amber-100";
+                iconEl.textContent = "⚠️";
+            } else {
+                content.className = "rounded-2xl p-4 shadow-2xl border flex items-start gap-3 backdrop-blur-md bg-rose-950/90 border-rose-400 text-rose-100";
+                iconEl.textContent = "❌";
+            }
+            document.getElementById("toastTitle").textContent = title;
+            document.getElementById("toastMessage").textContent = message;
+            box.classList.remove("translate-x-full", "opacity-0");
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 4000);
+        }
+
+        function jsonpRequest(url) {
+            return new Promise((resolve, reject) => {
+                const cbName = "gs_adm_" + Math.random().toString(36).slice(2);
+                const script = document.createElement("script");
+                const timer = setTimeout(() => {
+                    cleanup();
+                    reject(new Error("Google sunucusuna ulaşım zaman aşımına uğradı."));
+                }, 12000);
+
+                function cleanup() {
+                    clearTimeout(timer);
+                    delete window[cbName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                }
+
+                window[cbName] = (data) => {
+                    cleanup();
+                    resolve(data);
+                };
+                script.onerror = () => {
+                    cleanup();
+                    reject(new Error("Google Apps Script sunucusuna ulaşılamadı."));
+                };
+                script.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "callback=" + cbName;
+                document.body.appendChild(script);
+            });
+        }
+
+        function postPayloadViaIframe(payloadObj) {
+            return new Promise((resolve) => {
+                const postForm = document.createElement("form");
+                postForm.method = "POST";
+                postForm.action = APPS_SCRIPT_URL;
+                postForm.target = "saymanHiddenFrame";
+                postForm.style.display = "none";
+
+                const hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.name = "payload";
+                hiddenInput.value = JSON.stringify(payloadObj);
+                postForm.appendChild(hiddenInput);
+
+                document.body.appendChild(postForm);
+                postForm.submit();
+
+                setTimeout(() => {
+                    if (postForm.parentNode) postForm.parentNode.removeChild(postForm);
+                    resolve();
+                }, 1200);
+            });
+        }
+
+        async function loadRecordsFromGoogle(passwordToTest = null) {
+            const sifre = passwordToTest || getSaymanPass();
+            if (!sifre) return false;
+
+            try {
+                const data = await jsonpRequest(`${APPS_SCRIPT_URL}?action=list&sifre=${encodeURIComponent(sifre)}`);
+                if (!data || !data.ok) {
+                    showToast("error", "Giriş Başarısız", (data && data.mesaj) || "Sayman şifresi hatalı.");
+                    return false;
+                }
+                sessionStorage.setItem("sayman_sifre", sifre);
+                records = data.records || [];
+                document.getElementById("loginSection").classList.add("hidden");
+                document.getElementById("dashboardContent").classList.remove("hidden");
+                document.getElementById("logoutBtn").classList.remove("hidden");
+                renderDashboard();
+                return true;
+            } catch (err) {
+                showToast("error", "Bağlantı Hatası", err.message);
+                return false;
+            }
+        }
+
+        async function togglePaymentStatus(id) {
+            const rec = records.find(r => r.id === id);
+            if (!rec) return;
+            const nextStatus = rec.paymentStatus === "paid" ? "pending" : "paid";
+            rec.paymentStatus = nextStatus;
+            rec.amount = nextStatus === "paid" ? 150 : 0;
+            renderDashboard();
+
+            await postPayloadViaIframe({
+                action: "toggle_payment",
+                sifre: getSaymanPass(),
+                id: id,
+                paymentStatus: nextStatus
+            });
+            showToast("success", "Ödeme Güncellendi", `${rec.studentName}: ${nextStatus === "paid" ? "150 TL Ödendi" : "Ödeme Bekliyor"}`);
+        }
+
+        async function deleteRecordGoogle(id) {
+            await postPayloadViaIframe({
+                action: "delete",
+                sifre: getSaymanPass(),
+                id: id
+            });
+            records = records.filter(r => r.id !== id);
+            renderDashboard();
+            showToast("success", "Kayıt Silindi", "Öğrenci kaydı Google E-Tablodan silindi.");
+        }
+
+        async function backupToGoogleDrive() {
+            showToast("warning", "Yedekleniyor", "Google Drive üzerinde CSV yedeği oluşturuluyor...");
+            await postPayloadViaIframe({
+                action: "backup_drive",
+                sifre: getSaymanPass()
+            });
+            showToast("success", "Drive Yedeği Gönderildi", "Google Drive klasörünüze yedek dosyası oluşturuldu.");
+        }
+
+        async function rebuildGoogleSheet() {
+            showToast("warning", "Tablo Oluşturuluyor", "VR_Etkinlik_Kayitlari sayfası sıfırdan oluşturuluyor...");
+            await postPayloadViaIframe({
+                action: "rebuild_sheet",
+                sifre: getSaymanPass()
+            });
+            records = [];
+            renderDashboard();
+            showToast("success", "Tablo Yeniden Oluşturuldu", "Google E-Tabloda başlık satırı hazırlandı.");
+        }
+
+        function renderDashboard() {
+            const total = records.length;
+            const paidCount = records.filter(r => r.paymentStatus === "paid").length;
+            const pendingCount = total - paidCount;
+            document.getElementById("statTotalStudents").textContent = total;
+            document.getElementById("statPaidCount").textContent = paidCount;
+            document.getElementById("statPendingCount").textContent = `${pendingCount} Bekliyor`;
+            document.getElementById("statTotalMoney").textContent = `${(paidCount * 150).toLocaleString("tr-TR")} ₺`;
+
+            const vrCounts = {};
+            records.forEach(r => (r.vrTitles || []).forEach(t => vrCounts[t] = (vrCounts[t] || 0) + 1));
+            let topTitle = "Henüz seçim yok", topCount = 0;
+            Object.entries(vrCounts).forEach(([t, c]) => { if (c > topCount) { topTitle = t; topCount = c; } });
+            document.getElementById("statTopVr").textContent = topTitle;
+            document.getElementById("statTopVrCount").textContent = `${topCount} kez tercih edildi`;
+
+            const searchQ = document.getElementById("tableSearchInput").value.trim().toLocaleLowerCase("tr-TR");
+            const classFilter = document.getElementById("tableClassFilter").value;
+            const paymentFilter = document.getElementById("tablePaymentFilter").value;
+
+            const filtered = records.filter(r => {
+                if (classFilter && r.className !== classFilter) return false;
+                if (paymentFilter && r.paymentStatus !== paymentFilter) return false;
+                if (searchQ) {
+                    const hay = `${r.className} ${r.studentNo} ${r.studentName} ${(r.vrTitles || []).join(" ")} ${r.parentName}`.toLocaleLowerCase("tr-TR");
+                    if (!hay.includes(searchQ)) return false;
+                }
+                return true;
+            });
+
+            const tbody = document.getElementById("recordsTableBody");
+            tbody.innerHTML = "";
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" class="py-10 text-center text-slate-400">Kayıt bulunamadı.</td></tr>';
+                return;
+            }
+
+            filtered.forEach((rec, idx) => {
+                const tr = document.createElement("tr");
+                tr.className = "hover:bg-slate-900/60 transition align-top";
+                const vrBadges = (rec.vrTitles || []).map((t, i) =>
+                    `<span class="inline-block px-2 py-0.5 m-0.5 rounded-md bg-purple-950/90 border border-purple-500/40 text-[11px] text-purple-200">${i + 1}. ${t}</span>`
+                ).join("");
+
+                const payBtn = rec.paymentStatus === "paid"
+                    ? `<button type="button" onclick="togglePaymentStatus('${rec.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-950/90 border border-emerald-400/60 text-emerald-300 font-bold text-[11px] whitespace-nowrap">✅ 150 TL Ödendi</button>`
+                    : `<button type="button" onclick="togglePaymentStatus('${rec.id}')" class="px-2.5 py-1 rounded-lg bg-amber-950/90 border border-amber-400/60 text-amber-300 font-bold text-[11px] whitespace-nowrap">⏳ Bekliyor (Onayla)</button>`;
+
+                tr.innerHTML = `
+                    <td class="py-3 px-3 text-slate-400 font-semibold">${idx + 1}</td>
+                    <td class="py-3 px-3 font-bold text-indigo-300 whitespace-nowrap">${rec.className}</td>
+                    <td class="py-3 px-3 font-mono font-semibold text-white">${rec.studentNo}</td>
+                    <td class="py-3 px-3 font-bold text-white whitespace-nowrap">${rec.studentName}</td>
+                    <td class="py-3 px-3 min-w-[260px]">${vrBadges}</td>
+                    <td class="py-3 px-3 text-[11px] text-slate-300">
+                        ${rec.parentName ? `<div class="font-semibold text-white">${rec.parentName}</div>` : ""}
+                        ${rec.parentPhone ? `<div>📞 ${rec.parentPhone}</div>` : ""}
+                        ${rec.paymentNote ? `<div class="text-amber-300 italic">📝 ${rec.paymentNote}</div>` : ""}
+                    </td>
+                    <td class="py-3 px-3">${payBtn}</td>
+                    <td class="py-3 px-3 text-right no-print">
+                        <button type="button" onclick="openDeleteModal('${rec.id}')" class="px-2.5 py-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600/50 border border-rose-400/40 text-rose-200 text-[11px] font-semibold">🗑️ Sil</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        function openDeleteModal(id) {
+            const rec = records.find(r => r.id === id);
+            if (!rec) return;
+            recordIdToDelete = id;
+            document.getElementById("deleteModalText").textContent = `${rec.className} - ${rec.studentNo} ${rec.studentName} kaydı kalıcı olarak silinecektir.`;
+            document.getElementById("deleteModal").classList.remove("hidden");
+        }
+
+        function exportToCsv() {
+            if (records.length === 0) return showToast("warning", "Liste Boş", "İndirilecek kayıt yok.");
+            const headers = ["Sıra No", "Sınıf", "Okul No", "Öğrenci Adı Soyadı", "VR 1", "VR 2", "VR 3", "VR 4", "VR 5", "Ödeme Durumu", "Tutar (TL)", "Veli Adı", "Veli Tel", "Not", "Tarih"];
+            const rows = records.map((r, i) => [
+                i + 1, r.className, r.studentNo, r.studentName,
+                r.vrTitles[0] || "", r.vrTitles[1] || "", r.vrTitles[2] || "", r.vrTitles[3] || "", r.vrTitles[4] || "",
+                r.paymentStatus === "paid" ? "Ödendi (150 TL)" : "Bekliyor",
+                r.paymentStatus === "paid" ? 150 : 0,
+                r.parentName || "", r.parentPhone || "", r.paymentNote || "", r.updatedAt || ""
+            ]);
+            const csv = "\uFEFF" + [headers, ...rows].map(row => row.map(c => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\n");
+            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement("a");
+            a.href = url;
+            a.download = `Saffet_Cam_VR_Sayman_Listesi_${new Date().toISOString().slice(0, 10)}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            const classFilter = document.getElementById("tableClassFilter");
+            SCHOOL_DATA.forEach(cls => {
+                const opt = document.createElement("option");
+                opt.value = cls.className;
+                opt.textContent = `${cls.className} Şubesi`;
+                classFilter.appendChild(opt);
+            });
+
+            document.getElementById("saymanLoginForm").addEventListener("submit", async (e) => {
+                e.preventDefault();
+                const btn = document.getElementById("loginSubmitBtn");
+                btn.disabled = true;
+                btn.textContent = "Doğrulanıyor...";
+                const sifre = document.getElementById("saymanPasswordInput").value.trim();
+                await loadRecordsFromGoogle(sifre);
+                btn.disabled = false;
+                btn.textContent = "Giriş Yap ve Google Verilerini Yükle";
+            });
+
+            document.getElementById("logoutBtn").addEventListener("click", () => {
+                sessionStorage.removeItem("sayman_sifre");
+                location.reload();
+            });
+
+            document.getElementById("rebuildSheetBtn").addEventListener("click", rebuildGoogleSheet);
+            document.getElementById("refreshBtn").addEventListener("click", () => loadRecordsFromGoogle());
+            document.getElementById("driveBackupBtn").addEventListener("click", backupToGoogleDrive);
+            document.getElementById("exportCsvBtn").addEventListener("click", exportToCsv);
+            document.getElementById("printListBtn").addEventListener("click", () => window.print());
+
+            document.getElementById("tableSearchInput").addEventListener("input", renderDashboard);
+            document.getElementById("tableClassFilter").addEventListener("change", renderDashboard);
+            document.getElementById("tablePaymentFilter").addEventListener("change", renderDashboard);
+
+            document.getElementById("cancelDeleteBtn").addEventListener("click", () => {
+                recordIdToDelete = null;
+                document.getElementById("deleteModal").classList.add("hidden");
+            });
+            document.getElementById("confirmDeleteBtn").addEventListener("click", async () => {
+                if (recordIdToDelete) {
+                    await deleteRecordGoogle(recordIdToDelete);
+                    recordIdToDelete = null;
+                    document.getElementById("deleteModal").classList.add("hidden");
+                }
+            });
+
+            if (getSaymanPass()) {
+                loadRecordsFromGoogle();
+            }
+        });
+    </script>
+</body>
+</html>
