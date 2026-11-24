@@ -6,7 +6,7 @@
     <title>Saffet Çam Ortaokulu - VR Etkinliği Sayman Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="data.js?v=20261124_8"></script>
+    <script src="data.js?v=20261124_9"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -163,44 +163,22 @@
             toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 6000);
         }
 
-        function jsonpRequest(url, timeoutMs = 15000) {
-            return new Promise((resolve, reject) => {
-                const cbName = "gs_sayman_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-                const script = document.createElement("script");
-                let settled = false;
-
-                function cleanup() {
-                    clearTimeout(timer);
-                    try { delete window[cbName]; } catch (_) { window[cbName] = undefined; }
-                    if (script && script.parentNode) script.parentNode.removeChild(script);
-                }
-
-                const timer = setTimeout(() => {
-                    if (settled) return;
-                    settled = true;
-                    cleanup();
-                    reject(new Error("JSONP zaman aşımı"));
-                }, timeoutMs);
-
-                window[cbName] = (data) => {
-                    if (settled) return;
-                    settled = true;
-                    cleanup();
-                    resolve(data);
-                };
-
-                script.onerror = () => {
-                    if (settled) return;
-                    settled = true;
-                    cleanup();
-                    reject(new Error("JSONP betik hatası"));
-                };
-
-                const sep = url.indexOf("?") === -1 ? "?" : "&";
-                script.src = `${url}${sep}callback=${cbName}&_ts=${Date.now()}`;
-                script.async = true;
-                (document.body || document.documentElement).appendChild(script);
-            });
+        async function fetchGetJson(url, timeoutMs = 15000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const res = await fetch(url, {
+                    method: "GET",
+                    cache: "no-store",
+                    signal: controller.signal
+                });
+                clearTimeout(timer);
+                const text = await res.text();
+                return JSON.parse(text);
+            } catch (err) {
+                clearTimeout(timer);
+                throw err;
+            }
         }
 
         async function postToAppsScript(payloadObj, timeoutMs = 15000) {
@@ -218,18 +196,17 @@
                 return JSON.parse(text);
             } catch (err) {
                 clearTimeout(timer);
-                throw new Error("POST hatası: " + (err && err.message ? err.message : "bağlanamadı"));
+                throw err;
             }
         }
 
         async function sendSaymanAction(payloadObj) {
             const fullPayload = { ...payloadObj, sifre: saymanPassword };
             const encoded = encodeURIComponent(JSON.stringify(fullPayload));
-
             try {
-                return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 14000);
+                return await fetchGetJson(`${SAYMAN_ENDPOINT}?payload=${encoded}&_ts=${Date.now()}`, 15000);
             } catch (_) {
-                return await postToAppsScript(fullPayload, 14000);
+                return await postToAppsScript(fullPayload, 15000);
             }
         }
 
@@ -240,24 +217,7 @@
                 _ts: String(Date.now())
             });
             const listUrl = `${SAYMAN_ENDPOINT}?${q.toString()}`;
-
-            try {
-                const d1 = await jsonpRequest(listUrl, 14000);
-                return applyLoadedRecords(d1);
-            } catch (e1) {
-                try {
-                    const d2 = await postToAppsScript({
-                        action: "list",
-                        sifre: saymanPassword
-                    }, 14000);
-                    return applyLoadedRecords(d2);
-                } catch (e2) {
-                    throw new Error(`${e1.message} / ${e2.message}`);
-                }
-            }
-        }
-
-        function applyLoadedRecords(data) {
+            const data = await fetchGetJson(listUrl, 15000);
             if (!data || !data.ok) {
                 throw new Error((data && data.mesaj) || "Kayıtlar alınamadı.");
             }
