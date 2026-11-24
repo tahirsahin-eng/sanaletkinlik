@@ -122,7 +122,7 @@
         <!-- Başarılı Başvuru Sonrası Onay Kartı -->
         <section id="successReceiptCard" class="hidden glass-card rounded-2xl p-6 border border-emerald-400/50 text-center space-y-3">
             <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-3xl mx-auto">✅</div>
-            <h3 class="text-lg font-extrabold text-emerald-300">Başvurunuz Google E-Tabloya Başarıyla Kaydedildi!</h3>
+            <h3 class="text-lg font-extrabold text-emerald-300">Başvurunuz Google E-Tabloya Gönderildi!</h3>
             <p id="receiptSummaryText" class="text-sm text-slate-200 max-w-xl mx-auto"></p>
             <p class="text-xs text-amber-300">150 TL katılım ücretini Okul Aile Birliği Saymanı <strong>Fatma Erdem</strong>'e teslim ettiğinizde ödeme onayınız sisteme işlenecektir.</p>
             <button type="button" onclick="document.getElementById('successReceiptCard').classList.add('hidden')" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white transition">
@@ -132,7 +132,6 @@
 
         <!-- Veli Başvuru Formu -->
         <form id="registrationForm" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
-            <!-- Sol Sütun -->
             <div class="lg:col-span-5 space-y-6">
                 <div class="glass-card rounded-2xl p-5 space-y-4">
                     <div class="flex items-center gap-2.5 border-b border-indigo-500/20 pb-3">
@@ -223,7 +222,6 @@
                 </div>
             </div>
 
-            <!-- Sağ Sütun: 5 Adet VR İçerik Seçimi -->
             <div class="lg:col-span-7">
                 <div class="glass-card rounded-2xl p-5 h-full flex flex-col justify-between space-y-4">
                     <div>
@@ -259,6 +257,9 @@
         </form>
     </main>
 
+    <!-- Gizli Iframe ile Kesintisiz POST Gönderimi -->
+    <iframe name="gsHiddenFrame" id="gsHiddenFrame" class="hidden"></iframe>
+
     <script>
         let selectedVrIds = [];
         let registeredKeys = new Set();
@@ -285,18 +286,45 @@
             toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 4500);
         }
 
+        function jsonpRequest(url) {
+            return new Promise((resolve, reject) => {
+                const cbName = "gs_cb_" + Math.random().toString(36).slice(2);
+                const script = document.createElement("script");
+                const timer = setTimeout(() => {
+                    cleanup();
+                    reject(new Error("Zaman aşımı"));
+                }, 10000);
+
+                function cleanup() {
+                    clearTimeout(timer);
+                    delete window[cbName];
+                    if (script.parentNode) script.parentNode.removeChild(script);
+                }
+
+                window[cbName] = (data) => {
+                    cleanup();
+                    resolve(data);
+                };
+                script.onerror = () => {
+                    cleanup();
+                    reject(new Error("Bağlantı hatası"));
+                };
+                script.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "callback=" + cbName;
+                document.body.appendChild(script);
+            });
+        }
+
         async function fetchPublicRegisteredKeys() {
             try {
-                const res = await fetch(`${APPS_SCRIPT_URL}?action=public_check`);
-                const data = await res.json();
-                if (data.ok && Array.isArray(data.registeredKeys)) {
+                const data = await jsonpRequest(`${APPS_SCRIPT_URL}?action=public_check`);
+                if (data && data.ok && Array.isArray(data.registeredKeys)) {
                     registeredKeys = new Set(data.registeredKeys);
                     const clsVal = document.getElementById("classSelect").value;
                     const stVal = document.getElementById("studentSelect").value;
                     if (clsVal) populateStudentsByClass(clsVal, stVal);
                 }
             } catch (e) {
-                console.warn("Kayıt kontrolü alınamadı:", e);
+                console.warn("Kayıt kontrolü atlandı:", e);
             }
         }
 
@@ -435,6 +463,30 @@
             });
         }
 
+        function postPayloadViaIframe(payloadObj) {
+            return new Promise((resolve) => {
+                const postForm = document.createElement("form");
+                postForm.method = "POST";
+                postForm.action = APPS_SCRIPT_URL;
+                postForm.target = "gsHiddenFrame";
+                postForm.style.display = "none";
+
+                const hiddenInput = document.createElement("input");
+                hiddenInput.type = "hidden";
+                hiddenInput.name = "payload";
+                hiddenInput.value = JSON.stringify(payloadObj);
+                postForm.appendChild(hiddenInput);
+
+                document.body.appendChild(postForm);
+                postForm.submit();
+
+                setTimeout(() => {
+                    if (postForm.parentNode) postForm.parentNode.removeChild(postForm);
+                    resolve();
+                }, 1200);
+            });
+        }
+
         async function handleFormSubmit(e) {
             e.preventDefault();
             const className = document.getElementById("classSelect").value;
@@ -467,35 +519,22 @@
             const btn = document.getElementById("submitFormBtn");
             const btnText = document.getElementById("submitBtnText");
             btn.disabled = true;
-            btnText.textContent = "Google E-Tabloya Kaydediliyor...";
+            btnText.textContent = "Google E-Tabloya Gönderiliyor...";
 
-            try {
-                const res = await fetch(APPS_SCRIPT_URL, {
-                    method: "POST",
-                    headers: { "Content-Type": "text/plain;charset=utf-8" },
-                    body: JSON.stringify({ action: "upsert", record: recordObj })
-                });
-                const result = await res.json();
-                if (!result.ok) {
-                    showToast("warning", "Kayıt Uyarısı", result.mesaj || "Başvuru kaydedilemedi.");
-                } else {
-                    registeredKeys.add(`${className}_${studentNo}`);
-                    document.getElementById("receiptSummaryText").innerHTML =
-                        `<strong>${className}</strong> sınıfı <strong>${studentObj.no} - ${studentObj.name}</strong> için seçilen içerikler: <br><span class="text-purple-300 font-semibold">${vrTitles.join(", ")}</span>`;
-                    document.getElementById("successReceiptCard").classList.remove("hidden");
-                    showToast("success", "Başvurunuz Alındı", "Kaydınız Google E-Tabloya başarıyla işlendi.");
-                    document.getElementById("registrationForm").reset();
-                    populateStudentsByClass("");
-                    selectedVrIds = [];
-                    renderVrGrid();
-                    window.scrollTo({ top: 0, behavior: "smooth" });
-                }
-            } catch (err) {
-                showToast("error", "Bağlantı Hatası", "Google sunucusuna ulaşılamadı. Lütfen tekrar deneyin.");
-            } finally {
-                btn.disabled = false;
-                btnText.textContent = "Başvuruyu Tamamla ve Gönder";
-            }
+            await postPayloadViaIframe({ action: "upsert", record: recordObj });
+
+            registeredKeys.add(`${className}_${studentNo}`);
+            document.getElementById("receiptSummaryText").innerHTML =
+                `<strong>${className}</strong> sınıfı <strong>${studentObj.no} - ${studentObj.name}</strong> için seçilen içerikler: <br><span class="text-purple-300 font-semibold">${vrTitles.join(", ")}</span>`;
+            document.getElementById("successReceiptCard").classList.remove("hidden");
+            showToast("success", "Başvurunuz Gönderildi", "Kaydınız Google E-Tabloya aktarıldı.");
+            document.getElementById("registrationForm").reset();
+            populateStudentsByClass("");
+            selectedVrIds = [];
+            renderVrGrid();
+            btn.disabled = false;
+            btnText.textContent = "Başvuruyu Tamamla ve Gönder";
+            window.scrollTo({ top: 0, behavior: "smooth" });
         }
 
         window.addEventListener("DOMContentLoaded", () => {
