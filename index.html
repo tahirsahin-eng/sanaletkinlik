@@ -39,7 +39,6 @@
 </head>
 <body class="stars-bg antialiased selection:bg-purple-500 selection:text-white">
 
-    <!-- Bildirim Toast Mesajı -->
     <div id="toastBox" class="fixed top-4 right-4 z-50 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-none max-w-sm w-full">
         <div id="toastContent" class="rounded-2xl p-4 shadow-2xl border flex items-start gap-3 backdrop-blur-md">
             <span id="toastIcon" class="text-xl mt-0.5"></span>
@@ -50,7 +49,6 @@
         </div>
     </div>
 
-    <!-- Üst Kurumsal Başlık -->
     <header class="border-b border-indigo-500/30 bg-slate-950/75 backdrop-blur-md sticky top-0 z-30">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
             <div class="flex items-center gap-3.5 text-center md:text-left">
@@ -81,7 +79,6 @@
 
     <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-        <!-- Veli Bilgilendirme Duyurusu -->
         <section class="glass-card rounded-2xl overflow-hidden">
             <button type="button" id="toggleAnnouncementBtn" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-indigo-950/40 transition">
                 <div class="flex items-center gap-3">
@@ -119,10 +116,9 @@
             </div>
         </section>
 
-        <!-- Başarılı Başvuru Sonrası Onay Kartı -->
         <section id="successReceiptCard" class="hidden glass-card rounded-2xl p-6 border border-emerald-400/50 text-center space-y-3">
             <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-3xl mx-auto">✅</div>
-            <h3 class="text-lg font-extrabold text-emerald-300">Başvurunuz Google E-Tabloya Gönderildi!</h3>
+            <h3 class="text-lg font-extrabold text-emerald-300">Başvurunuz Google E-Tabloya Kaydedildi!</h3>
             <p id="receiptSummaryText" class="text-sm text-slate-200 max-w-xl mx-auto"></p>
             <p class="text-xs text-amber-300">150 TL katılım ücretini Okul Aile Birliği Saymanı <strong>Fatma Erdem</strong>'e teslim ettiğinizde ödeme onayınız sisteme işlenecektir.</p>
             <button type="button" onclick="document.getElementById('successReceiptCard').classList.add('hidden')" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white transition">
@@ -130,7 +126,6 @@
             </button>
         </section>
 
-        <!-- Veli Başvuru Formu -->
         <form id="registrationForm" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
             <div class="lg:col-span-5 space-y-6">
                 <div class="glass-card rounded-2xl p-5 space-y-4">
@@ -257,12 +252,6 @@
         </form>
     </main>
 
-    <!-- Gizli Iframe ve Gizli Form ile Kesintisiz POST Gönderimi -->
-    <iframe name="gsHiddenFrame" id="gsHiddenFrame" class="hidden"></iframe>
-    <form id="gsHiddenPostForm" method="POST" target="gsHiddenFrame" class="hidden">
-        <input type="hidden" name="payload" id="gsHiddenPayloadInput" value="">
-    </form>
-
     <script>
         let selectedVrIds = [];
         let registeredKeys = new Set();
@@ -295,8 +284,8 @@
                 const script = document.createElement("script");
                 const timer = setTimeout(() => {
                     cleanup();
-                    reject(new Error("Zaman aşımı"));
-                }, 10000);
+                    reject(new Error("Google sunucusu zaman aşımına uğradı."));
+                }, 12000);
 
                 function cleanup() {
                     clearTimeout(timer);
@@ -310,7 +299,7 @@
                 };
                 script.onerror = () => {
                     cleanup();
-                    reject(new Error("Bağlantı hatası"));
+                    reject(new Error("Google sunucusuna bağlanılamadı."));
                 };
                 script.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "callback=" + cbName;
                 document.body.appendChild(script);
@@ -466,20 +455,9 @@
             });
         }
 
-        function postPayloadViaIframe(payloadObj) {
-            return new Promise((resolve) => {
-                const hiddenForm = document.getElementById("gsHiddenPostForm");
-                const hiddenInput = document.getElementById("gsHiddenPayloadInput");
-                hiddenForm.action = APPS_SCRIPT_URL;
-                hiddenForm.target = "gsHiddenFrame";
-                hiddenInput.value = JSON.stringify(payloadObj);
-                hiddenForm.submit();
-
-                setTimeout(() => {
-                    hiddenInput.value = "";
-                    resolve();
-                }, 1400);
-            });
+        async function sendPayloadJsonp(payloadObj) {
+            const encoded = encodeURIComponent(JSON.stringify(payloadObj));
+            return await jsonpRequest(`${APPS_SCRIPT_URL}?payload=${encoded}`);
         }
 
         async function handleFormSubmit(e) {
@@ -514,22 +492,31 @@
             const btn = document.getElementById("submitFormBtn");
             const btnText = document.getElementById("submitBtnText");
             btn.disabled = true;
-            btnText.textContent = "Google E-Tabloya Gönderiliyor...";
+            btnText.textContent = "Google E-Tabloya Kaydediliyor...";
 
-            await postPayloadViaIframe({ action: "upsert", record: recordObj });
+            try {
+                const res = await sendPayloadJsonp({ action: "upsert", record: recordObj });
+                if (!res || !res.ok) {
+                    showToast("error", "Kayıt Uyarısı", (res && res.mesaj) || "Başvuru kaydedilemedi.");
+                    return;
+                }
 
-            registeredKeys.add(`${className}_${studentNo}`);
-            document.getElementById("receiptSummaryText").innerHTML =
-                `<strong>${className}</strong> sınıfı <strong>${studentObj.no} - ${studentObj.name}</strong> için seçilen içerikler: <br><span class="text-purple-300 font-semibold">${vrTitles.join(", ")}</span>`;
-            document.getElementById("successReceiptCard").classList.remove("hidden");
-            showToast("success", "Başvurunuz Gönderildi", "Kaydınız Google E-Tabloya aktarıldı.");
-            document.getElementById("registrationForm").reset();
-            populateStudentsByClass("");
-            selectedVrIds = [];
-            renderVrGrid();
-            btn.disabled = false;
-            btnText.textContent = "Başvuruyu Tamamla ve Gönder";
-            window.scrollTo({ top: 0, behavior: "smooth" });
+                registeredKeys.add(`${className}_${studentNo}`);
+                document.getElementById("receiptSummaryText").innerHTML =
+                    `<strong>${className}</strong> sınıfı <strong>${studentObj.no} - ${studentObj.name}</strong> için seçilen içerikler: <br><span class="text-purple-300 font-semibold">${vrTitles.join(", ")}</span>`;
+                document.getElementById("successReceiptCard").classList.remove("hidden");
+                showToast("success", "Başvurunuz Kaydedildi", res.mesaj || "Kaydınız Google E-Tabloya aktarıldı.");
+                document.getElementById("registrationForm").reset();
+                populateStudentsByClass("");
+                selectedVrIds = [];
+                renderVrGrid();
+                window.scrollTo({ top: 0, behavior: "smooth" });
+            } catch (err) {
+                showToast("error", "Bağlantı Hatası", err.message || "Google sunucusuna ulaşılamadı.");
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = "Başvuruyu Tamamla ve Gönder";
+            }
         }
 
         window.addEventListener("DOMContentLoaded", () => {
