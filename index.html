@@ -6,7 +6,7 @@
     <title>Saffet Çam Ortaokulu - Uzay Çadırı ve VR Etkinliği Veli Başvuru Formu</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="data.js"></script>
+    <script src="data.js?v=20261124"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -261,6 +261,18 @@
         let registeredKeys = new Set();
         let toastTimeout = null;
 
+        function getSchoolList() {
+            if (Array.isArray(window.SCHOOL_DATA)) return window.SCHOOL_DATA;
+            if (typeof SCHOOL_DATA !== "undefined" && Array.isArray(SCHOOL_DATA)) return SCHOOL_DATA;
+            return [];
+        }
+
+        function getVrList() {
+            if (Array.isArray(window.VR_CONTENTS)) return window.VR_CONTENTS;
+            if (typeof VR_CONTENTS !== "undefined" && Array.isArray(VR_CONTENTS)) return VR_CONTENTS;
+            return [];
+        }
+
         function showToast(type, title, message) {
             const box = document.getElementById("toastBox");
             const content = document.getElementById("toastContent");
@@ -385,8 +397,8 @@
 
         function initClassSelects() {
             const classSelect = document.getElementById("classSelect");
-            if (!Array.isArray(window.SCHOOL_DATA)) return;
-            window.SCHOOL_DATA.forEach(cls => {
+            const schoolList = getSchoolList();
+            schoolList.forEach(cls => {
                 const opt = document.createElement("option");
                 opt.value = cls.className;
                 opt.textContent = `${cls.className} (${cls.students.length} Öğrenci)`;
@@ -397,8 +409,7 @@
         function populateStudentsByClass(className, preselectNo = null) {
             const studentSelect = document.getElementById("studentSelect");
             studentSelect.innerHTML = "";
-            const schoolList = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
-            const classObj = schoolList.find(c => c.className === className);
+            const classObj = getSchoolList().find(c => c.className === className);
             if (!classObj) {
                 studentSelect.disabled = true;
                 studentSelect.innerHTML = '<option value="">Önce sınıf seçiniz...</option>';
@@ -430,8 +441,7 @@
                 card.classList.add("hidden");
                 return;
             }
-            const schoolList = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
-            const classObj = schoolList.find(c => c.className === className);
+            const classObj = getSchoolList().find(c => c.className === className);
             const studentObj = classObj ? classObj.students.find(s => s.no === studentNo) : null;
             if (!studentObj) return card.classList.add("hidden");
 
@@ -444,7 +454,7 @@
         function renderVrGrid() {
             const container = document.getElementById("vrGridContainer");
             container.innerHTML = "";
-            const vrList = Array.isArray(window.VR_CONTENTS) ? window.VR_CONTENTS : [];
+            const vrList = getVrList();
             const isMaxReached = selectedVrIds.length >= 5;
 
             vrList.forEach(item => {
@@ -492,9 +502,8 @@
             input.addEventListener("input", () => {
                 const q = input.value.trim().toLocaleLowerCase("tr-TR");
                 if (q.length < 2) return resultsBox.classList.add("hidden");
-                const schoolList = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
                 const matches = [];
-                for (const cls of schoolList) {
+                for (const cls of getSchoolList()) {
                     for (const st of cls.students) {
                         if (st.no.toLowerCase().includes(q) || st.name.toLocaleLowerCase("tr-TR").includes(q)) {
                             matches.push({ className: cls.className, no: st.no, name: st.name });
@@ -533,12 +542,11 @@
                 return showToast("warning", "Kayıt Mevcut", "Bu öğrenci için daha önce başvuru yapılmıştır. Değişiklik için Sayman Fatma Erdem ile iletişime geçiniz.");
             }
 
-            const schoolList = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
-            const vrList = Array.isArray(window.VR_CONTENTS) ? window.VR_CONTENTS : [];
-            const classObj = schoolList.find(c => c.className === className);
+            const classObj = getSchoolList().find(c => c.className === className);
             const studentObj = classObj ? classObj.students.find(s => s.no === studentNo) : null;
             if (!studentObj) return showToast("error", "Öğrenci Bulunamadı", "Seçili öğrenci kaydı doğrulanamadı.");
 
+            const vrList = getVrList();
             const sortedIds = selectedVrIds.slice().sort((a, b) => a - b);
             const vrTitles = sortedIds.map(id => {
                 const found = vrList.find(v => v.id === id);
