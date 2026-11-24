@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sayman Yönetim Paneli (Fatma Erdem) - Uzay Çadırı ve VR Etkinliği</title>
+    <title>Saffet Çam Ortaokulu - VR Etkinliği Sayman Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="data.js"></script>
@@ -15,25 +15,16 @@
             color: #f8fafc;
         }
         .glass-card {
-            background: rgba(15, 23, 42, 0.85);
+            background: rgba(15, 23, 42, 0.82);
             backdrop-filter: blur(14px);
-            border: 1px solid rgba(245, 158, 11, 0.28);
-            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.65);
-        }
-        @media print {
-            body { background: #ffffff !important; color: #000000 !important; }
-            .no-print { display: none !important; }
-            .print-only { display: block !important; }
-            .glass-card { background: #ffffff !important; border: 1px solid #cbd5e1 !important; box-shadow: none !important; }
-            table { width: 100% !important; border-collapse: collapse !important; font-size: 11px !important; }
-            th, td { border: 1px solid #475569 !important; padding: 6px 8px !important; color: #000000 !important; }
-            th { background-color: #f1f5f9 !important; }
+            border: 1px solid rgba(139, 92, 246, 0.28);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
         }
     </style>
 </head>
-<body class="antialiased selection:bg-amber-500 selection:text-slate-950">
+<body class="antialiased selection:bg-purple-500 selection:text-white">
 
-    <div id="toastBox" class="fixed top-4 right-4 z-50 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-none max-w-sm w-full no-print">
+    <div id="toastBox" class="fixed top-4 right-4 z-50 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-none max-w-sm w-full">
         <div id="toastContent" class="rounded-2xl p-4 shadow-2xl border flex items-start gap-3 backdrop-blur-md">
             <span id="toastIcon" class="text-xl mt-0.5"></span>
             <div class="flex-1">
@@ -43,164 +34,113 @@
         </div>
     </div>
 
-    <header class="border-b border-amber-500/30 bg-slate-950/80 backdrop-blur-md sticky top-0 z-30 no-print">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-wrap items-center justify-between gap-4">
-            <div class="flex items-center gap-3">
-                <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center text-xl shadow-lg">🔐</div>
-                <div>
-                    <p class="text-[11px] font-semibold uppercase tracking-wider text-amber-400">Saffet Çam Ortaokulu • Okul Aile Birliği Saymanlığı</p>
-                    <h1 class="text-base sm:text-lg font-extrabold text-white">Sayman Yönetim & Tahsilat Paneli (Fatma Erdem)</h1>
-                </div>
+    <header class="border-b border-indigo-500/30 bg-slate-950/80 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div>
+                <p class="text-[11px] font-semibold tracking-wider uppercase text-amber-400">Saffet Çam Ortaokulu • Okul Aile Birliği Sayman Paneli</p>
+                <h1 class="text-lg sm:text-xl font-extrabold text-white">VR Etkinliği Kayıt ve Ödeme Takibi (150 TL)</h1>
             </div>
             <div class="flex items-center gap-2">
-                <a href="index.html" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-semibold text-slate-200 border border-slate-700 transition">
-                    ← Veli Başvuru Sayfası
+                <a href="index.html" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-200 transition">
+                    ← Başvuru Formuna Dön
                 </a>
-                <button type="button" id="logoutBtn" class="hidden px-3.5 py-2 rounded-xl bg-rose-950/90 hover:bg-rose-900 border border-rose-500/40 text-xs font-bold text-rose-200 transition">
-                    🔒 Oturumu Kapat
+                <button type="button" id="logoutBtn" class="hidden px-3.5 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-xs font-semibold text-rose-200 transition">
+                    Çıkış Yap
                 </button>
             </div>
         </div>
     </header>
 
-    <div class="hidden print-only text-center mb-4 border-b-2 border-black pb-3">
-        <h2 class="text-base font-bold uppercase">T.C. YALOVA VALİLİĞİ - MERKEZ / SAFFET ÇAM ORTAOKULU MÜDÜRLÜĞÜ</h2>
-        <h3 class="text-sm font-bold mt-1">UZAY ÇADIRI VE VR ETKİNLİĞİ KESİN KATILIM VE 150 TL TAHSİLAT LİSTESİ (ARALIK 2026)</h3>
-        <p class="text-xs mt-1">Okul Aile Birliği Saymanı: Fatma Erdem | Okul Müdürü: Tahir Şahin</p>
-    </div>
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
 
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
-
-        <section id="loginSection" class="glass-card rounded-2xl p-6 max-w-md mx-auto text-center space-y-4">
-            <div class="w-14 h-14 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-3xl mx-auto">🧾</div>
-            <div>
-                <h2 class="text-lg font-extrabold text-white">Sayman Yönetim Paneli Girişi</h2>
-                <p class="text-xs text-slate-300 mt-1">Google E-Tablolar üzerindeki başvuruları görüntülemek, 150 TL ödeme onaylarını işlemek ve Drive yedeği almak için sayman şifresini giriniz.</p>
+        <section id="loginSection" class="max-w-md mx-auto glass-card rounded-2xl p-6 space-y-4">
+            <div class="text-center space-y-1">
+                <div class="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-2xl mx-auto">🔐</div>
+                <h2 class="text-lg font-extrabold text-white">Sayman Girişi</h2>
+                <p class="text-xs text-slate-400">Sayman: <strong class="text-amber-300">Fatma Erdem</strong> • Kayıtları görüntülemek ve ödeme onaylamak için şifre giriniz.</p>
             </div>
-            <form id="saymanLoginForm" class="space-y-3 text-left">
+            <form id="loginForm" class="space-y-3">
                 <div>
-                    <label for="saymanPasswordInput" class="block text-xs font-semibold text-amber-300 mb-1">Sayman Şifresi</label>
-                    <input type="password" id="saymanPasswordInput" required autofocus placeholder="Şifreyi giriniz"
-                        class="w-full rounded-xl bg-slate-900 border border-amber-500/40 px-4 py-3 text-sm text-white focus:outline-none focus:border-amber-400">
+                    <label for="saymanPassInput" class="block text-xs font-semibold text-slate-300 mb-1">Sayman Şifresi</label>
+                    <input type="password" id="saymanPassInput" required placeholder="Şifre giriniz..."
+                        class="w-full rounded-xl bg-slate-900 border border-indigo-500/40 px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-purple-400">
                 </div>
                 <button type="submit" id="loginSubmitBtn"
-                    class="w-full py-3 px-4 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 hover:from-amber-400 hover:to-orange-400 text-slate-950 font-extrabold text-sm shadow-lg transition">
-                    Giriş Yap ve Google Verilerini Yükle
+                    class="w-full py-3 rounded-xl bg-gradient-to-r from-indigo-600 to-purple-600 hover:from-indigo-500 hover:to-purple-500 text-sm font-bold text-white transition">
+                    Kayıtları Yükle
                 </button>
             </form>
         </section>
 
-        <div id="dashboardContent" class="hidden space-y-6">
+        <section id="panelSection" class="hidden space-y-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div class="glass-card rounded-2xl p-4">
+                    <div class="text-xs text-slate-400">Toplam Başvuru</div>
+                    <div id="statTotalCount" class="text-2xl font-extrabold text-white mt-1">0</div>
+                </div>
+                <div class="glass-card rounded-2xl p-4">
+                    <div class="text-xs text-emerald-300">Ödemesi Onaylanan</div>
+                    <div id="statPaidCount" class="text-2xl font-extrabold text-emerald-300 mt-1">0</div>
+                </div>
+                <div class="glass-card rounded-2xl p-4">
+                    <div class="text-xs text-amber-300">Ödeme Bekleyen</div>
+                    <div id="statPendingCount" class="text-2xl font-extrabold text-amber-300 mt-1">0</div>
+                </div>
+                <div class="glass-card rounded-2xl p-4">
+                    <div class="text-xs text-indigo-300">Toplanan Tutar</div>
+                    <div id="statTotalAmount" class="text-2xl font-extrabold text-indigo-300 mt-1">0 TL</div>
+                </div>
+            </div>
 
-            <section class="grid grid-cols-2 lg:grid-cols-4 gap-4 no-print">
-                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-indigo-500">
-                    <div class="text-xs text-slate-400 font-medium">Toplam Kayıtlı Öğrenci</div>
-                    <div class="mt-1 flex items-baseline justify-between">
-                        <span id="statTotalStudents" class="text-2xl sm:text-3xl font-extrabold text-white">0</span>
-                        <span class="text-xs text-indigo-300 bg-indigo-950 px-2 py-0.5 rounded-lg">676 Mevcut</span>
-                    </div>
-                </div>
-                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-emerald-500">
-                    <div class="text-xs text-slate-400 font-medium">150 TL Ödemesi Alınan</div>
-                    <div class="mt-1 flex items-baseline justify-between">
-                        <span id="statPaidCount" class="text-2xl sm:text-3xl font-extrabold text-emerald-400">0</span>
-                        <span id="statPendingCount" class="text-xs text-amber-300 bg-amber-950/70 px-2 py-0.5 rounded-lg">0 Bekliyor</span>
-                    </div>
-                </div>
-                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-amber-400">
-                    <div class="text-xs text-slate-400 font-medium">Toplanan Toplam Tutar</div>
-                    <div class="mt-1 flex items-baseline justify-between">
-                        <span id="statTotalMoney" class="text-2xl sm:text-3xl font-extrabold text-amber-300">0 ₺</span>
-                        <span class="text-xs text-slate-400">Kişi başı 150 ₺</span>
-                    </div>
-                </div>
-                <div class="glass-card rounded-2xl p-4 border-l-4 border-l-purple-500">
-                    <div class="text-xs text-slate-400 font-medium">En Popüler VR İçeriği</div>
-                    <div class="mt-1">
-                        <div id="statTopVr" class="text-sm font-bold text-purple-300 truncate">-</div>
-                        <div id="statTopVrCount" class="text-xs text-slate-400 mt-0.5">0 kez tercih edildi</div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="glass-card rounded-2xl p-5 space-y-4">
-                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-4 no-print">
-                    <div>
-                        <h2 class="text-base sm:text-lg font-bold text-white">📋 Google E-Tablolar Öğrenci & Ödeme Listesi</h2>
-                        <p class="text-xs text-slate-400">Ödeme durumuna tıklayarak 150 TL tahsilatı anında onaylayabilir, Google Drive'a CSV yedeği alabilirsiniz.</p>
-                    </div>
-                    <div class="flex flex-wrap items-center gap-2">
-                        <button type="button" id="rebuildSheetBtn" class="px-3.5 py-2 rounded-xl bg-rose-700/90 hover:bg-rose-600 text-white text-xs font-bold transition">
-                            🧱 Tabloyu Yeniden Oluştur
-                        </button>
-                        <button type="button" id="refreshBtn" class="px-3.5 py-2 rounded-xl bg-indigo-600/80 hover:bg-indigo-500 text-white text-xs font-bold transition">
-                            🔄 Google'dan Yenile
-                        </button>
-                        <button type="button" id="driveBackupBtn" class="px-3.5 py-2 rounded-xl bg-amber-600/90 hover:bg-amber-500 text-white text-xs font-bold transition">
-                            ☁️ Drive'a Yedekle
-                        </button>
-                        <button type="button" id="exportCsvBtn" class="px-3.5 py-2 rounded-xl bg-emerald-600/90 hover:bg-emerald-500 text-white text-xs font-bold transition">
-                            📊 Excel (CSV) İndir
-                        </button>
-                        <button type="button" id="printListBtn" class="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-white text-xs font-bold transition">
-                            🖨️ Yazdır
-                        </button>
-                    </div>
-                </div>
-
-                <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 no-print">
-                    <input type="text" id="tableSearchInput" placeholder="Öğrenci adı, okul no, veli veya içerik ara..."
-                        class="rounded-xl bg-slate-900/90 border border-slate-700 px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-amber-400">
-                    <select id="tableClassFilter" class="rounded-xl bg-slate-900/90 border border-slate-700 px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
-                        <option value="">Tüm Sınıflar / Şubeler</option>
-                    </select>
-                    <select id="tablePaymentFilter" class="rounded-xl bg-slate-900/90 border border-slate-700 px-3 py-2 text-xs text-white focus:outline-none focus:border-amber-400">
-                        <option value="">Tüm Ödeme Durumları</option>
-                        <option value="paid">✅ 150 TL Ödendi</option>
-                        <option value="pending">⏳ Ödeme Bekliyor</option>
+            <div class="glass-card rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+                <div class="flex flex-col sm:flex-row gap-2.5 flex-1">
+                    <input type="text" id="filterSearchInput" placeholder="Öğrenci adı, no, şube veya veli ara..."
+                        class="rounded-xl bg-slate-900 border border-indigo-500/40 px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-400 flex-1">
+                    <select id="filterStatusSelect" class="rounded-xl bg-slate-900 border border-indigo-500/40 px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-400">
+                        <option value="all">Tüm Durumlar</option>
+                        <option value="paid">Ödendi (150 TL)</option>
+                        <option value="pending">Ödeme Bekliyor</option>
                     </select>
                 </div>
+                <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" id="refreshBtn" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white transition">
+                        🔄 Yenile
+                    </button>
+                    <button type="button" id="backupDriveBtn" class="px-3.5 py-2 rounded-xl bg-amber-500/20 hover:bg-amber-500/30 border border-amber-400/50 text-xs font-bold text-amber-200 transition">
+                        ☁️ Drive Yedek Al
+                    </button>
+                </div>
+            </div>
 
-                <div class="overflow-x-auto rounded-xl border border-slate-800">
-                    <table class="w-full text-left border-collapse">
+            <div class="glass-card rounded-2xl overflow-hidden">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse text-xs">
                         <thead>
-                            <tr class="bg-slate-900/95 text-[11px] uppercase tracking-wider text-amber-300 border-b border-slate-800">
-                                <th class="py-3 px-3">S.No</th>
-                                <th class="py-3 px-3">Sınıf</th>
-                                <th class="py-3 px-3">Okul No</th>
+                            <tr class="bg-slate-950/90 border-b border-indigo-500/30 text-indigo-200">
+                                <th class="py-3 px-3">Şube</th>
+                                <th class="py-3 px-3">No</th>
                                 <th class="py-3 px-3">Öğrenci Adı Soyadı</th>
                                 <th class="py-3 px-3">Seçilen 5 VR İçeriği</th>
-                                <th class="py-3 px-3">Veli / İletişim</th>
-                                <th class="py-3 px-3">Ücret (150 TL)</th>
-                                <th class="py-3 px-3 text-right no-print">İşlem</th>
+                                <th class="py-3 px-3">Veli Bilgisi</th>
+                                <th class="py-3 px-3">Durum & Tutar</th>
+                                <th class="py-3 px-3 text-right">İşlemler</th>
                             </tr>
                         </thead>
-                        <tbody id="recordsTableBody" class="divide-y divide-slate-800/80 text-xs text-slate-200"></tbody>
+                        <tbody id="recordsTableBody" class="divide-y divide-slate-800/80"></tbody>
                     </table>
                 </div>
-            </section>
-        </div>
+            </div>
+        </section>
     </main>
 
-    <div id="deleteModal" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 no-print">
-        <div class="glass-card rounded-2xl max-w-md w-full p-6 space-y-4 border border-rose-500/40">
-            <h4 class="font-bold text-base text-white">⚠️ Kaydı Google E-Tablodan Sil</h4>
-            <p id="deleteModalText" class="text-xs text-slate-300"></p>
-            <div class="flex justify-end gap-2.5">
-                <button type="button" id="cancelDeleteBtn" class="px-4 py-2 rounded-xl bg-slate-800 text-xs font-semibold text-slate-200">Vazgeç</button>
-                <button type="button" id="confirmDeleteBtn" class="px-4 py-2 rounded-xl bg-rose-600 text-xs font-bold text-white">Evet, Sil</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        let records = [];
-        let recordIdToDelete = null;
-        let toastTimeout = null;
+        const SAYMAN_ENDPOINT = (typeof window.APPS_SCRIPT_URL === "string" && window.APPS_SCRIPT_URL.trim())
+            ? window.APPS_SCRIPT_URL.trim()
+            : "https://script.google.com/macros/s/AKfycbwPoGIGs5OHg7MUrTjFmJEBy7xOLoJEdUPyxxJzp9_X96bz-UE3JcAEFTD6Bwdm8CVj/exec";
 
-        function getSaymanPass() {
-            return sessionStorage.getItem("sayman_sifre") || "";
-        }
+        let saymanPassword = "";
+        let allRecords = [];
+        let toastTimeout = null;
 
         function showToast(type, title, message) {
             const box = document.getElementById("toastBox");
@@ -220,278 +160,281 @@
             document.getElementById("toastMessage").textContent = message;
             box.classList.remove("translate-x-full", "opacity-0");
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 4000);
+            toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 5000);
         }
 
-        function jsonpRequest(url) {
+        function jsonpRequest(url, timeoutMs = 18000) {
             return new Promise((resolve, reject) => {
-                const cbName = "gs_adm_" + Math.random().toString(36).slice(2);
+                const cbName = "gs_sayman_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
                 const script = document.createElement("script");
-                const timer = setTimeout(() => {
-                    cleanup();
-                    reject(new Error("Google sunucusuna ulaşım zaman aşımına uğradı."));
-                }, 12000);
+                let settled = false;
 
                 function cleanup() {
                     clearTimeout(timer);
-                    delete window[cbName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
+                    try { delete window[cbName]; } catch (_) { window[cbName] = undefined; }
+                    if (script && script.parentNode) script.parentNode.removeChild(script);
                 }
 
+                const timer = setTimeout(() => {
+                    if (settled) return;
+                    settled = true;
+                    cleanup();
+                    reject(new Error("Sunucu yanıt süresi aşıldı (zaman aşımı)."));
+                }, timeoutMs);
+
                 window[cbName] = (data) => {
+                    if (settled) return;
+                    settled = true;
                     cleanup();
                     resolve(data);
                 };
+
                 script.onerror = () => {
+                    if (settled) return;
+                    settled = true;
                     cleanup();
-                    reject(new Error("Google Apps Script sunucusuna ulaşılamadı."));
+                    reject(new Error("Google Apps Script bağlantısı kurulamadı."));
                 };
-                script.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "callback=" + cbName;
-                document.body.appendChild(script);
+
+                const sep = url.indexOf("?") === -1 ? "?" : "&";
+                script.src = `${url}${sep}callback=${cbName}&_ts=${Date.now()}`;
+                script.async = true;
+                (document.body || document.documentElement).appendChild(script);
             });
         }
 
-        async function sendPayloadJsonp(payloadObj) {
-            const encoded = encodeURIComponent(JSON.stringify(payloadObj));
-            return await jsonpRequest(`${APPS_SCRIPT_URL}?payload=${encoded}`);
-        }
-
-        async function loadRecordsFromGoogle(passwordToTest = null) {
-            const sifre = passwordToTest || getSaymanPass();
-            if (!sifre) return false;
+        async function sendSaymanAction(payloadObj) {
+            const fullPayload = { ...payloadObj, sifre: saymanPassword };
+            const payloadStr = JSON.stringify(fullPayload);
+            const encoded = encodeURIComponent(payloadStr);
 
             try {
-                const data = await jsonpRequest(`${APPS_SCRIPT_URL}?action=list&sifre=${encodeURIComponent(sifre)}`);
-                if (!data || !data.ok) {
-                    showToast("error", "Giriş Başarısız", (data && data.mesaj) || "Sayman şifresi hatalı.");
-                    return false;
+                return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 18000);
+            } catch (jsonpErr) {
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 15000);
+                try {
+                    const res = await fetch(SAYMAN_ENDPOINT, {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: payloadStr,
+                        signal: controller.signal
+                    });
+                    clearTimeout(timer);
+                    const text = await res.text();
+                    try {
+                        return JSON.parse(text);
+                    } catch (_) {
+                        return { ok: true, mesaj: "İşlem Google E-Tabloya iletildi." };
+                    }
+                } catch (fetchErr) {
+                    clearTimeout(timer);
+                    try {
+                        await fetch(SAYMAN_ENDPOINT, {
+                            method: "POST",
+                            mode: "no-cors",
+                            headers: { "Content-Type": "text/plain;charset=utf-8" },
+                            body: payloadStr
+                        });
+                        return {
+                            ok: true,
+                            unverified: true,
+                            mesaj: "İstek mobil ağ üzerinden iletildi; yenile ile kontrol ediniz."
+                        };
+                    } catch (_) {
+                        const detail = (fetchErr && fetchErr.name === "AbortError")
+                            ? "Bağlantı zaman aşımına uğradı."
+                            : (jsonpErr && jsonpErr.message ? jsonpErr.message : "Google sunucusuna bağlanılamadı.");
+                        throw new Error(detail);
+                    }
                 }
-                sessionStorage.setItem("sayman_sifre", sifre);
-                records = data.records || [];
-                document.getElementById("loginSection").classList.add("hidden");
-                document.getElementById("dashboardContent").classList.remove("hidden");
-                document.getElementById("logoutBtn").classList.remove("hidden");
-                renderDashboard();
-                return true;
-            } catch (err) {
-                showToast("error", "Bağlantı Hatası", err.message);
-                return false;
             }
         }
 
-        async function togglePaymentStatus(id) {
-            const rec = records.find(r => r.id === id);
-            if (!rec) return;
-            const nextStatus = rec.paymentStatus === "paid" ? "pending" : "paid";
-            try {
-                const res = await sendPayloadJsonp({
-                    action: "toggle_payment",
-                    sifre: getSaymanPass(),
-                    id: id,
-                    paymentStatus: nextStatus
-                });
-                if (!res || !res.ok) return showToast("error", "Güncellenemedi", (res && res.mesaj) || "İşlem başarısız.");
-                rec.paymentStatus = nextStatus;
-                rec.amount = nextStatus === "paid" ? 150 : 0;
-                renderDashboard();
-                showToast("success", "Ödeme Güncellendi", `${rec.studentName}: ${nextStatus === "paid" ? "150 TL Ödendi" : "Ödeme Bekliyor"}`);
-            } catch (err) {
-                showToast("error", "Gönderim Hatası", err.message);
-            }
-        }
-
-        async function deleteRecordGoogle(id) {
-            try {
-                const res = await sendPayloadJsonp({
-                    action: "delete",
-                    sifre: getSaymanPass(),
-                    id: id
-                });
-                if (!res || !res.ok) return showToast("error", "Silinemedi", (res && res.mesaj) || "İşlem başarısız.");
-                records = records.filter(r => r.id !== id);
-                renderDashboard();
-                showToast("success", "Kayıt Silindi", "Öğrenci kaydı Google E-Tablodan silindi.");
-            } catch (err) {
-                showToast("error", "Silme Hatası", err.message);
-            }
-        }
-
-        async function backupToGoogleDrive() {
-            showToast("warning", "Yedekleniyor", "Google Drive üzerinde CSV yedeği oluşturuluyor...");
-            try {
-                const res = await sendPayloadJsonp({
-                    action: "backup_drive",
-                    sifre: getSaymanPass()
-                });
-                if (!res || !res.ok) return showToast("error", "Yedeklenemedi", (res && res.mesaj) || "İşlem başarısız.");
-                showToast("success", "Drive Yedeği Oluşturuldu", res.mesaj || "Google Drive klasörünüze yedek dosyası oluşturuldu.");
-            } catch (err) {
-                showToast("error", "Yedekleme Hatası", err.message);
-            }
-        }
-
-        async function rebuildGoogleSheet() {
-            showToast("warning", "Tablo Oluşturuluyor", "VR_Etkinlik_Kayitlari sayfası sıfırdan oluşturuluyor...");
-            try {
-                const res = await sendPayloadJsonp({
-                    action: "rebuild_sheet",
-                    sifre: getSaymanPass()
-                });
-                if (!res || !res.ok) return showToast("error", "Oluşturulamadı", (res && res.mesaj) || "İşlem başarısız.");
-                records = [];
-                renderDashboard();
-                showToast("success", "Tablo Yeniden Oluşturuldu", res.mesaj || "Google E-Tabloda başlık satırı hazırlandı.");
-            } catch (err) {
-                showToast("error", "Tablo Hatası", err.message);
-            }
-        }
-
-        function renderDashboard() {
-            const total = records.length;
-            const paidCount = records.filter(r => r.paymentStatus === "paid").length;
-            const pendingCount = total - paidCount;
-            document.getElementById("statTotalStudents").textContent = total;
-            document.getElementById("statPaidCount").textContent = paidCount;
-            document.getElementById("statPendingCount").textContent = `${pendingCount} Bekliyor`;
-            document.getElementById("statTotalMoney").textContent = `${(paidCount * 150).toLocaleString("tr-TR")} ₺`;
-
-            const vrCounts = {};
-            records.forEach(r => (r.vrTitles || []).forEach(t => vrCounts[t] = (vrCounts[t] || 0) + 1));
-            let topTitle = "Henüz seçim yok", topCount = 0;
-            Object.entries(vrCounts).forEach(([t, c]) => { if (c > topCount) { topTitle = t; topCount = c; } });
-            document.getElementById("statTopVr").textContent = topTitle;
-            document.getElementById("statTopVrCount").textContent = `${topCount} kez tercih edildi`;
-
-            const searchQ = document.getElementById("tableSearchInput").value.trim().toLocaleLowerCase("tr-TR");
-            const classFilter = document.getElementById("tableClassFilter").value;
-            const paymentFilter = document.getElementById("tablePaymentFilter").value;
-
-            const filtered = records.filter(r => {
-                if (classFilter && r.className !== classFilter) return false;
-                if (paymentFilter && r.paymentStatus !== paymentFilter) return false;
-                if (searchQ) {
-                    const hay = `${r.className} ${r.studentNo} ${r.studentName} ${(r.vrTitles || []).join(" ")} ${r.parentName}`.toLocaleLowerCase("tr-TR");
-                    if (!hay.includes(searchQ)) return false;
-                }
-                return true;
+        async function loadSaymanRecords() {
+            const q = new URLSearchParams({
+                action: "list",
+                sifre: saymanPassword
             });
+            const data = await jsonpRequest(`${SAYMAN_ENDPOINT}?${q.toString()}`, 18000);
+            if (!data || !data.ok) {
+                throw new Error((data && data.mesaj) || "Kayıtlar alınamadı.");
+            }
+            allRecords = Array.isArray(data.records) ? data.records : [];
+            updateStats();
+            renderRecordsTable();
+        }
 
+        function updateStats() {
+            const total = allRecords.length;
+            const paidList = allRecords.filter(r => r.paymentStatus === "paid");
+            const pendingCount = total - paidList.length;
+            const collectedAmount = paidList.reduce((acc, r) => acc + (Number(r.amount) || 150), 0);
+
+            document.getElementById("statTotalCount").textContent = String(total);
+            document.getElementById("statPaidCount").textContent = String(paidList.length);
+            document.getElementById("statPendingCount").textContent = String(pendingCount);
+            document.getElementById("statTotalAmount").textContent = `${collectedAmount} TL`;
+        }
+
+        function renderRecordsTable() {
             const tbody = document.getElementById("recordsTableBody");
-            tbody.innerHTML = "";
+            const searchQ = document.getElementById("filterSearchInput").value.trim().toLocaleLowerCase("tr-TR");
+            const statusFilter = document.getElementById("filterStatusSelect").value;
+
+            const filtered = allRecords.filter(r => {
+                if (statusFilter !== "all" && r.paymentStatus !== statusFilter) return false;
+                if (!searchQ) return true;
+                const hay = [
+                    r.className,
+                    r.studentNo,
+                    r.studentName,
+                    r.parentName,
+                    r.parentPhone,
+                    (r.vrTitles || []).join(" ")
+                ].join(" ").toLocaleLowerCase("tr-TR");
+                return hay.includes(searchQ);
+            });
+
             if (filtered.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" class="py-10 text-center text-slate-400">Kayıt bulunamadı.</td></tr>';
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Gösterilecek kayıt bulunamadı.</td></tr>`;
                 return;
             }
 
-            filtered.forEach((rec, idx) => {
+            tbody.innerHTML = "";
+            filtered.forEach(r => {
+                const isPaid = r.paymentStatus === "paid";
                 const tr = document.createElement("tr");
-                tr.className = "hover:bg-slate-900/60 transition align-top";
-                const vrBadges = (rec.vrTitles || []).map((t, i) =>
-                    `<span class="inline-block px-2 py-0.5 m-0.5 rounded-md bg-purple-950/90 border border-purple-500/40 text-[11px] text-purple-200">${i + 1}. ${t}</span>`
-                ).join("");
-
-                const payBtn = rec.paymentStatus === "paid"
-                    ? `<button type="button" onclick="togglePaymentStatus('${rec.id}')" class="px-2.5 py-1 rounded-lg bg-emerald-950/90 border border-emerald-400/60 text-emerald-300 font-bold text-[11px] whitespace-nowrap">✅ 150 TL Ödendi</button>`
-                    : `<button type="button" onclick="togglePaymentStatus('${rec.id}')" class="px-2.5 py-1 rounded-lg bg-amber-950/90 border border-amber-400/60 text-amber-300 font-bold text-[11px] whitespace-nowrap">⏳ Bekliyor (Onayla)</button>`;
-
+                tr.className = "hover:bg-slate-900/60 transition";
                 tr.innerHTML = `
-                    <td class="py-3 px-3 text-slate-400 font-semibold">${idx + 1}</td>
-                    <td class="py-3 px-3 font-bold text-indigo-300 whitespace-nowrap">${rec.className}</td>
-                    <td class="py-3 px-3 font-mono font-semibold text-white">${rec.studentNo}</td>
-                    <td class="py-3 px-3 font-bold text-white whitespace-nowrap">${rec.studentName}</td>
-                    <td class="py-3 px-3 min-w-[260px]">${vrBadges}</td>
-                    <td class="py-3 px-3 text-[11px] text-slate-300">
-                        ${rec.parentName ? `<div class="font-semibold text-white">${rec.parentName}</div>` : ""}
-                        ${rec.parentPhone ? `<div>📞 ${rec.parentPhone}</div>` : ""}
-                        ${rec.paymentNote ? `<div class="text-amber-300 italic">📝 ${rec.paymentNote}</div>` : ""}
+                    <td class="py-3 px-3 font-bold text-indigo-300">${r.className || ""}</td>
+                    <td class="py-3 px-3 font-semibold text-white">${r.studentNo || ""}</td>
+                    <td class="py-3 px-3 font-semibold text-white">${r.studentName || ""}</td>
+                    <td class="py-3 px-3 text-slate-300 max-w-xs">${(r.vrTitles || []).join(", ")}</td>
+                    <td class="py-3 px-3 text-slate-300">
+                        <div>${r.parentName || "-"}</div>
+                        <div class="text-[11px] text-slate-400">${r.parentPhone || ""}</div>
                     </td>
-                    <td class="py-3 px-3">${payBtn}</td>
-                    <td class="py-3 px-3 text-right no-print">
-                        <button type="button" onclick="openDeleteModal('${rec.id}')" class="px-2.5 py-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600/50 border border-rose-400/40 text-rose-200 text-[11px] font-semibold">🗑️ Sil</button>
+                    <td class="py-3 px-3">
+                        <span class="inline-block px-2.5 py-1 rounded-lg text-[11px] font-bold ${
+                            isPaid
+                                ? "bg-emerald-950 text-emerald-300 border border-emerald-500/40"
+                                : "bg-amber-950 text-amber-300 border border-amber-500/40"
+                        }">
+                            ${isPaid ? "Ödendi (150 TL)" : "Ödeme Bekliyor"}
+                        </span>
+                    </td>
+                    <td class="py-3 px-3 text-right space-x-1.5 whitespace-nowrap">
+                        <button type="button" onclick="togglePayment('${r.id}', '${isPaid ? "pending" : "paid"}')"
+                            class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition ${
+                                isPaid
+                                    ? "bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600"
+                                    : "bg-emerald-600 hover:bg-emerald-500 text-white"
+                            }">
+                            ${isPaid ? "Beklemeye Al" : "150 TL Onayla"}
+                        </button>
+                        <button type="button" onclick="deleteRecord('${r.id}')"
+                            class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-rose-950/80 hover:bg-rose-900 text-rose-200 border border-rose-500/40 transition">
+                            Sil
+                        </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function openDeleteModal(id) {
-            const rec = records.find(r => r.id === id);
-            if (!rec) return;
-            recordIdToDelete = id;
-            document.getElementById("deleteModalText").textContent = `${rec.className} - ${rec.studentNo} ${rec.studentName} kaydı kalıcı olarak silinecektir.`;
-            document.getElementById("deleteModal").classList.remove("hidden");
+        async function togglePayment(id, nextStatus) {
+            try {
+                const res = await sendSaymanAction({
+                    action: "toggle_payment",
+                    id: id,
+                    paymentStatus: nextStatus
+                });
+                if (!res || !res.ok) {
+                    return showToast("error", "İşlem Başarısız", (res && res.mesaj) || "Ödeme durumu güncellenemedi.");
+                }
+                showToast("success", "Güncellendi", res.mesaj || "Ödeme durumu kaydedildi.");
+                await loadSaymanRecords();
+            } catch (err) {
+                showToast("error", "Bağlantı Hatası", err.message || "Sunucuya bağlanılamadı.");
+            }
         }
 
-        function exportToCsv() {
-            if (records.length === 0) return showToast("warning", "Liste Boş", "İndirilecek kayıt yok.");
-            const headers = ["Sıra No", "Sınıf", "Okul No", "Öğrenci Adı Soyadı", "VR 1", "VR 2", "VR 3", "VR 4", "VR 5", "Ödeme Durumu", "Tutar (TL)", "Veli Adı", "Veli Tel", "Not", "Tarih"];
-            const rows = records.map((r, i) => [
-                i + 1, r.className, r.studentNo, r.studentName,
-                r.vrTitles[0] || "", r.vrTitles[1] || "", r.vrTitles[2] || "", r.vrTitles[3] || "", r.vrTitles[4] || "",
-                r.paymentStatus === "paid" ? "Ödendi (150 TL)" : "Bekliyor",
-                r.paymentStatus === "paid" ? 150 : 0,
-                r.parentName || "", r.parentPhone || "", r.paymentNote || "", r.updatedAt || ""
-            ]);
-            const csv = "\uFEFF" + [headers, ...rows].map(row => row.map(c => `"${String(c).replace(/"/g, '""')}"`).join(";")).join("\n");
-            const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement("a");
-            a.href = url;
-            a.download = `Saffet_Cam_VR_Sayman_Listesi_${new Date().toISOString().slice(0, 10)}.csv`;
-            a.click();
-            URL.revokeObjectURL(url);
+        async function deleteRecord(id) {
+            if (!confirm("Bu öğrenci kaydını Google E-Tablodan silmek istediğinize emin misiniz?")) return;
+            try {
+                const res = await sendSaymanAction({
+                    action: "delete",
+                    id: id
+                });
+                if (!res || !res.ok) {
+                    return showToast("error", "Silinemedi", (res && res.mesaj) || "Kayıt silinemedi.");
+                }
+                showToast("success", "Silindi", res.mesaj || "Kayıt silindi.");
+                await loadSaymanRecords();
+            } catch (err) {
+                showToast("error", "Bağlantı Hatası", err.message || "Sunucuya bağlanılamadı.");
+            }
         }
 
         window.addEventListener("DOMContentLoaded", () => {
-            const classFilter = document.getElementById("tableClassFilter");
-            SCHOOL_DATA.forEach(cls => {
-                const opt = document.createElement("option");
-                opt.value = cls.className;
-                opt.textContent = `${cls.className} Şubesi`;
-                classFilter.appendChild(opt);
-            });
-
-            document.getElementById("saymanLoginForm").addEventListener("submit", async (e) => {
+            document.getElementById("loginForm").addEventListener("submit", async (e) => {
                 e.preventDefault();
+                const pass = document.getElementById("saymanPassInput").value.trim();
+                if (!pass) return;
+
                 const btn = document.getElementById("loginSubmitBtn");
                 btn.disabled = true;
                 btn.textContent = "Doğrulanıyor...";
-                const sifre = document.getElementById("saymanPasswordInput").value.trim();
-                await loadRecordsFromGoogle(sifre);
-                btn.disabled = false;
-                btn.textContent = "Giriş Yap ve Google Verilerini Yükle";
-            });
+                saymanPassword = pass;
 
-            document.getElementById("logoutBtn").addEventListener("click", () => {
-                sessionStorage.removeItem("sayman_sifre");
-                location.reload();
-            });
-
-            document.getElementById("rebuildSheetBtn").addEventListener("click", rebuildGoogleSheet);
-            document.getElementById("refreshBtn").addEventListener("click", () => loadRecordsFromGoogle());
-            document.getElementById("driveBackupBtn").addEventListener("click", backupToGoogleDrive);
-            document.getElementById("exportCsvBtn").addEventListener("click", exportToCsv);
-            document.getElementById("printListBtn").addEventListener("click", () => window.print());
-
-            document.getElementById("tableSearchInput").addEventListener("input", renderDashboard);
-            document.getElementById("tableClassFilter").addEventListener("change", renderDashboard);
-            document.getElementById("tablePaymentFilter").addEventListener("change", renderDashboard);
-
-            document.getElementById("cancelDeleteBtn").addEventListener("click", () => {
-                recordIdToDelete = null;
-                document.getElementById("deleteModal").classList.add("hidden");
-            });
-            document.getElementById("confirmDeleteBtn").addEventListener("click", async () => {
-                if (recordIdToDelete) {
-                    await deleteRecordGoogle(recordIdToDelete);
-                    recordIdToDelete = null;
-                    document.getElementById("deleteModal").classList.add("hidden");
+                try {
+                    await loadSaymanRecords();
+                    document.getElementById("loginSection").classList.add("hidden");
+                    document.getElementById("panelSection").classList.remove("hidden");
+                    document.getElementById("logoutBtn").classList.remove("hidden");
+                    showToast("success", "Giriş Başarılı", "Kayıtlar yüklendi.");
+                } catch (err) {
+                    saymanPassword = "";
+                    showToast("error", "Giriş Hatası", err.message || "Şifre veya bağlantı doğrulanamadı.");
+                } finally {
+                    btn.disabled = false;
+                    btn.textContent = "Kayıtları Yükle";
                 }
             });
 
-            if (getSaymanPass()) {
-                loadRecordsFromGoogle();
-            }
+            document.getElementById("logoutBtn").addEventListener("click", () => {
+                saymanPassword = "";
+                allRecords = [];
+                document.getElementById("saymanPassInput").value = "";
+                document.getElementById("panelSection").classList.add("hidden");
+                document.getElementById("logoutBtn").classList.add("hidden");
+                document.getElementById("loginSection").classList.remove("hidden");
+            });
+
+            document.getElementById("refreshBtn").addEventListener("click", async () => {
+                try {
+                    await loadSaymanRecords();
+                    showToast("success", "Yenilendi", "Güncel kayıtlar çekildi.");
+                } catch (err) {
+                    showToast("error", "Yenileme Hatası", err.message || "Kayıtlar yenilenemedi.");
+                }
+            });
+
+            document.getElementById("backupDriveBtn").addEventListener("click", async () => {
+                try {
+                    const res = await sendSaymanAction({ action: "backup_drive" });
+                    if (!res || !res.ok) {
+                        return showToast("error", "Yedek Hatası", (res && res.mesaj) || "Drive yedeği alınamadı.");
+                    }
+                    showToast("success", "Drive Yedeklendi", res.mesaj || "CSV yedeği Google Drive'a kaydedildi.");
+                } catch (err) {
+                    showToast("error", "Bağlantı Hatası", err.message || "Yedekleme başarısız.");
+                }
+            });
+
+            document.getElementById("filterSearchInput").addEventListener("input", renderRecordsTable);
+            document.getElementById("filterStatusSelect").addEventListener("change", renderRecordsTable);
         });
     </script>
 </body>

@@ -253,9 +253,9 @@
     </main>
 
     <script>
-        const APPS_SCRIPT_URL = (typeof window.APPS_SCRIPT_URL === "string" && window.APPS_SCRIPT_URL.trim())
+        const SCRIPT_ENDPOINT = (typeof window.APPS_SCRIPT_URL === "string" && window.APPS_SCRIPT_URL.trim())
             ? window.APPS_SCRIPT_URL.trim()
-            : "https://script.google.com/macros/s/AKfycbxz1CvrcPtug8gTbgR_c9qeFwpjVtbnzI8E3Sz8aR-oHI3qBWfmHQaYdd_M2kGdiRgVxg/exec";
+            : "https://script.google.com/macros/s/AKfycbwPoGIGs5OHg7MUrTjFmJEBy7xOLoJEdUPyxxJzp9_X96bz-UE3JcAEFTD6Bwdm8CVj/exec";
 
         let selectedVrIds = [];
         let registeredKeys = new Set();
@@ -327,13 +327,12 @@
             const encoded = encodeURIComponent(payloadStr);
 
             try {
-                return await jsonpRequest(`${APPS_SCRIPT_URL}?payload=${encoded}`, 18000);
+                return await jsonpRequest(`${SCRIPT_ENDPOINT}?payload=${encoded}`, 18000);
             } catch (jsonpErr) {
-                // Mobil ağlarda JSONP takılırsa standart POST/no-cors yedeğini dener
                 const controller = new AbortController();
                 const timer = setTimeout(() => controller.abort(), 15000);
                 try {
-                    const res = await fetch(APPS_SCRIPT_URL, {
+                    const res = await fetch(SCRIPT_ENDPOINT, {
                         method: "POST",
                         headers: { "Content-Type": "text/plain;charset=utf-8" },
                         body: payloadStr,
@@ -349,7 +348,7 @@
                 } catch (fetchErr) {
                     clearTimeout(timer);
                     try {
-                        await fetch(APPS_SCRIPT_URL, {
+                        await fetch(SCRIPT_ENDPOINT, {
                             method: "POST",
                             mode: "no-cors",
                             headers: { "Content-Type": "text/plain;charset=utf-8" },
@@ -372,7 +371,7 @@
 
         async function fetchPublicRegisteredKeys() {
             try {
-                const data = await jsonpRequest(`${APPS_SCRIPT_URL}?action=public_check`, 12000);
+                const data = await jsonpRequest(`${SCRIPT_ENDPOINT}?action=public_check`, 12000);
                 if (data && data.ok && Array.isArray(data.registeredKeys)) {
                     registeredKeys = new Set(data.registeredKeys);
                     const clsVal = document.getElementById("classSelect").value;
@@ -386,7 +385,8 @@
 
         function initClassSelects() {
             const classSelect = document.getElementById("classSelect");
-            SCHOOL_DATA.forEach(cls => {
+            if (!Array.isArray(window.SCHOOL_DATA)) return;
+            window.SCHOOL_DATA.forEach(cls => {
                 const opt = document.createElement("option");
                 opt.value = cls.className;
                 opt.textContent = `${cls.className} (${cls.students.length} Öğrenci)`;
@@ -397,7 +397,8 @@
         function populateStudentsByClass(className, preselectNo = null) {
             const studentSelect = document.getElementById("studentSelect");
             studentSelect.innerHTML = "";
-            const classObj = SCHOOL_DATA.find(c => c.className === className);
+            const schoolList = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
+            const classObj = schoolList.find(c => c.className === className);
             if (!classObj) {
                 studentSelect.disabled = true;
                 studentSelect.innerHTML = '<option value="">Önce sınıf seçiniz...</option>';
@@ -429,7 +430,8 @@
                 card.classList.add("hidden");
                 return;
             }
-            const classObj = SCHOOL_DATA.find(c => c.className === className);
+            const schoolList = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
+            const classObj = schoolList.find(c => c.className === className);
             const studentObj = classObj ? classObj.students.find(s => s.no === studentNo) : null;
             if (!studentObj) return card.classList.add("hidden");
 
@@ -442,9 +444,10 @@
         function renderVrGrid() {
             const container = document.getElementById("vrGridContainer");
             container.innerHTML = "";
+            const vrList = Array.isArray(window.VR_CONTENTS) ? window.VR_CONTENTS : [];
             const isMaxReached = selectedVrIds.length >= 5;
 
-            VR_CONTENTS.forEach(item => {
+            vrList.forEach(item => {
                 const isSelected = selectedVrIds.includes(item.id);
                 const isDisabled = !isSelected && isMaxReached;
                 const card = document.createElement("div");
@@ -489,8 +492,9 @@
             input.addEventListener("input", () => {
                 const q = input.value.trim().toLocaleLowerCase("tr-TR");
                 if (q.length < 2) return resultsBox.classList.add("hidden");
+                const schoolList = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
                 const matches = [];
-                for (const cls of SCHOOL_DATA) {
+                for (const cls of schoolList) {
                     for (const st of cls.students) {
                         if (st.no.toLowerCase().includes(q) || st.name.toLocaleLowerCase("tr-TR").includes(q)) {
                             matches.push({ className: cls.className, no: st.no, name: st.name });
@@ -529,10 +533,17 @@
                 return showToast("warning", "Kayıt Mevcut", "Bu öğrenci için daha önce başvuru yapılmıştır. Değişiklik için Sayman Fatma Erdem ile iletişime geçiniz.");
             }
 
-            const classObj = SCHOOL_DATA.find(c => c.className === className);
-            const studentObj = classObj.students.find(s => s.no === studentNo);
+            const schoolList = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
+            const vrList = Array.isArray(window.VR_CONTENTS) ? window.VR_CONTENTS : [];
+            const classObj = schoolList.find(c => c.className === className);
+            const studentObj = classObj ? classObj.students.find(s => s.no === studentNo) : null;
+            if (!studentObj) return showToast("error", "Öğrenci Bulunamadı", "Seçili öğrenci kaydı doğrulanamadı.");
+
             const sortedIds = selectedVrIds.slice().sort((a, b) => a - b);
-            const vrTitles = sortedIds.map(id => VR_CONTENTS.find(v => v.id === id).title);
+            const vrTitles = sortedIds.map(id => {
+                const found = vrList.find(v => v.id === id);
+                return found ? found.title : String(id);
+            });
 
             const recordObj = {
                 id: `rec_${className.replace("/", "")}_${studentObj.no}_${Date.now()}`,
