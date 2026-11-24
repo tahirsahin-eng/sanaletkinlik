@@ -6,7 +6,7 @@
     <title>Saffet Çam Ortaokulu - VR Etkinliği Sayman Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="data.js?v=20261124_4"></script>
+    <script src="data.js?v=20261124_5"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -160,10 +160,10 @@
             document.getElementById("toastMessage").textContent = message;
             box.classList.remove("translate-x-full", "opacity-0");
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 5000);
+            toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 6000);
         }
 
-        function jsonpRequest(url, timeoutMs = 12000) {
+        function jsonpRequest(url, timeoutMs = 10000) {
             return new Promise((resolve, reject) => {
                 const cbName = "gs_sayman_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
                 const script = document.createElement("script");
@@ -179,7 +179,7 @@
                     if (settled) return;
                     settled = true;
                     cleanup();
-                    reject(new Error("Sunucu yanıt süresi aşıldı (zaman aşımı)."));
+                    reject(new Error("JSONP zaman aşımı"));
                 }, timeoutMs);
 
                 window[cbName] = (data) => {
@@ -193,7 +193,7 @@
                     if (settled) return;
                     settled = true;
                     cleanup();
-                    reject(new Error("Google Apps Script bağlantısı kurulamadı."));
+                    reject(new Error("JSONP betik hatası"));
                 };
 
                 const sep = url.indexOf("?") === -1 ? "?" : "&";
@@ -217,7 +217,7 @@
                 return JSON.parse(text);
             } catch (err) {
                 clearTimeout(timer);
-                throw err;
+                throw new Error("GET hatası: " + (err && err.message ? err.message : "bağlanamadı"));
             }
         }
 
@@ -236,7 +236,7 @@
                 return JSON.parse(text);
             } catch (err) {
                 clearTimeout(timer);
-                throw err;
+                throw new Error("POST hatası: " + (err && err.message ? err.message : "bağlanamadı"));
             }
         }
 
@@ -245,12 +245,12 @@
             const encoded = encodeURIComponent(JSON.stringify(fullPayload));
 
             try {
-                return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 10000);
-            } catch (_) {
+                return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 9000);
+            } catch (e1) {
                 try {
-                    return await fetchGetJson(`${SAYMAN_ENDPOINT}?payload=${encoded}&_ts=${Date.now()}`, 15000);
-                } catch (__) {
-                    return await postToAppsScript(fullPayload, 15000);
+                    return await fetchGetJson(`${SAYMAN_ENDPOINT}?payload=${encoded}&_ts=${Date.now()}`, 12000);
+                } catch (e2) {
+                    return await postToAppsScript(fullPayload, 12000);
                 }
             }
         }
@@ -264,21 +264,38 @@
             const listUrl = `${SAYMAN_ENDPOINT}?${q.toString()}`;
 
             let data = null;
+            const errors = [];
+
             try {
                 data = await jsonpRequest(listUrl, 9000);
-            } catch (_) {
+            } catch (e1) {
+                errors.push(e1.message);
+            }
+
+            if (!data) {
                 try {
-                    data = await fetchGetJson(listUrl, 15000);
-                } catch (__) {
-                    data = await postToAppsScript({
-                        action: "list",
-                        sifre: saymanPassword
-                    }, 15000);
+                    data = await fetchGetJson(listUrl, 12000);
+                } catch (e2) {
+                    errors.push(e2.message);
                 }
             }
 
-            if (!data || !data.ok) {
-                throw new Error((data && data.mesaj) || "Kayıtlar alınamadı.");
+            if (!data) {
+                try {
+                    data = await postToAppsScript({
+                        action: "list",
+                        sifre: saymanPassword
+                    }, 12000);
+                } catch (e3) {
+                    errors.push(e3.message);
+                }
+            }
+
+            if (!data) {
+                throw new Error(errors.join(" | ") || "Google Apps Script bağlantısı kurulamadı.");
+            }
+            if (!data.ok) {
+                throw new Error(data.mesaj || "Kayıtlar alınamadı.");
             }
             allRecords = Array.isArray(data.records) ? data.records : [];
             updateStats();
