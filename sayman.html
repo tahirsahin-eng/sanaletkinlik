@@ -193,8 +193,6 @@
         </div>
     </div>
 
-    <iframe name="saymanHiddenFrame" id="saymanHiddenFrame" class="hidden"></iframe>
-
     <script>
         let records = [];
         let recordIdToDelete = null;
@@ -253,28 +251,9 @@
             });
         }
 
-        function postPayloadViaIframe(payloadObj) {
-            return new Promise((resolve) => {
-                const postForm = document.createElement("form");
-                postForm.method = "POST";
-                postForm.action = APPS_SCRIPT_URL;
-                postForm.target = "saymanHiddenFrame";
-                postForm.style.display = "none";
-
-                const hiddenInput = document.createElement("input");
-                hiddenInput.type = "hidden";
-                hiddenInput.name = "payload";
-                hiddenInput.value = JSON.stringify(payloadObj);
-                postForm.appendChild(hiddenInput);
-
-                document.body.appendChild(postForm);
-                postForm.submit();
-
-                setTimeout(() => {
-                    if (postForm.parentNode) postForm.parentNode.removeChild(postForm);
-                    resolve();
-                }, 1200);
-            });
+        async function sendPayloadJsonp(payloadObj) {
+            const encoded = encodeURIComponent(JSON.stringify(payloadObj));
+            return await jsonpRequest(`${APPS_SCRIPT_URL}?payload=${encoded}`);
         }
 
         async function loadRecordsFromGoogle(passwordToTest = null) {
@@ -304,48 +283,67 @@
             const rec = records.find(r => r.id === id);
             if (!rec) return;
             const nextStatus = rec.paymentStatus === "paid" ? "pending" : "paid";
-            rec.paymentStatus = nextStatus;
-            rec.amount = nextStatus === "paid" ? 150 : 0;
-            renderDashboard();
-
-            await postPayloadViaIframe({
-                action: "toggle_payment",
-                sifre: getSaymanPass(),
-                id: id,
-                paymentStatus: nextStatus
-            });
-            showToast("success", "Ödeme Güncellendi", `${rec.studentName}: ${nextStatus === "paid" ? "150 TL Ödendi" : "Ödeme Bekliyor"}`);
+            try {
+                const res = await sendPayloadJsonp({
+                    action: "toggle_payment",
+                    sifre: getSaymanPass(),
+                    id: id,
+                    paymentStatus: nextStatus
+                });
+                if (!res || !res.ok) return showToast("error", "Güncellenemedi", (res && res.mesaj) || "İşlem başarısız.");
+                rec.paymentStatus = nextStatus;
+                rec.amount = nextStatus === "paid" ? 150 : 0;
+                renderDashboard();
+                showToast("success", "Ödeme Güncellendi", `${rec.studentName}: ${nextStatus === "paid" ? "150 TL Ödendi" : "Ödeme Bekliyor"}`);
+            } catch (err) {
+                showToast("error", "Gönderim Hatası", err.message);
+            }
         }
 
         async function deleteRecordGoogle(id) {
-            await postPayloadViaIframe({
-                action: "delete",
-                sifre: getSaymanPass(),
-                id: id
-            });
-            records = records.filter(r => r.id !== id);
-            renderDashboard();
-            showToast("success", "Kayıt Silindi", "Öğrenci kaydı Google E-Tablodan silindi.");
+            try {
+                const res = await sendPayloadJsonp({
+                    action: "delete",
+                    sifre: getSaymanPass(),
+                    id: id
+                });
+                if (!res || !res.ok) return showToast("error", "Silinemedi", (res && res.mesaj) || "İşlem başarısız.");
+                records = records.filter(r => r.id !== id);
+                renderDashboard();
+                showToast("success", "Kayıt Silindi", "Öğrenci kaydı Google E-Tablodan silindi.");
+            } catch (err) {
+                showToast("error", "Silme Hatası", err.message);
+            }
         }
 
         async function backupToGoogleDrive() {
             showToast("warning", "Yedekleniyor", "Google Drive üzerinde CSV yedeği oluşturuluyor...");
-            await postPayloadViaIframe({
-                action: "backup_drive",
-                sifre: getSaymanPass()
-            });
-            showToast("success", "Drive Yedeği Gönderildi", "Google Drive klasörünüze yedek dosyası oluşturuldu.");
+            try {
+                const res = await sendPayloadJsonp({
+                    action: "backup_drive",
+                    sifre: getSaymanPass()
+                });
+                if (!res || !res.ok) return showToast("error", "Yedeklenemedi", (res && res.mesaj) || "İşlem başarısız.");
+                showToast("success", "Drive Yedeği Oluşturuldu", res.mesaj || "Google Drive klasörünüze yedek dosyası oluşturuldu.");
+            } catch (err) {
+                showToast("error", "Yedekleme Hatası", err.message);
+            }
         }
 
         async function rebuildGoogleSheet() {
             showToast("warning", "Tablo Oluşturuluyor", "VR_Etkinlik_Kayitlari sayfası sıfırdan oluşturuluyor...");
-            await postPayloadViaIframe({
-                action: "rebuild_sheet",
-                sifre: getSaymanPass()
-            });
-            records = [];
-            renderDashboard();
-            showToast("success", "Tablo Yeniden Oluşturuldu", "Google E-Tabloda başlık satırı hazırlandı.");
+            try {
+                const res = await sendPayloadJsonp({
+                    action: "rebuild_sheet",
+                    sifre: getSaymanPass()
+                });
+                if (!res || !res.ok) return showToast("error", "Oluşturulamadı", (res && res.mesaj) || "İşlem başarısız.");
+                records = [];
+                renderDashboard();
+                showToast("success", "Tablo Yeniden Oluşturuldu", res.mesaj || "Google E-Tabloda başlık satırı hazırlandı.");
+            } catch (err) {
+                showToast("error", "Tablo Hatası", err.message);
+            }
         }
 
         function renderDashboard() {
