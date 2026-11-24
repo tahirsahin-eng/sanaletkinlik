@@ -6,7 +6,7 @@
     <title>Saffet Çam Ortaokulu - VR Etkinliği Sayman Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="data.js?v=20261124_5"></script>
+    <script src="data.js?v=20261124_6"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -179,7 +179,7 @@
                     if (settled) return;
                     settled = true;
                     cleanup();
-                    reject(new Error("JSONP zaman aşımı"));
+                    reject(new Error("Sunucu yanıt süresi aşıldı."));
                 }, timeoutMs);
 
                 window[cbName] = (data) => {
@@ -193,7 +193,7 @@
                     if (settled) return;
                     settled = true;
                     cleanup();
-                    reject(new Error("JSONP betik hatası"));
+                    reject(new Error("Sunucu betiği yüklenemedi."));
                 };
 
                 const sep = url.indexOf("?") === -1 ? "?" : "&";
@@ -217,7 +217,7 @@
                 return JSON.parse(text);
             } catch (err) {
                 clearTimeout(timer);
-                throw new Error("GET hatası: " + (err && err.message ? err.message : "bağlanamadı"));
+                throw err;
             }
         }
 
@@ -236,7 +236,7 @@
                 return JSON.parse(text);
             } catch (err) {
                 clearTimeout(timer);
-                throw new Error("POST hatası: " + (err && err.message ? err.message : "bağlanamadı"));
+                throw err;
             }
         }
 
@@ -245,12 +245,12 @@
             const encoded = encodeURIComponent(JSON.stringify(fullPayload));
 
             try {
-                return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 9000);
-            } catch (e1) {
+                return await fetchGetJson(`${SAYMAN_ENDPOINT}?payload=${encoded}&_ts=${Date.now()}`, 14000);
+            } catch (_) {
                 try {
-                    return await fetchGetJson(`${SAYMAN_ENDPOINT}?payload=${encoded}&_ts=${Date.now()}`, 12000);
-                } catch (e2) {
-                    return await postToAppsScript(fullPayload, 12000);
+                    return await postToAppsScript(fullPayload, 14000);
+                } catch (__) {
+                    return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 10000);
                 }
             }
         }
@@ -264,20 +264,12 @@
             const listUrl = `${SAYMAN_ENDPOINT}?${q.toString()}`;
 
             let data = null;
-            const errors = [];
+            let lastErr = null;
 
             try {
-                data = await jsonpRequest(listUrl, 9000);
+                data = await fetchGetJson(listUrl, 14000);
             } catch (e1) {
-                errors.push(e1.message);
-            }
-
-            if (!data) {
-                try {
-                    data = await fetchGetJson(listUrl, 12000);
-                } catch (e2) {
-                    errors.push(e2.message);
-                }
+                lastErr = e1;
             }
 
             if (!data) {
@@ -285,14 +277,22 @@
                     data = await postToAppsScript({
                         action: "list",
                         sifre: saymanPassword
-                    }, 12000);
-                } catch (e3) {
-                    errors.push(e3.message);
+                    }, 14000);
+                } catch (e2) {
+                    lastErr = e2;
                 }
             }
 
             if (!data) {
-                throw new Error(errors.join(" | ") || "Google Apps Script bağlantısı kurulamadı.");
+                try {
+                    data = await jsonpRequest(listUrl, 10000);
+                } catch (e3) {
+                    lastErr = e3;
+                }
+            }
+
+            if (!data) {
+                throw new Error((lastErr && lastErr.message) || "Google Apps Script bağlantısı kurulamadı.");
             }
             if (!data.ok) {
                 throw new Error(data.mesaj || "Kayıtlar alınamadı.");
