@@ -6,7 +6,7 @@
     <title>Saffet Çam Ortaokulu - VR Etkinliği Sayman Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="data.js?v=20261124"></script>
+    <script src="data.js?v=20261124_2"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -163,7 +163,7 @@
             toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 5000);
         }
 
-        function jsonpRequest(url, timeoutMs = 18000) {
+        function jsonpRequest(url, timeoutMs = 15000) {
             return new Promise((resolve, reject) => {
                 const cbName = "gs_sayman_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
                 const script = document.createElement("script");
@@ -203,51 +203,36 @@
             });
         }
 
+        async function postToAppsScript(payloadObj, timeoutMs = 15000) {
+            const controller = new AbortController();
+            const timer = setTimeout(() => controller.abort(), timeoutMs);
+            try {
+                const res = await fetch(SAYMAN_ENDPOINT, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify(payloadObj),
+                    signal: controller.signal
+                });
+                clearTimeout(timer);
+                const text = await res.text();
+                return JSON.parse(text);
+            } catch (err) {
+                clearTimeout(timer);
+                if (err && err.name === "AbortError") {
+                    throw new Error("Bağlantı zaman aşımına uğradı.");
+                }
+                throw new Error("Google Apps Script bağlantısı kurulamadı.");
+            }
+        }
+
         async function sendSaymanAction(payloadObj) {
             const fullPayload = { ...payloadObj, sifre: saymanPassword };
-            const payloadStr = JSON.stringify(fullPayload);
-            const encoded = encodeURIComponent(payloadStr);
+            const encoded = encodeURIComponent(JSON.stringify(fullPayload));
 
             try {
-                return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 18000);
-            } catch (jsonpErr) {
-                const controller = new AbortController();
-                const timer = setTimeout(() => controller.abort(), 15000);
-                try {
-                    const res = await fetch(SAYMAN_ENDPOINT, {
-                        method: "POST",
-                        headers: { "Content-Type": "text/plain;charset=utf-8" },
-                        body: payloadStr,
-                        signal: controller.signal
-                    });
-                    clearTimeout(timer);
-                    const text = await res.text();
-                    try {
-                        return JSON.parse(text);
-                    } catch (_) {
-                        return { ok: true, mesaj: "İşlem Google E-Tabloya iletildi." };
-                    }
-                } catch (fetchErr) {
-                    clearTimeout(timer);
-                    try {
-                        await fetch(SAYMAN_ENDPOINT, {
-                            method: "POST",
-                            mode: "no-cors",
-                            headers: { "Content-Type": "text/plain;charset=utf-8" },
-                            body: payloadStr
-                        });
-                        return {
-                            ok: true,
-                            unverified: true,
-                            mesaj: "İstek mobil ağ üzerinden iletildi; yenile ile kontrol ediniz."
-                        };
-                    } catch (_) {
-                        const detail = (fetchErr && fetchErr.name === "AbortError")
-                            ? "Bağlantı zaman aşımına uğradı."
-                            : (jsonpErr && jsonpErr.message ? jsonpErr.message : "Google sunucusuna bağlanılamadı.");
-                        throw new Error(detail);
-                    }
-                }
+                return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 12000);
+            } catch (_) {
+                return await postToAppsScript(fullPayload, 15000);
             }
         }
 
@@ -256,7 +241,17 @@
                 action: "list",
                 sifre: saymanPassword
             });
-            const data = await jsonpRequest(`${SAYMAN_ENDPOINT}?${q.toString()}`, 18000);
+
+            let data = null;
+            try {
+                data = await jsonpRequest(`${SAYMAN_ENDPOINT}?${q.toString()}`, 12000);
+            } catch (_) {
+                data = await postToAppsScript({
+                    action: "list",
+                    sifre: saymanPassword
+                }, 15000);
+            }
+
             if (!data || !data.ok) {
                 throw new Error((data && data.mesaj) || "Kayıtlar alınamadı.");
             }
