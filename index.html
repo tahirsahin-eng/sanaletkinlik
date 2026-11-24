@@ -257,8 +257,11 @@
         </form>
     </main>
 
-    <!-- Gizli Iframe ile Kesintisiz POST Gönderimi -->
+    <!-- Gizli Iframe ve Gizli Form ile Kesintisiz POST Gönderimi -->
     <iframe name="gsHiddenFrame" id="gsHiddenFrame" class="hidden"></iframe>
+    <form id="gsHiddenPostForm" method="POST" target="gsHiddenFrame" class="hidden">
+        <input type="hidden" name="payload" id="gsHiddenPayloadInput" value="">
+    </form>
 
     <script>
         let selectedVrIds = [];
@@ -465,25 +468,17 @@
 
         function postPayloadViaIframe(payloadObj) {
             return new Promise((resolve) => {
-                const postForm = document.createElement("form");
-                postForm.method = "POST";
-                postForm.action = APPS_SCRIPT_URL;
-                postForm.target = "gsHiddenFrame";
-                postForm.style.display = "none";
-
-                const hiddenInput = document.createElement("input");
-                hiddenInput.type = "hidden";
-                hiddenInput.name = "payload";
+                const hiddenForm = document.getElementById("gsHiddenPostForm");
+                const hiddenInput = document.getElementById("gsHiddenPayloadInput");
+                hiddenForm.action = APPS_SCRIPT_URL;
+                hiddenForm.target = "gsHiddenFrame";
                 hiddenInput.value = JSON.stringify(payloadObj);
-                postForm.appendChild(hiddenInput);
-
-                document.body.appendChild(postForm);
-                postForm.submit();
+                hiddenForm.submit();
 
                 setTimeout(() => {
-                    if (postForm.parentNode) postForm.parentNode.removeChild(postForm);
+                    hiddenInput.value = "";
                     resolve();
-                }, 1200);
+                }, 1400);
             });
         }
 
