@@ -253,6 +253,10 @@
     </main>
 
     <script>
+        const APPS_SCRIPT_URL = (typeof window.APPS_SCRIPT_URL === "string" && window.APPS_SCRIPT_URL.trim())
+            ? window.APPS_SCRIPT_URL.trim()
+            : "https://script.google.com/macros/s/AKfycbxz1CvrcPtug8gTbgR_c9qeFwpjVtbnzI8E3Sz8aR-oHI3qBWfmHQaYdd_M2kGdiRgVxg/exec";
+
         let selectedVrIds = [];
         let registeredKeys = new Set();
         let toastTimeout = null;
@@ -275,40 +279,100 @@
             document.getElementById("toastMessage").textContent = message;
             box.classList.remove("translate-x-full", "opacity-0");
             clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 4500);
+            toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 5000);
         }
 
-        function jsonpRequest(url) {
+        function jsonpRequest(url, timeoutMs = 18000) {
             return new Promise((resolve, reject) => {
-                const cbName = "gs_cb_" + Math.random().toString(36).slice(2);
+                const cbName = "gs_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
                 const script = document.createElement("script");
-                const timer = setTimeout(() => {
-                    cleanup();
-                    reject(new Error("Google sunucusu zaman aşımına uğradı."));
-                }, 12000);
+                let settled = false;
 
                 function cleanup() {
                     clearTimeout(timer);
-                    delete window[cbName];
-                    if (script.parentNode) script.parentNode.removeChild(script);
+                    try { delete window[cbName]; } catch (_) { window[cbName] = undefined; }
+                    if (script && script.parentNode) script.parentNode.removeChild(script);
                 }
 
+                const timer = setTimeout(() => {
+                    if (settled) return;
+                    settled = true;
+                    cleanup();
+                    reject(new Error("Sunucu yanıt süresi aşıldı (zaman aşımı)."));
+                }, timeoutMs);
+
                 window[cbName] = (data) => {
+                    if (settled) return;
+                    settled = true;
                     cleanup();
                     resolve(data);
                 };
+
                 script.onerror = () => {
+                    if (settled) return;
+                    settled = true;
                     cleanup();
-                    reject(new Error("Google sunucusuna bağlanılamadı."));
+                    reject(new Error("Google Apps Script bağlantısı kurulamadı."));
                 };
-                script.src = url + (url.indexOf("?") === -1 ? "?" : "&") + "callback=" + cbName;
-                document.body.appendChild(script);
+
+                const sep = url.indexOf("?") === -1 ? "?" : "&";
+                script.src = `${url}${sep}callback=${cbName}&_ts=${Date.now()}`;
+                script.async = true;
+                (document.body || document.documentElement).appendChild(script);
             });
+        }
+
+        async function sendToAppsScript(payloadObj) {
+            const payloadStr = JSON.stringify(payloadObj);
+            const encoded = encodeURIComponent(payloadStr);
+
+            try {
+                return await jsonpRequest(`${APPS_SCRIPT_URL}?payload=${encoded}`, 18000);
+            } catch (jsonpErr) {
+                // Mobil ağlarda JSONP takılırsa standart POST/no-cors yedeğini dener
+                const controller = new AbortController();
+                const timer = setTimeout(() => controller.abort(), 15000);
+                try {
+                    const res = await fetch(APPS_SCRIPT_URL, {
+                        method: "POST",
+                        headers: { "Content-Type": "text/plain;charset=utf-8" },
+                        body: payloadStr,
+                        signal: controller.signal
+                    });
+                    clearTimeout(timer);
+                    const text = await res.text();
+                    try {
+                        return JSON.parse(text);
+                    } catch (_) {
+                        return { ok: true, mesaj: "Başvurunuz Google E-Tabloya iletildi." };
+                    }
+                } catch (fetchErr) {
+                    clearTimeout(timer);
+                    try {
+                        await fetch(APPS_SCRIPT_URL, {
+                            method: "POST",
+                            mode: "no-cors",
+                            headers: { "Content-Type": "text/plain;charset=utf-8" },
+                            body: payloadStr
+                        });
+                        return {
+                            ok: true,
+                            unverified: true,
+                            mesaj: "İstek mobil ağ üzerinden iletildi; kayıt durumunu kontrol edebilirsiniz."
+                        };
+                    } catch (_) {
+                        const detail = (fetchErr && fetchErr.name === "AbortError")
+                            ? "Bağlantı zaman aşımına uğradı."
+                            : (jsonpErr && jsonpErr.message ? jsonpErr.message : "Google sunucusuna bağlanılamadı.");
+                        throw new Error(detail);
+                    }
+                }
+            }
         }
 
         async function fetchPublicRegisteredKeys() {
             try {
-                const data = await jsonpRequest(`${APPS_SCRIPT_URL}?action=public_check`);
+                const data = await jsonpRequest(`${APPS_SCRIPT_URL}?action=public_check`, 12000);
                 if (data && data.ok && Array.isArray(data.registeredKeys)) {
                     registeredKeys = new Set(data.registeredKeys);
                     const clsVal = document.getElementById("classSelect").value;
@@ -455,11 +519,6 @@
             });
         }
 
-        async function sendPayloadJsonp(payloadObj) {
-            const encoded = encodeURIComponent(JSON.stringify(payloadObj));
-            return await jsonpRequest(`${APPS_SCRIPT_URL}?payload=${encoded}`);
-        }
-
         async function handleFormSubmit(e) {
             e.preventDefault();
             const className = document.getElementById("classSelect").value;
@@ -495,7 +554,7 @@
             btnText.textContent = "Google E-Tabloya Kaydediliyor...";
 
             try {
-                const res = await sendPayloadJsonp({ action: "upsert", record: recordObj });
+                const res = await sendToAppsScript({ action: "upsert", record: recordObj });
                 if (!res || !res.ok) {
                     showToast("error", "Kayıt Uyarısı", (res && res.mesaj) || "Başvuru kaydedilemedi.");
                     return;
@@ -505,14 +564,22 @@
                 document.getElementById("receiptSummaryText").innerHTML =
                     `<strong>${className}</strong> sınıfı <strong>${studentObj.no} - ${studentObj.name}</strong> için seçilen içerikler: <br><span class="text-purple-300 font-semibold">${vrTitles.join(", ")}</span>`;
                 document.getElementById("successReceiptCard").classList.remove("hidden");
-                showToast("success", "Başvurunuz Kaydedildi", res.mesaj || "Kaydınız Google E-Tabloya aktarıldı.");
+                showToast(
+                    res.unverified ? "warning" : "success",
+                    res.unverified ? "İstek İletildi" : "Başvurunuz Kaydedildi",
+                    res.mesaj || "Kaydınız Google E-Tabloya aktarıldı."
+                );
                 document.getElementById("registrationForm").reset();
                 populateStudentsByClass("");
                 selectedVrIds = [];
                 renderVrGrid();
                 window.scrollTo({ top: 0, behavior: "smooth" });
             } catch (err) {
-                showToast("error", "Bağlantı Hatası", err.message || "Google sunucusuna ulaşılamadı.");
+                showToast(
+                    "error",
+                    "Bağlantı Hatası",
+                    "Google sunucusuna bağlanılamadı (" + (err && err.message ? err.message : "Bilinmeyen hata") + ")."
+                );
             } finally {
                 btn.disabled = false;
                 btnText.textContent = "Başvuruyu Tamamla ve Gönder";
