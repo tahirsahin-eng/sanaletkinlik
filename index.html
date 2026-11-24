@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saffet Çam Ortaokulu - Uzay Çadırı ve VR Etkinliği Veli Başvuru Formu</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script src="data.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background: radial-gradient(ellipse at top, #1e1b4b 0%, #0f172a 55%, #020617 100%);
+            min-height: 100vh;
+            color: #f8fafc;
+        }
+        .stars-bg {
+            background-image: 
+                radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 80px 120px, #e0e7ff, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 160px 60px, #c7d2fe, rgba(0,0,0,0)),
+                radial-gradient(2px 2px at 250px 180px, #fde047, rgba(0,0,0,0)),
+                radial-gradient(1px 1px at 340px 90px, #ffffff, rgba(0,0,0,0)),
+                radial-gradient(1.5px 1.5px at 420px 210px, #93c5fd, rgba(0,0,0,0));
+            background-size: 480px 260px;
+        }
+        .glass-card {
+            background: rgba(15, 23, 42, 0.80);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(139, 92, 246, 0.28);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6);
+        }
+        .vr-card-active {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.35), rgba(168, 85, 247, 0.35));
+            border-color: #a855f7;
+            box-shadow: 0 0 18px rgba(168, 85, 247, 0.35);
+        }
+    </style>
+</head>
+<body class="stars-bg antialiased selection:bg-purple-500 selection:text-white">
+
+    <!-- Bildirim Toast Mesajı -->
+    <div id="toastBox" class="fixed top-4 right-4 z-50 transform transition-all duration-300 translate-x-full opacity-0 pointer-events-none max-w-sm w-full">
+        <div id="toastContent" class="rounded-2xl p-4 shadow-2xl border flex items-start gap-3 backdrop-blur-md">
+            <span id="toastIcon" class="text-xl mt-0.5"></span>
+            <div class="flex-1">
+                <h4 id="toastTitle" class="font-bold text-sm"></h4>
+                <p id="toastMessage" class="text-xs mt-0.5 opacity-90"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Üst Kurumsal Başlık -->
+    <header class="border-b border-indigo-500/30 bg-slate-950/75 backdrop-blur-md sticky top-0 z-30">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex flex-col md:flex-row items-center justify-between gap-4">
+            <div class="flex items-center gap-3.5 text-center md:text-left">
+                <div class="w-12 h-12 rounded-2xl bg-gradient-to-br from-indigo-500 via-purple-600 to-amber-500 p-0.5 shadow-lg shadow-purple-500/30 shrink-0">
+                    <div class="w-full h-full bg-slate-950 rounded-2xl flex items-center justify-center text-2xl">🚀</div>
+                </div>
+                <div>
+                    <p class="text-[11px] font-semibold tracking-wider uppercase text-amber-400">T.C. Yalova Valiliği • Merkez / Saffet Çam Ortaokulu Müdürlüğü</p>
+                    <h1 class="text-lg sm:text-xl font-extrabold bg-gradient-to-r from-white via-indigo-200 to-purple-300 bg-clip-text text-transparent">
+                        Uzay Çadırı ve Sanal Gerçeklik (VR) Etkinliği
+                    </h1>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center justify-center gap-2">
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-indigo-950/90 border border-indigo-500/40 text-xs font-medium text-indigo-200">
+                    📅 Aralık 2026 • ⏱️ 34 Dk
+                </span>
+                <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-amber-500/20 border border-amber-400/50 text-xs font-bold text-amber-300">
+                    💰 150 TL
+                </span>
+                <a href="sayman.html" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-300 transition">
+                    🔐 Sayman Girişi
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- Veli Bilgilendirme Duyurusu -->
+        <section class="glass-card rounded-2xl overflow-hidden">
+            <button type="button" id="toggleAnnouncementBtn" class="w-full px-5 py-4 flex items-center justify-between text-left hover:bg-indigo-950/40 transition">
+                <div class="flex items-center gap-3">
+                    <span class="w-9 h-9 rounded-xl bg-amber-500/20 border border-amber-400/40 flex items-center justify-center text-amber-300 text-lg">📢</span>
+                    <div>
+                        <h2 class="text-sm sm:text-base font-bold text-white">Veli Bilgilendirme Duyurusu ve Etkinlik Detayları</h2>
+                        <p class="text-xs text-slate-300">Sorumlu: Okul Aile Birliği Saymanı <span class="text-amber-300 font-semibold">Fatma Erdem</span> • 17 dk Uzay Çadırı + 17 dk VR Deneyimi</p>
+                    </div>
+                </div>
+                <span id="announcementArrow" class="text-indigo-300 text-xs font-semibold px-3 py-1.5 rounded-xl bg-indigo-900/50 border border-indigo-500/30">
+                    Metni Göster ▼
+                </span>
+            </button>
+
+            <div id="announcementContent" class="hidden px-5 pb-5 pt-2 border-t border-indigo-500/20 text-sm text-slate-200 space-y-3 leading-relaxed">
+                <p class="font-semibold text-amber-300">Sayın Velimiz,</p>
+                <p>
+                    Öğrencilerimizin bilimsel merakını artırmak, tarihî ve doğal güzellikleri yerinde deneyimlemiş gibi keşfetmelerini sağlamak amacıyla okulumuz bünyesinde <strong>"Uzay Çadırı ve Sanal Gerçeklik (VR) Etkinliği"</strong> düzenlenmesi planlanmaktadır.
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-3 my-3">
+                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-indigo-500/30">
+                        <div class="text-xs font-bold text-indigo-400 uppercase mb-1">1. Etkinlik Süresi ve Yapısı</div>
+                        <p class="text-xs text-slate-300">17 dakika <strong>Uzay Çadırı</strong> + 17 dakika <strong>Sanal Gerçeklik (VR)</strong> olmak üzere toplam <strong>34 dakika</strong>.</p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-purple-500/30">
+                        <div class="text-xs font-bold text-purple-400 uppercase mb-1">2. VR İçerik Seçimi (5 Adet)</div>
+                        <p class="text-xs text-slate-300">13 maddelik içerik listesinden öğrenci başına <strong>tam 5 adet</strong> içerik seçilecektir.</p>
+                    </div>
+                    <div class="p-3.5 rounded-xl bg-slate-900/90 border border-amber-500/30">
+                        <div class="text-xs font-bold text-amber-400 uppercase mb-1">3. Katılım Ücreti & Kayıt</div>
+                        <p class="text-xs text-slate-300">Katılım ücreti öğrenci başına <strong>150 TL</strong>'dir. Ödeme ve kayıt takibi Okul Aile Birliği Saymanı <strong>Fatma Erdem</strong> tarafından yürütülmektedir.</p>
+                    </div>
+                </div>
+                <p class="text-xs text-right text-slate-400 italic">Bilgilerinize... — Tahir Şahin, Saffet Çam Ortaokulu Müdürü</p>
+            </div>
+        </section>
+
+        <!-- Başarılı Başvuru Sonrası Onay Kartı -->
+        <section id="successReceiptCard" class="hidden glass-card rounded-2xl p-6 border border-emerald-400/50 text-center space-y-3">
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500/20 border border-emerald-400 flex items-center justify-center text-3xl mx-auto">✅</div>
+            <h3 class="text-lg font-extrabold text-emerald-300">Başvurunuz Google E-Tabloya Başarıyla Kaydedildi!</h3>
+            <p id="receiptSummaryText" class="text-sm text-slate-200 max-w-xl mx-auto"></p>
+            <p class="text-xs text-amber-300">150 TL katılım ücretini Okul Aile Birliği Saymanı <strong>Fatma Erdem</strong>'e teslim ettiğinizde ödeme onayınız sisteme işlenecektir.</p>
+            <button type="button" onclick="document.getElementById('successReceiptCard').classList.add('hidden')" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white transition">
+                Yeni Öğrenci Kaydı Yap
+            </button>
+        </section>
+
+        <!-- Veli Başvuru Formu -->
+        <form id="registrationForm" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+            <!-- Sol Sütun -->
+            <div class="lg:col-span-5 space-y-6">
+                <div class="glass-card rounded-2xl p-5 space-y-4">
+                    <div class="flex items-center gap-2.5 border-b border-indigo-500/20 pb-3">
+                        <span class="w-7 h-7 rounded-xl bg-indigo-600 text-white text-xs font-bold flex items-center justify-center">1</span>
+                        <h3 class="font-bold text-base text-white">Sınıf ve Öğrenci Seçimi</h3>
+                    </div>
+
+                    <div>
+                        <label for="quickSearchInput" class="block text-xs font-semibold text-indigo-300 mb-1.5">
+                            🔍 Hızlı Öğrenci Ara (İsim, Soyisim veya Okul No)
+                        </label>
+                        <div class="relative">
+                            <input type="text" id="quickSearchInput" placeholder="Örn: 385 veya Arin Özkaya..." autocomplete="off"
+                                class="w-full rounded-xl bg-slate-900/90 border border-indigo-500/40 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-400">
+                            <div id="quickSearchResults" class="hidden absolute left-0 right-0 mt-1 max-h-60 overflow-y-auto rounded-xl bg-slate-900 border border-purple-500/50 shadow-2xl z-20 divide-y divide-slate-800"></div>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label for="classSelect" class="block text-xs font-semibold text-slate-300 mb-1.5">Sınıf / Şube *</label>
+                            <select id="classSelect" required class="w-full rounded-xl bg-slate-900/90 border border-indigo-500/40 px-3 py-2.5 text-sm text-white focus:outline-none focus:border-purple-400">
+                                <option value="">Şube Seçiniz...</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="studentSelect" class="block text-xs font-semibold text-slate-300 mb-1.5">Öğrenci (No - Ad Soyad) *</label>
+                            <select id="studentSelect" required disabled class="w-full rounded-xl bg-slate-900/90 border border-indigo-500/40 px-3 py-2.5 text-sm text-white disabled:opacity-50 focus:outline-none focus:border-purple-400">
+                                <option value="">Önce sınıf seçiniz...</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div id="selectedStudentCard" class="hidden rounded-xl bg-gradient-to-r from-indigo-950/90 to-purple-950/80 border border-indigo-400/40 p-3.5">
+                        <div class="flex items-center justify-between">
+                            <div>
+                                <div class="text-[11px] text-indigo-300 uppercase font-semibold">Seçili Öğrenci Bilgisi</div>
+                                <div id="selStudentName" class="text-sm font-bold text-white mt-0.5"></div>
+                                <div id="selStudentMeta" class="text-xs text-slate-300 mt-0.5"></div>
+                            </div>
+                            <span id="selStudentNoBadge" class="px-3 py-1.5 rounded-xl bg-indigo-600/40 border border-indigo-400/50 text-xs font-extrabold text-white"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="glass-card rounded-2xl p-5 space-y-4">
+                    <div class="flex items-center gap-2.5 border-b border-indigo-500/20 pb-3">
+                        <span class="w-7 h-7 rounded-xl bg-amber-500 text-slate-950 text-xs font-extrabold flex items-center justify-center">3</span>
+                        <h3 class="font-bold text-base text-white">Katılım Ücreti (150 TL) ve Veli Onayı</h3>
+                    </div>
+
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                        <div>
+                            <label for="parentNameInput" class="block text-xs font-semibold text-slate-300 mb-1.5">Veli Adı Soyadı *</label>
+                            <input type="text" id="parentNameInput" required placeholder="Veli Adı Soyadı"
+                                class="w-full rounded-xl bg-slate-900/90 border border-indigo-500/40 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-400">
+                        </div>
+                        <div>
+                            <label for="parentPhoneInput" class="block text-xs font-semibold text-slate-300 mb-1.5">Veli Telefon Numarası *</label>
+                            <input type="tel" id="parentPhoneInput" required placeholder="05XX XXX XX XX"
+                                class="w-full rounded-xl bg-slate-900/90 border border-indigo-500/40 px-3.5 py-2.5 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-purple-400">
+                        </div>
+                    </div>
+
+                    <div class="rounded-xl bg-slate-900/90 border border-amber-500/40 p-3.5 space-y-2.5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-bold text-amber-300">💰 Etkinlik Katılım Ücreti: 150 TL</span>
+                            <span class="text-[11px] text-slate-400">Sayman: Fatma Erdem</span>
+                        </div>
+                        <div class="p-2.5 rounded-xl bg-amber-950/50 border border-amber-500/30 text-[11px] text-amber-200 leading-relaxed">
+                            ⏳ Başvurunuz <strong>"Ödeme Bekliyor (150 TL)"</strong> olarak kaydedilir. Ücret teslim edildiğinde Okul Aile Birliği Saymanı <strong>Fatma Erdem</strong> tarafından onaylanır.
+                        </div>
+                        <input type="text" id="paymentNoteInput" placeholder="Veli notu (İsteğe bağlı)..."
+                            class="w-full rounded-xl bg-slate-950/80 border border-slate-700 px-3 py-2 text-xs text-slate-200 placeholder-slate-500 focus:outline-none focus:border-amber-400">
+                    </div>
+
+                    <label class="flex items-start gap-3 p-3 rounded-xl bg-indigo-950/40 border border-indigo-500/30 cursor-pointer hover:bg-indigo-950/60 transition">
+                        <input type="checkbox" id="parentApprovalCheck" required class="mt-0.5 w-4 h-4 rounded text-purple-600 bg-slate-900 border-indigo-400">
+                        <span class="text-xs text-slate-200 leading-relaxed">
+                            Okul Aile Birliği Saymanı <strong>Fatma Erdem</strong> bilgisi dahilinde öğrencimin etkinliğe katılımını, seçilen <strong>5 adet VR içeriğini</strong> ve <strong>150 TL</strong> katılım koşullarını onaylıyorum.
+                        </span>
+                    </label>
+
+                    <button type="submit" id="submitFormBtn"
+                        class="w-full py-3.5 px-5 rounded-xl bg-gradient-to-r from-indigo-600 via-purple-600 to-fuchsia-600 hover:from-indigo-500 hover:to-fuchsia-500 text-white font-bold text-sm shadow-lg shadow-purple-600/30 transition flex items-center justify-center gap-2">
+                        <span>🚀</span> <span id="submitBtnText">Başvuruyu Tamamla ve Gönder</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Sağ Sütun: 5 Adet VR İçerik Seçimi -->
+            <div class="lg:col-span-7">
+                <div class="glass-card rounded-2xl p-5 h-full flex flex-col justify-between space-y-4">
+                    <div>
+                        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-indigo-500/20 pb-3">
+                            <div class="flex items-center gap-2.5">
+                                <span class="w-7 h-7 rounded-xl bg-purple-600 text-white text-xs font-bold flex items-center justify-center">2</span>
+                                <div>
+                                    <h3 class="font-bold text-base text-white">Sanal Gerçeklik (VR) İçerik Seçimi</h3>
+                                    <p class="text-xs text-slate-400">13 içerik arasından öğrenci başına <strong class="text-purple-300">tam 5 adet</strong> seçiniz.</p>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2 self-start sm:self-auto">
+                                <span id="vrCounterBadge" class="px-3.5 py-1.5 rounded-xl bg-slate-900 border border-purple-500/50 text-xs font-extrabold text-purple-300">
+                                    0 / 5 Seçildi
+                                </span>
+                                <button type="button" id="clearVrBtn" class="px-2.5 py-1.5 rounded-xl bg-slate-800/80 hover:bg-slate-700 text-xs text-slate-300 border border-slate-700 transition">
+                                    Temizle
+                                </button>
+                            </div>
+                        </div>
+
+                        <div id="vrGridContainer" class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 mt-4"></div>
+                    </div>
+
+                    <div class="rounded-xl bg-indigo-950/60 border border-indigo-500/30 p-3 flex items-start gap-2.5 text-xs text-indigo-200">
+                        <span class="text-base">ℹ️</span>
+                        <p>
+                            <strong>Not:</strong> Uzay ve gezegenlerin tanıtımı dışındaki tüm içerikler, gerçek görüntülerle oluşturulmuş özel çekimlerdir. Etkinlik süresi 17 dk Uzay Çadırı + 17 dk VR olmak üzere toplam 34 dakikadır.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </main>
+
+    <script>
+        let selectedVrIds = [];
+        let registeredKeys = new Set();
+        let toastTimeout = null;
+
+        function showToast(type, title, message) {
+            const box = document.getElementById("toastBox");
+            const content = document.getElementById("toastContent");
+            const iconEl = document.getElementById("toastIcon");
+            if (type === "success") {
+                content.className = "rounded-2xl p-4 shadow-2xl border flex items-start gap-3 backdrop-blur-md bg-emerald-950/90 border-emerald-400 text-emerald-100";
+                iconEl.textContent = "✅";
+            } else if (type === "warning") {
+                content.className = "rounded-2xl p-4 shadow-2xl border flex items-start gap-3 backdrop-blur-md bg-amber-950/90 border-amber-400 text-amber-100";
+                iconEl.textContent = "⚠️";
+            } else {
+                content.className = "rounded-2xl p-4 shadow-2xl border flex items-start gap-3 backdrop-blur-md bg-rose-950/90 border-rose-400 text-rose-100";
+                iconEl.textContent = "❌";
+            }
+            document.getElementById("toastTitle").textContent = title;
+            document.getElementById("toastMessage").textContent = message;
+            box.classList.remove("translate-x-full", "opacity-0");
+            clearTimeout(toastTimeout);
+            toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 4500);
+        }
+
+        async function fetchPublicRegisteredKeys() {
+            try {
+                const res = await fetch(`${APPS_SCRIPT_URL}?action=public_check`);
+                const data = await res.json();
+                if (data.ok && Array.isArray(data.registeredKeys)) {
+                    registeredKeys = new Set(data.registeredKeys);
+                    const clsVal = document.getElementById("classSelect").value;
+                    const stVal = document.getElementById("studentSelect").value;
+                    if (clsVal) populateStudentsByClass(clsVal, stVal);
+                }
+            } catch (e) {
+                console.warn("Kayıt kontrolü alınamadı:", e);
+            }
+        }
+
+        function initClassSelects() {
+            const classSelect = document.getElementById("classSelect");
+            SCHOOL_DATA.forEach(cls => {
+                const opt = document.createElement("option");
+                opt.value = cls.className;
+                opt.textContent = `${cls.className} (${cls.students.length} Öğrenci)`;
+                classSelect.appendChild(opt);
+            });
+        }
+
+        function populateStudentsByClass(className, preselectNo = null) {
+            const studentSelect = document.getElementById("studentSelect");
+            studentSelect.innerHTML = "";
+            const classObj = SCHOOL_DATA.find(c => c.className === className);
+            if (!classObj) {
+                studentSelect.disabled = true;
+                studentSelect.innerHTML = '<option value="">Önce sınıf seçiniz...</option>';
+                updateSelectedStudentCard();
+                return;
+            }
+            studentSelect.disabled = false;
+            const defaultOpt = document.createElement("option");
+            defaultOpt.value = "";
+            defaultOpt.textContent = "Öğrenci Seçiniz...";
+            studentSelect.appendChild(defaultOpt);
+
+            classObj.students.forEach(st => {
+                const opt = document.createElement("option");
+                opt.value = st.no;
+                const isReg = registeredKeys.has(`${className}_${st.no}`);
+                opt.textContent = `${st.no} - ${st.name}${isReg ? " ✓ (Başvuru Yapıldı)" : ""}`;
+                studentSelect.appendChild(opt);
+            });
+            if (preselectNo) studentSelect.value = preselectNo;
+            updateSelectedStudentCard();
+        }
+
+        function updateSelectedStudentCard() {
+            const className = document.getElementById("classSelect").value;
+            const studentNo = document.getElementById("studentSelect").value;
+            const card = document.getElementById("selectedStudentCard");
+            if (!className || !studentNo) {
+                card.classList.add("hidden");
+                return;
+            }
+            const classObj = SCHOOL_DATA.find(c => c.className === className);
+            const studentObj = classObj ? classObj.students.find(s => s.no === studentNo) : null;
+            if (!studentObj) return card.classList.add("hidden");
+
+            document.getElementById("selStudentName").textContent = studentObj.name;
+            document.getElementById("selStudentMeta").textContent = `${classObj.className} Şubesi • Sınıf Öğretmeni: ${classObj.teacher}`;
+            document.getElementById("selStudentNoBadge").textContent = `No: ${studentObj.no}`;
+            card.classList.remove("hidden");
+        }
+
+        function renderVrGrid() {
+            const container = document.getElementById("vrGridContainer");
+            container.innerHTML = "";
+            const isMaxReached = selectedVrIds.length >= 5;
+
+            VR_CONTENTS.forEach(item => {
+                const isSelected = selectedVrIds.includes(item.id);
+                const isDisabled = !isSelected && isMaxReached;
+                const card = document.createElement("div");
+                card.className = `p-3 rounded-xl border transition select-none flex items-center justify-between gap-2.5 ${
+                    isSelected ? "vr-card-active cursor-pointer"
+                    : isDisabled ? "bg-slate-950/40 border-slate-800/70 opacity-45 cursor-not-allowed"
+                    : "bg-slate-900/75 border-indigo-500/25 hover:border-purple-400/60 hover:bg-slate-900 cursor-pointer"
+                }`;
+                card.innerHTML = `
+                    <div class="flex items-center gap-2.5 min-w-0">
+                        <span class="text-xl shrink-0">${item.icon}</span>
+                        <div class="min-w-0">
+                            <div class="text-xs font-bold text-white leading-snug">${item.id}. ${item.title}</div>
+                            <span class="inline-block text-[10px] text-indigo-300/90 mt-0.5">${item.tag}</span>
+                        </div>
+                    </div>
+                    <div class="w-6 h-6 rounded-lg border flex items-center justify-center text-xs font-extrabold shrink-0 ${
+                        isSelected ? "bg-purple-500 border-purple-300 text-white" : "bg-slate-950 border-slate-600 text-transparent"
+                    }">✓</div>
+                `;
+                if (!isDisabled) {
+                    card.addEventListener("click", () => {
+                        const idx = selectedVrIds.indexOf(item.id);
+                        if (idx > -1) selectedVrIds.splice(idx, 1);
+                        else selectedVrIds.push(item.id);
+                        renderVrGrid();
+                    });
+                }
+                container.appendChild(card);
+            });
+
+            const badge = document.getElementById("vrCounterBadge");
+            badge.textContent = `${selectedVrIds.length} / 5 Seçildi`;
+            badge.className = selectedVrIds.length === 5
+                ? "px-3.5 py-1.5 rounded-xl bg-emerald-950/90 border border-emerald-400 text-xs font-extrabold text-emerald-300"
+                : "px-3.5 py-1.5 rounded-xl bg-slate-900 border border-purple-500/50 text-xs font-extrabold text-purple-300";
+        }
+
+        function setupQuickSearch() {
+            const input = document.getElementById("quickSearchInput");
+            const resultsBox = document.getElementById("quickSearchResults");
+            input.addEventListener("input", () => {
+                const q = input.value.trim().toLocaleLowerCase("tr-TR");
+                if (q.length < 2) return resultsBox.classList.add("hidden");
+                const matches = [];
+                for (const cls of SCHOOL_DATA) {
+                    for (const st of cls.students) {
+                        if (st.no.toLowerCase().includes(q) || st.name.toLocaleLowerCase("tr-TR").includes(q)) {
+                            matches.push({ className: cls.className, no: st.no, name: st.name });
+                            if (matches.length >= 25) break;
+                        }
+                    }
+                    if (matches.length >= 25) break;
+                }
+                resultsBox.innerHTML = matches.length === 0
+                    ? '<div class="p-3 text-xs text-slate-400">Eşleşen öğrenci bulunamadı.</div>'
+                    : "";
+                matches.forEach(m => {
+                    const row = document.createElement("button");
+                    row.type = "button";
+                    row.className = "w-full text-left px-3.5 py-2.5 hover:bg-indigo-950/80 transition flex items-center justify-between text-xs";
+                    row.innerHTML = `<span class="font-semibold text-white">${m.name}</span><span class="px-2 py-0.5 rounded bg-indigo-900 text-indigo-200 font-bold">${m.className} • No: ${m.no}</span>`;
+                    row.addEventListener("click", () => {
+                        document.getElementById("classSelect").value = m.className;
+                        populateStudentsByClass(m.className, m.no);
+                        input.value = "";
+                        resultsBox.classList.add("hidden");
+                    });
+                    resultsBox.appendChild(row);
+                });
+                resultsBox.classList.remove("hidden");
+            });
+        }
+
+        async function handleFormSubmit(e) {
+            e.preventDefault();
+            const className = document.getElementById("classSelect").value;
+            const studentNo = document.getElementById("studentSelect").value;
+            if (!className || !studentNo) return showToast("error", "Eksik Bilgi", "Lütfen sınıf ve öğrenci seçimi yapınız.");
+            if (selectedVrIds.length !== 5) return showToast("error", "VR Seçimi Eksik", `Tam 5 adet VR içeriği seçmelisiniz (${selectedVrIds.length}/5).`);
+            if (registeredKeys.has(`${className}_${studentNo}`)) {
+                return showToast("warning", "Kayıt Mevcut", "Bu öğrenci için daha önce başvuru yapılmıştır. Değişiklik için Sayman Fatma Erdem ile iletişime geçiniz.");
+            }
+
+            const classObj = SCHOOL_DATA.find(c => c.className === className);
+            const studentObj = classObj.students.find(s => s.no === studentNo);
+            const sortedIds = selectedVrIds.slice().sort((a, b) => a - b);
+            const vrTitles = sortedIds.map(id => VR_CONTENTS.find(v => v.id === id).title);
+
+            const recordObj = {
+                id: `rec_${className.replace("/", "")}_${studentObj.no}_${Date.now()}`,
+                className: className,
+                studentNo: studentObj.no,
+                studentName: studentObj.name,
+                vrIds: sortedIds,
+                vrTitles: vrTitles,
+                paymentStatus: "pending",
+                amount: 0,
+                parentName: document.getElementById("parentNameInput").value.trim(),
+                parentPhone: document.getElementById("parentPhoneInput").value.trim(),
+                paymentNote: document.getElementById("paymentNoteInput").value.trim()
+            };
+
+            const btn = document.getElementById("submitFormBtn");
+            const btnText = document.getElementById("submitBtnText");
+            btn.disabled = true;
+            btnText.textContent = "Google E-Tabloya Kaydediliyor...";
+
+            try {
+                const res = await fetch(APPS_SCRIPT_URL, {
+                    method: "POST",
+                    headers: { "Content-Type": "text/plain;charset=utf-8" },
+                    body: JSON.stringify({ action: "upsert", record: recordObj })
+                });
+                const result = await res.json();
+                if (!result.ok) {
+                    showToast("warning", "Kayıt Uyarısı", result.mesaj || "Başvuru kaydedilemedi.");
+                } else {
+                    registeredKeys.add(`${className}_${studentNo}`);
+                    document.getElementById("receiptSummaryText").innerHTML =
+                        `<strong>${className}</strong> sınıfı <strong>${studentObj.no} - ${studentObj.name}</strong> için seçilen içerikler: <br><span class="text-purple-300 font-semibold">${vrTitles.join(", ")}</span>`;
+                    document.getElementById("successReceiptCard").classList.remove("hidden");
+                    showToast("success", "Başvurunuz Alındı", "Kaydınız Google E-Tabloya başarıyla işlendi.");
+                    document.getElementById("registrationForm").reset();
+                    populateStudentsByClass("");
+                    selectedVrIds = [];
+                    renderVrGrid();
+                    window.scrollTo({ top: 0, behavior: "smooth" });
+                }
+            } catch (err) {
+                showToast("error", "Bağlantı Hatası", "Google sunucusuna ulaşılamadı. Lütfen tekrar deneyin.");
+            } finally {
+                btn.disabled = false;
+                btnText.textContent = "Başvuruyu Tamamla ve Gönder";
+            }
+        }
+
+        window.addEventListener("DOMContentLoaded", () => {
+            initClassSelects();
+            renderVrGrid();
+            setupQuickSearch();
+            fetchPublicRegisteredKeys();
+
+            document.getElementById("toggleAnnouncementBtn").addEventListener("click", () => {
+                const content = document.getElementById("announcementContent");
+                const isHidden = content.classList.toggle("hidden");
+                document.getElementById("announcementArrow").textContent = isHidden ? "Metni Göster ▼" : "Gizle ▲";
+            });
+            document.getElementById("classSelect").addEventListener("change", (e) => populateStudentsByClass(e.target.value));
+            document.getElementById("studentSelect").addEventListener("change", updateSelectedStudentCard);
+            document.getElementById("clearVrBtn").addEventListener("click", () => { selectedVrIds = []; renderVrGrid(); });
+            document.getElementById("registrationForm").addEventListener("submit", handleFormSubmit);
+        });
+    </script>
+</body>
+</html>
