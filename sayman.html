@@ -6,7 +6,7 @@
     <title>Saffet Çam Ortaokulu - VR Etkinliği Sayman Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="data.js?v=20261124_9"></script>
+    <script src="data.js?v=20261124_10"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -163,6 +163,46 @@
             toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 6000);
         }
 
+        function jsonpRequest(url, timeoutMs = 15000) {
+            return new Promise((resolve, reject) => {
+                const cbName = "gs_sayman_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
+                const script = document.createElement("script");
+                let settled = false;
+
+                function cleanup() {
+                    clearTimeout(timer);
+                    try { delete window[cbName]; } catch (_) { window[cbName] = undefined; }
+                    if (script && script.parentNode) script.parentNode.removeChild(script);
+                }
+
+                const timer = setTimeout(() => {
+                    if (settled) return;
+                    settled = true;
+                    cleanup();
+                    reject(new Error("Sunucu yanıt süresi aşıldı."));
+                }, timeoutMs);
+
+                window[cbName] = (data) => {
+                    if (settled) return;
+                    settled = true;
+                    cleanup();
+                    resolve(data);
+                };
+
+                script.onerror = () => {
+                    if (settled) return;
+                    settled = true;
+                    cleanup();
+                    reject(new Error("Sunucu betiği yüklenemedi."));
+                };
+
+                const sep = url.indexOf("?") === -1 ? "?" : "&";
+                script.src = `${url}${sep}callback=${cbName}&_ts=${Date.now()}`;
+                script.async = true;
+                (document.body || document.documentElement).appendChild(script);
+            });
+        }
+
         async function fetchGetJson(url, timeoutMs = 15000) {
             const controller = new AbortController();
             const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -203,39 +243,12 @@
         async function sendSaymanAction(payloadObj) {
             const fullPayload = { ...payloadObj, sifre: saymanPassword };
             const encoded = encodeURIComponent(JSON.stringify(fullPayload));
+
             try {
-                return await fetchGetJson(`${SAYMAN_ENDPOINT}?payload=${encoded}&_ts=${Date.now()}`, 15000);
+                return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 14000);
             } catch (_) {
-                return await postToAppsScript(fullPayload, 15000);
-            }
-        }
-
-        async function loadSaymanRecords() {
-            const q = new URLSearchParams({
-                action: "list",
-                sifre: saymanPassword,
-                _ts: String(Date.now())
-            });
-            const listUrl = `${SAYMAN_ENDPOINT}?${q.toString()}`;
-            const data = await fetchGetJson(listUrl, 15000);
-            if (!data || !data.ok) {
-                throw new Error((data && data.mesaj) || "Kayıtlar alınamadı.");
-            }
-            allRecords = Array.isArray(data.records) ? data.records : [];
-            updateStats();
-            renderRecordsTable();
-        }
-
-        function updateStats() {
-            const total = allRecords.length;
-            const paidList = allRecords.filter(r => r.paymentStatus === "paid");
-            const pendingCount = total - paidList.length;
-            const collectedAmount = paidList.reduce((acc, r) => acc + (Number(r.amount) || 150), 0);
-
-            document.getElementById("statTotalCount").textContent = String(total);
-            document.getElementById("statPaidCount").textContent = String(paidList.length);
-            document.getElementById("statPendingCount").textContent = String(pendingCount);
-            document.getElementById("statTotalAmount").textContent = `${collectedAmount} TL`;
+                try {
+                    return await fetchGetJson(`${SAYMAN_ENDPOINT}?payload=${encoded}&_ts=${Date.now()}`, 14000); } catch (__) { return await postToAppsScript(fullPayload, 14000); } } }  async function loadSaymanRecords() { const q = new URLSearchParams({ action: "list", sifre: saymanPassword, _ts: String(Date.now()) }); const listUrl = `${SAYMAN_ENDPOINT}?${q.toString()}`;  try { const d1 = await jsonpRequest(listUrl, 14000); return applyLoadedRecords(d1); } catch (e1) { try { const d2 = await fetchGetJson(listUrl, 14000); return applyLoadedRecords(d2); } catch (e2) { try { const d3 = await postToAppsScript({ action: "list", sifre: saymanPassword }, 14000); return applyLoadedRecords(d3); } catch (e3) { throw new Error((e3 && e3.message) \vert{}\vert{} (e2 && e2.message) \vert{}\vert{} (e1 && e1.message) \vert{}\vert{} "Google Apps Script bağlantısı kurulamadı."); } } } }  function applyLoadedRecords(data) { if (!data \vert{}\vert{} !data.ok) { throw new Error((data && data.mesaj) \vert{}\vert{} "Kayıtlar alınamadı."); } allRecords = Array.isArray(data.records) ? data.records : []; updateStats(); renderRecordsTable(); }  function updateStats() { const total = allRecords.length; const paidList = allRecords.filter(r => r.paymentStatus === "paid"); const pendingCount = total - paidList.length; const collectedAmount = paidList.reduce((acc, r) => acc + (Number(r.amount) \vert{}\vert{} 150), 0);  document.getElementById("statTotalCount").textContent = String(total); document.getElementById("statPaidCount").textContent = String(paidList.length); document.getElementById("statPendingCount").textContent = String(pendingCount); document.getElementById("statTotalAmount").textContent = `${collectedAmount} TL`;
         }
 
         function renderRecordsTable() {
@@ -277,126 +290,4 @@
                         <div class="text-[11px] text-slate-400">${r.parentPhone || ""}</div>
                     </td>
                     <td class="py-3 px-3">
-                        <span class="inline-block px-2.5 py-1 rounded-lg text-[11px] font-bold ${
-                            isPaid
-                                ? "bg-emerald-950 text-emerald-300 border border-emerald-500/40"
-                                : "bg-amber-950 text-amber-300 border border-amber-500/40"
-                        }">
-                            ${isPaid ? "Ödendi (150 TL)" : "Ödeme Bekliyor"}
-                        </span>
-                    </td>
-                    <td class="py-3 px-3 text-right space-x-1.5 whitespace-nowrap">
-                        <button type="button" onclick="togglePayment('${r.id}', '${isPaid ? "pending" : "paid"}')"
-                            class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition ${
-                                isPaid
-                                    ? "bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-600"
-                                    : "bg-emerald-600 hover:bg-emerald-500 text-white"
-                            }">
-                            ${isPaid ? "Beklemeye Al" : "150 TL Onayla"}
-                        </button>
-                        <button type="button" onclick="deleteRecord('${r.id}')"
-                            class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-rose-950/80 hover:bg-rose-900 text-rose-200 border border-rose-500/40 transition">
-                            Sil
-                        </button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function togglePayment(id, nextStatus) {
-            try {
-                const res = await sendSaymanAction({
-                    action: "toggle_payment",
-                    id: id,
-                    paymentStatus: nextStatus
-                });
-                if (!res || !res.ok) {
-                    return showToast("error", "İşlem Başarısız", (res && res.mesaj) || "Ödeme durumu güncellenemedi.");
-                }
-                showToast("success", "Güncellendi", res.mesaj || "Ödeme durumu kaydedildi.");
-                await loadSaymanRecords();
-            } catch (err) {
-                showToast("error", "Bağlantı Hatası", err.message || "Sunucuya bağlanılamadı.");
-            }
-        }
-
-        async function deleteRecord(id) {
-            if (!confirm("Bu öğrenci kaydını Google E-Tablodan silmek istediğinize emin misiniz?")) return;
-            try {
-                const res = await sendSaymanAction({
-                    action: "delete",
-                    id: id
-                });
-                if (!res || !res.ok) {
-                    return showToast("error", "Silinemedi", (res && res.mesaj) || "Kayıt silinemedi.");
-                }
-                showToast("success", "Silindi", res.mesaj || "Kayıt silindi.");
-                await loadSaymanRecords();
-            } catch (err) {
-                showToast("error", "Bağlantı Hatası", err.message || "Sunucuya bağlanılamadı.");
-            }
-        }
-
-        window.addEventListener("DOMContentLoaded", () => {
-            document.getElementById("loginForm").addEventListener("submit", async (e) => {
-                e.preventDefault();
-                const pass = document.getElementById("saymanPassInput").value.trim();
-                if (!pass) return;
-
-                const btn = document.getElementById("loginSubmitBtn");
-                btn.disabled = true;
-                btn.textContent = "Doğrulanıyor...";
-                saymanPassword = pass;
-
-                try {
-                    await loadSaymanRecords();
-                    document.getElementById("loginSection").classList.add("hidden");
-                    document.getElementById("panelSection").classList.remove("hidden");
-                    document.getElementById("logoutBtn").classList.remove("hidden");
-                    showToast("success", "Giriş Başarılı", "Kayıtlar yüklendi.");
-                } catch (err) {
-                    saymanPassword = "";
-                    showToast("error", "Giriş Hatası", err.message || "Şifre veya bağlantı doğrulanamadı.");
-                } finally {
-                    btn.disabled = false;
-                    btn.textContent = "Kayıtları Yükle";
-                }
-            });
-
-            document.getElementById("logoutBtn").addEventListener("click", () => {
-                saymanPassword = "";
-                allRecords = [];
-                document.getElementById("saymanPassInput").value = "";
-                document.getElementById("panelSection").classList.add("hidden");
-                document.getElementById("logoutBtn").classList.add("hidden");
-                document.getElementById("loginSection").classList.remove("hidden");
-            });
-
-            document.getElementById("refreshBtn").addEventListener("click", async () => {
-                try {
-                    await loadSaymanRecords();
-                    showToast("success", "Yenilendi", "Güncel kayıtlar çekildi.");
-                } catch (err) {
-                    showToast("error", "Yenileme Hatası", err.message || "Kayıtlar yenilenemedi.");
-                }
-            });
-
-            document.getElementById("backupDriveBtn").addEventListener("click", async () => {
-                try {
-                    const res = await sendSaymanAction({ action: "backup_drive" });
-                    if (!res || !res.ok) {
-                        return showToast("error", "Yedek Hatası", (res && res.mesaj) || "Drive yedeği alınamadı.");
-                    }
-                    showToast("success", "Drive Yedeklendi", res.mesaj || "CSV yedeği Google Drive'a kaydedildi.");
-                } catch (err) {
-                    showToast("error", "Bağlantı Hatası", err.message || "Yedekleme başarısız.");
-                }
-            });
-
-            document.getElementById("filterSearchInput").addEventListener("input", renderRecordsTable);
-            document.getElementById("filterStatusSelect").addEventListener("change", renderRecordsTable);
-        });
-    </script>
-</body>
-</html>
+                        <span class="inline-block px-2.5 py-1 rounded-lg text-[11px] font
