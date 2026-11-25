@@ -73,17 +73,18 @@
         </section>
 
         <section id="panelSection" class="hidden space-y-6">
+            <!-- Özet Kartları -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="glass-card rounded-2xl p-4">
                     <div class="text-xs text-slate-400">Toplam Başvuru</div>
                     <div id="statTotalCount" class="text-2xl font-extrabold text-white mt-1">0</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4">
-                    <div class="text-xs text-emerald-300">Ödemesi Onaylanan</div>
+                    <div class="text-xs text-emerald-300">Ödeme Yapılan (Onaylanan)</div>
                     <div id="statPaidCount" class="text-2xl font-extrabold text-emerald-300 mt-1">0</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4">
-                    <div class="text-xs text-amber-300">Ödeme Bekleyen</div>
+                    <div class="text-xs text-amber-300">Ödeme Bekleyen (Onay Bekleyen)</div>
                     <div id="statPendingCount" class="text-2xl font-extrabold text-amber-300 mt-1">0</div>
                 </div>
                 <div class="glass-card rounded-2xl p-4">
@@ -92,14 +93,16 @@
                 </div>
             </div>
 
-            <div class="glass-card rounded-2xl p-4 flex flex-col md:flex-row items-stretch md:items-center justify-between gap-3">
+            <!-- Arama, Görünüm ve İşlem Çubuğu -->
+            <div class="glass-card rounded-2xl p-4 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
                 <div class="flex flex-col sm:flex-row gap-2.5 flex-1">
                     <input type="text" id="filterSearchInput" placeholder="Öğrenci adı, no, şube veya veli ara..."
                         class="rounded-xl bg-slate-900 border border-indigo-500/40 px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-400 flex-1">
-                    <select id="filterStatusSelect" class="rounded-xl bg-slate-900 border border-indigo-500/40 px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-400">
-                        <option value="all">Tüm Durumlar</option>
-                        <option value="paid">Ödendi (150 TL)</option>
-                        <option value="pending">Ödeme Bekliyor</option>
+                    <select id="viewModeSelect" class="rounded-xl bg-slate-900 border border-indigo-500/40 px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-400">
+                        <option value="split">Ayrı Listeler (Ödeme Yapılan & Ödeme Bekleyen)</option>
+                        <option value="all">Tek Liste: Tüm Başvurular</option>
+                        <option value="paid">Tek Liste: Sadece Ödeme Yapılan (Onaylanan)</option>
+                        <option value="pending">Tek Liste: Sadece Ödeme Bekleyen (Onay Bekleyen)</option>
                     </select>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
@@ -112,15 +115,71 @@
                 </div>
             </div>
 
-            <div class="glass-card rounded-2xl overflow-hidden">
+            <!-- Ayrı Listeler Görünümü -->
+            <div id="splitListsContainer" class="space-y-6">
+                <!-- Ödeme Yapılan / Onaylanan Listesi -->
+                <div class="glass-card rounded-2xl overflow-hidden border border-emerald-500/30">
+                    <div class="px-4 py-3 bg-emerald-950/50 border-b border-emerald-500/30 flex items-center justify-between">
+                        <h3 class="text-sm font-extrabold text-emerald-300">✅ Ödeme Yapılan / Onaylanan Başvurular</h3>
+                        <span id="paidListBadge" class="px-2.5 py-1 rounded-lg bg-emerald-500/20 text-emerald-200 text-xs font-bold">0 kayıt</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-950/90 border-b border-slate-800 text-slate-300">
+                                    <th class="py-3 px-3">Şube</th>
+                                    <th class="py-3 px-3">No</th>
+                                    <th class="py-3 px-3">Katılımcı Adı Soyadı</th>
+                                    <th class="py-3 px-3">Seçilen VR İçerikleri</th>
+                                    <th class="py-3 px-3">Veli Bilgisi</th>
+                                    <th class="py-3 px-3">Durum & Tutar</th>
+                                    <th class="py-3 px-3 text-right">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="paidRecordsTableBody" class="divide-y divide-slate-800/80"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Ödeme Bekleyen / Onay Bekleyen Listesi -->
+                <div class="glass-card rounded-2xl overflow-hidden border border-amber-500/30">
+                    <div class="px-4 py-3 bg-amber-950/40 border-b border-amber-500/30 flex items-center justify-between">
+                        <h3 class="text-sm font-extrabold text-amber-300">⏳ Ödeme Bekleyen / Onay Bekleyen Başvurular</h3>
+                        <span id="pendingListBadge" class="px-2.5 py-1 rounded-lg bg-amber-500/20 text-amber-200 text-xs font-bold">0 kayıt</span>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse text-xs">
+                            <thead>
+                                <tr class="bg-slate-950/90 border-b border-slate-800 text-slate-300">
+                                    <th class="py-3 px-3">Şube</th>
+                                    <th class="py-3 px-3">No</th>
+                                    <th class="py-3 px-3">Katılımcı Adı Soyadı</th>
+                                    <th class="py-3 px-3">Seçilen VR İçerikleri</th>
+                                    <th class="py-3 px-3">Veli Bilgisi</th>
+                                    <th class="py-3 px-3">Durum & Tutar</th>
+                                    <th class="py-3 px-3 text-right">İşlemler</th>
+                                </tr>
+                            </thead>
+                            <tbody id="pendingRecordsTableBody" class="divide-y divide-slate-800/80"></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tek Liste Görünümü -->
+            <div id="singleListContainer" class="hidden glass-card rounded-2xl overflow-hidden">
+                <div class="px-4 py-3 bg-slate-950/70 border-b border-indigo-500/30 flex items-center justify-between">
+                    <h3 id="singleListTitle" class="text-sm font-extrabold text-indigo-200">Başvuru Listesi</h3>
+                    <span id="singleListBadge" class="px-2.5 py-1 rounded-lg bg-indigo-500/20 text-indigo-200 text-xs font-bold">0 kayıt</span>
+                </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left border-collapse text-xs">
                         <thead>
                             <tr class="bg-slate-950/90 border-b border-indigo-500/30 text-indigo-200">
                                 <th class="py-3 px-3">Şube</th>
                                 <th class="py-3 px-3">No</th>
-                                <th class="py-3 px-3">Öğrenci Adı Soyadı</th>
-                                <th class="py-3 px-3">Seçilen 5 VR İçeriği</th>
+                                <th class="py-3 px-3">Katılımcı Adı Soyadı</th>
+                                <th class="py-3 px-3">Seçilen VR İçerikleri</th>
                                 <th class="py-3 px-3">Veli Bilgisi</th>
                                 <th class="py-3 px-3">Durum & Tutar</th>
                                 <th class="py-3 px-3 text-right">İşlemler</th>
@@ -248,16 +307,102 @@
                 return await jsonpRequest(`${SAYMAN_ENDPOINT}?payload=${encoded}`, 14000);
             } catch (_) {
                 try {
-                    return await fetchGetJson(`${SAYMAN_ENDPOINT}?payload=${encoded}&_ts=${Date.now()}`, 14000); } catch (__) { return await postToAppsScript(fullPayload, 14000); } } }  async function loadSaymanRecords() { const q = new URLSearchParams({ action: "list", sifre: saymanPassword, _ts: String(Date.now()) }); const listUrl = `${SAYMAN_ENDPOINT}?${q.toString()}`;  try { const d1 = await jsonpRequest(listUrl, 14000); return applyLoadedRecords(d1); } catch (e1) { try { const d2 = await fetchGetJson(listUrl, 14000); return applyLoadedRecords(d2); } catch (e2) { try { const d3 = await postToAppsScript({ action: "list", sifre: saymanPassword }, 14000); return applyLoadedRecords(d3); } catch (e3) { throw new Error((e3 && e3.message) \vert{}\vert{} (e2 && e2.message) \vert{}\vert{} (e1 && e1.message) \vert{}\vert{} "Google Apps Script bağlantısı kurulamadı."); } } } }  function applyLoadedRecords(data) { if (!data \vert{}\vert{} !data.ok) { throw new Error((data && data.mesaj) \vert{}\vert{} "Kayıtlar alınamadı."); } allRecords = Array.isArray(data.records) ? data.records : []; updateStats(); renderRecordsTable(); }  function updateStats() { const total = allRecords.length; const paidList = allRecords.filter(r => r.paymentStatus === "paid"); const pendingCount = total - paidList.length; const collectedAmount = paidList.reduce((acc, r) => acc + (Number(r.amount) \vert{}\vert{} 150), 0);  document.getElementById("statTotalCount").textContent = String(total); document.getElementById("statPaidCount").textContent = String(paidList.length); document.getElementById("statPendingCount").textContent = String(pendingCount); document.getElementById("statTotalAmount").textContent = `${collectedAmount} TL`;
+                    return await fetchGetJson(`${SAYMAN_ENDPOINT}?payload=${encoded}&_ts=${Date.now()}`, 14000);
+                } catch (__) {
+                    return await postToAppsScript(fullPayload, 14000);
+                }
+            }
+        }
+
+        async function loadSaymanRecords() {
+            const q = new URLSearchParams({ action: "list", sifre: saymanPassword, _ts: String(Date.now()) });
+            const listUrl = `${SAYMAN_ENDPOINT}?${q.toString()}`;
+
+            try {
+                const d1 = await jsonpRequest(listUrl, 14000);
+                return applyLoadedRecords(d1);
+            } catch (e1) {
+                try {
+                    const d2 = await fetchGetJson(listUrl, 14000);
+                    return applyLoadedRecords(d2);
+                } catch (e2) {
+                    try {
+                        const d3 = await postToAppsScript({ action: "list", sifre: saymanPassword }, 14000);
+                        return applyLoadedRecords(d3);
+                    } catch (e3) {
+                        throw new Error((e3 && e3.message) || (e2 && e2.message) || (e1 && e1.message) || "Google Apps Script bağlantısı kurulamadı.");
+                    }
+                }
+            }
+        }
+
+        function applyLoadedRecords(data) {
+            if (!data || !data.ok) {
+                throw new Error((data && data.mesaj) || "Kayıtlar alınamadı.");
+            }
+            allRecords = Array.isArray(data.records) ? data.records : [];
+            updateStats();
+            renderRecordsTable();
+        }
+
+        function updateStats() {
+            const total = allRecords.length;
+            const paidList = allRecords.filter(r => r.paymentStatus === "paid");
+            const pendingCount = total - paidList.length;
+            const collectedAmount = paidList.reduce((acc, r) => acc + (Number(r.amount) || 150), 0);
+
+            document.getElementById("statTotalCount").textContent = String(total);
+            document.getElementById("statPaidCount").textContent = String(paidList.length);
+            document.getElementById("statPendingCount").textContent = String(pendingCount);
+            document.getElementById("statTotalAmount").textContent = `${collectedAmount} TL`;
+        }
+
+        function createRecordRow(r) {
+            const isPaid = r.paymentStatus === "paid";
+            const tr = document.createElement("tr");
+            tr.className = "hover:bg-slate-900/60 transition";
+            tr.innerHTML = `
+                <td class="py-3 px-3 font-bold text-indigo-300">${r.className || ""}</td>
+                <td class="py-3 px-3 font-semibold text-white">${r.studentNo || ""}</td>
+                <td class="py-3 px-3 font-semibold text-white">${r.studentName || ""}</td>
+                <td class="py-3 px-3 text-slate-300 max-w-xs">${(r.vrTitles || []).join(", ")}</td>
+                <td class="py-3 px-3 text-slate-300">
+                    <div>${r.parentName || "-"}</div>
+                    <div class="text-[11px] text-slate-400">${r.parentPhone || ""}</div>
+                </td>
+                <td class="py-3 px-3">
+                    <span class="inline-block px-2.5 py-1 rounded-lg text-[11px] font-bold ${isPaid ? "bg-emerald-500/20 text-emerald-300 border border-emerald-500/40" : "bg-amber-500/20 text-amber-300 border border-amber-500/40"}">
+                        ${isPaid ? `Ödendi (${Number(r.amount) || 150} TL)` : "Ödeme Bekliyor"}
+                    </span>
+                </td>
+                <td class="py-3 px-3 text-right whitespace-nowrap space-x-1.5">
+                    <button type="button" onclick="handleTogglePayment('${r.id}', '${isPaid ? "pending" : "paid"}')"
+                        class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold transition ${isPaid ? "bg-amber-500/20 hover:bg-amber-500/30 text-amber-200 border border-amber-500/40" : "bg-emerald-600 hover:bg-emerald-500 text-white"}">
+                        ${isPaid ? "Beklemeye Al" : "Ödeme Onayla"}
+                    </button>
+                    <button type="button" onclick="handleDeleteRecord('${r.id}')"
+                        class="px-2.5 py-1.5 rounded-lg text-[11px] font-bold bg-rose-950/80 hover:bg-rose-900 text-rose-200 border border-rose-500/40 transition">
+                        Sil
+                    </button>
+                </td>
+            `;
+            return tr;
+        }
+
+        function renderTbodyRows(tbody, list, emptyText) {
+            tbody.innerHTML = "";
+            if (!list || list.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">${emptyText}</td></tr>`;
+                return;
+            }
+            list.forEach(r => tbody.appendChild(createRecordRow(r)));
         }
 
         function renderRecordsTable() {
-            const tbody = document.getElementById("recordsTableBody");
             const searchQ = document.getElementById("filterSearchInput").value.trim().toLocaleLowerCase("tr-TR");
-            const statusFilter = document.getElementById("filterStatusSelect").value;
+            const viewMode = document.getElementById("viewModeSelect").value;
 
-            const filtered = allRecords.filter(r => {
-                if (statusFilter !== "all" && r.paymentStatus !== statusFilter) return false;
+            const searched = allRecords.filter(r => {
                 if (!searchQ) return true;
                 const hay = [
                     r.className,
@@ -270,24 +415,141 @@
                 return hay.includes(searchQ);
             });
 
-            if (filtered.length === 0) {
-                tbody.innerHTML = `<tr><td colspan="7" class="py-8 text-center text-slate-400">Gösterilecek kayıt bulunamadı.</td></tr>`;
-                return;
-            }
+            const paidList = searched.filter(r => r.paymentStatus === "paid");
+            const pendingList = searched.filter(r => r.paymentStatus !== "paid");
 
-            tbody.innerHTML = "";
-            filtered.forEach(r => {
-                const isPaid = r.paymentStatus === "paid";
-                const tr = document.createElement("tr");
-                tr.className = "hover:bg-slate-900/60 transition";
-                tr.innerHTML = `
-                    <td class="py-3 px-3 font-bold text-indigo-300">${r.className || ""}</td>
-                    <td class="py-3 px-3 font-semibold text-white">${r.studentNo || ""}</td>
-                    <td class="py-3 px-3 font-semibold text-white">${r.studentName || ""}</td>
-                    <td class="py-3 px-3 text-slate-300 max-w-xs">${(r.vrTitles || []).join(", ")}</td>
-                    <td class="py-3 px-3 text-slate-300">
-                        <div>${r.parentName || "-"}</div>
-                        <div class="text-[11px] text-slate-400">${r.parentPhone || ""}</div>
-                    </td>
-                    <td class="py-3 px-3">
-                        <span class="inline-block px-2.5 py-1 rounded-lg text-[11px] font
+            const splitContainer = document.getElementById("splitListsContainer");
+            const singleContainer = document.getElementById("singleListContainer");
+
+            if (viewMode === "split") {
+                splitContainer.classList.remove("hidden");
+                singleContainer.classList.add("hidden");
+
+                document.getElementById("paidListBadge").textContent = `${paidList.length} kayıt`;
+                document.getElementById("pendingListBadge").textContent = `${pendingList.length} kayıt`;
+
+                renderTbodyRows(
+                    document.getElementById("paidRecordsTableBody"),
+                    paidList,
+                    "Ödeme yapılan / onaylanan kayıt bulunamadı."
+                );
+                renderTbodyRows(
+                    document.getElementById("pendingRecordsTableBody"),
+                    pendingList,
+                    "Ödeme bekleyen / onay bekleyen kayıt bulunamadı."
+                );
+            } else {
+                splitContainer.classList.add("hidden");
+                singleContainer.classList.remove("hidden");
+
+                let activeList = searched;
+                let titleText = `Tüm Başvurular (${searched.length})`;
+
+                if (viewMode === "paid") {
+                    activeList = paidList;
+                    titleText = `Ödeme Yapılan / Onaylanan Başvurular (${paidList.length})`;
+                } else if (viewMode === "pending") {
+                    activeList = pendingList;
+                    titleText = `Ödeme Bekleyen / Onay Bekleyen Başvurular (${pendingList.length})`;
+                }
+
+                document.getElementById("singleListTitle").textContent = titleText;
+                document.getElementById("singleListBadge").textContent = `${activeList.length} kayıt`;
+                renderTbodyRows(
+                    document.getElementById("recordsTableBody"),
+                    activeList,
+                    "Gösterilecek kayıt bulunamadı."
+                );
+            }
+        }
+
+        async function handleTogglePayment(id, targetStatus) {
+            try {
+                const res = await sendSaymanAction({ action: "toggle_payment", id, paymentStatus: targetStatus });
+                if (!res || !res.ok) {
+                    return showToast("error", "İşlem Başarısız", (res && res.mesaj) || "Ödeme durumu güncellenemedi.");
+                }
+                showToast("success", "Güncellendi", res.mesaj || "Ödeme durumu güncellendi.");
+                await loadSaymanRecords();
+            } catch (err) {
+                showToast("error", "Bağlantı Hatası", err.message);
+            }
+        }
+
+        async function handleDeleteRecord(id) {
+            if (!confirm("Bu kaydı Google E-Tablodan silmek istediğinize emin misiniz?")) return;
+            try {
+                const res = await sendSaymanAction({ action: "delete", id });
+                if (!res || !res.ok) {
+                    return showToast("error", "Silinemedi", (res && res.mesaj) || "Kayıt silinemedi.");
+                }
+                showToast("success", "Silindi", res.mesaj || "Kayıt silindi.");
+                await loadSaymanRecords();
+            } catch (err) {
+                showToast("error", "Bağlantı Hatası", err.message);
+            }
+        }
+
+        document.getElementById("loginForm").addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const passVal = document.getElementById("saymanPassInput").value.trim();
+            if (!passVal) return;
+
+            const btn = document.getElementById("loginSubmitBtn");
+            btn.disabled = true;
+            btn.textContent = "Yükleniyor...";
+            saymanPassword = passVal;
+
+            try {
+                await loadSaymanRecords();
+                document.getElementById("loginSection").classList.add("hidden");
+                document.getElementById("panelSection").classList.remove("hidden");
+                document.getElementById("logoutBtn").classList.remove("hidden");
+                showToast("success", "Giriş Başarılı", "Sayman paneli kayıtları yüklendi.");
+            } catch (err) {
+                saymanPassword = "";
+                showToast("error", "Giriş Başarısız", err.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "Kayıtları Yükle";
+            }
+        });
+
+        document.getElementById("logoutBtn").addEventListener("click", () => {
+            saymanPassword = "";
+            allRecords = [];
+            document.getElementById("saymanPassInput").value = "";
+            document.getElementById("panelSection").classList.add("hidden");
+            document.getElementById("logoutBtn").classList.add("hidden");
+            document.getElementById("loginSection").classList.remove("hidden");
+        });
+
+        document.getElementById("filterSearchInput").addEventListener("input", renderRecordsTable);
+        document.getElementById("viewModeSelect").addEventListener("change", renderRecordsTable);
+
+        document.getElementById("refreshBtn").addEventListener("click", async () => {
+            try {
+                await loadSaymanRecords();
+                showToast("success", "Yenilendi", "Kayıtlar güncel verilerle yenilendi.");
+            } catch (err) {
+                showToast("error", "Yenileme Hatası", err.message);
+            }
+        });
+
+        document.getElementById("backupDriveBtn").addEventListener("click", async () => {
+            try {
+                const res = await sendSaymanAction({ action: "backup_drive" });
+                if (!res || !res.ok) {
+                    return showToast("error", "Yedekleme Hatası", (res && res.mesaj) || "Drive yedeği alınamadı.");
+                }
+                showToast("success", "Drive Yedeklendi", res.mesaj || "Yedek oluşturuldu.");
+            } catch (err) {
+                showToast("error", "Bağlantı Hatası", err.message);
+            }
+        });
+    </script>
+</body>
+</html>
+```[cite: 4]
+
+Sayman panelinde kayıtları varsayılan olarak iki ayrı listede mi görmek istersiniz, yoksa yalnızca tek bir liste üzerinden durum seçerek mi ilerlemek istersiniz?
