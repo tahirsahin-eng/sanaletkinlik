@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Saffet Çam Ortaokulu - VR Etkinliği Sayman Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script src="data.js?v=20261124_10"></script>
     <style>
@@ -73,7 +74,6 @@
         </section>
 
         <section id="panelSection" class="hidden space-y-6">
-            <!-- Özet Kartları -->
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                 <div class="glass-card rounded-2xl p-4">
                     <div class="text-xs text-slate-400">Toplam Başvuru</div>
@@ -93,8 +93,7 @@
                 </div>
             </div>
 
-            <!-- Arama, Görünüm ve İşlem Çubuğu -->
-            <div class="glass-card rounded-2xl p-4 flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-3">
+            <div class="glass-card rounded-2xl p-4 flex flex-col xl:flex-row items-stretch xl:items-center justify-between gap-3">
                 <div class="flex flex-col sm:flex-row gap-2.5 flex-1">
                     <input type="text" id="filterSearchInput" placeholder="Öğrenci adı, no, şube veya veli ara..."
                         class="rounded-xl bg-slate-900 border border-indigo-500/40 px-3.5 py-2 text-xs text-white placeholder-slate-500 focus:outline-none focus:border-purple-400 flex-1">
@@ -106,6 +105,12 @@
                     </select>
                 </div>
                 <div class="flex flex-wrap items-center gap-2">
+                    <button type="button" id="exportExcelBtn" class="px-3.5 py-2 rounded-xl bg-emerald-700 hover:bg-emerald-600 text-xs font-bold text-white transition">
+                        📊 Excel İndir
+                    </button>
+                    <button type="button" id="exportPdfBtn" class="px-3.5 py-2 rounded-xl bg-rose-700 hover:bg-rose-600 text-xs font-bold text-white transition">
+                        🖨️ PDF / Yazdır
+                    </button>
                     <button type="button" id="refreshBtn" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white transition">
                         🔄 Yenile
                     </button>
@@ -115,9 +120,7 @@
                 </div>
             </div>
 
-            <!-- Ayrı Listeler Görünümü -->
             <div id="splitListsContainer" class="space-y-6">
-                <!-- Ödeme Yapılan / Onaylanan Listesi -->
                 <div class="glass-card rounded-2xl overflow-hidden border border-emerald-500/30">
                     <div class="px-4 py-3 bg-emerald-950/50 border-b border-emerald-500/30 flex items-center justify-between">
                         <h3 class="text-sm font-extrabold text-emerald-300">✅ Ödeme Yapılan / Onaylanan Başvurular</h3>
@@ -141,7 +144,6 @@
                     </div>
                 </div>
 
-                <!-- Ödeme Bekleyen / Onay Bekleyen Listesi -->
                 <div class="glass-card rounded-2xl overflow-hidden border border-amber-500/30">
                     <div class="px-4 py-3 bg-amber-950/40 border-b border-amber-500/30 flex items-center justify-between">
                         <h3 class="text-sm font-extrabold text-amber-300">⏳ Ödeme Bekleyen / Onay Bekleyen Başvurular</h3>
@@ -166,7 +168,6 @@
                 </div>
             </div>
 
-            <!-- Tek Liste Görünümü -->
             <div id="singleListContainer" class="hidden glass-card rounded-2xl overflow-hidden">
                 <div class="px-4 py-3 bg-slate-950/70 border-b border-indigo-500/30 flex items-center justify-between">
                     <h3 id="singleListTitle" class="text-sm font-extrabold text-indigo-200">Başvuru Listesi</h3>
@@ -357,6 +358,39 @@
             document.getElementById("statTotalAmount").textContent = `${collectedAmount} TL`;
         }
 
+        function getFilteredDataset() {
+            const searchQ = document.getElementById("filterSearchInput").value.trim().toLocaleLowerCase("tr-TR");
+            const viewMode = document.getElementById("viewModeSelect").value;
+
+            const searched = allRecords.filter(r => {
+                if (!searchQ) return true;
+                const hay = [
+                    r.className,
+                    r.studentNo,
+                    r.studentName,
+                    r.parentName,
+                    r.parentPhone,
+                    (r.vrTitles || []).join(" ")
+                ].join(" ").toLocaleLowerCase("tr-TR");
+                return hay.includes(searchQ);
+            });
+
+            const paidList = searched.filter(r => r.paymentStatus === "paid");
+            const pendingList = searched.filter(r => r.paymentStatus !== "paid");
+
+            let activeRecords = searched;
+            let reportLabel = "Tüm Başvurular";
+            if (viewMode === "paid") {
+                activeRecords = paidList;
+                reportLabel = "Ödeme Yapılan / Onaylanan Başvurular";
+            } else if (viewMode === "pending") {
+                activeRecords = pendingList;
+                reportLabel = "Ödeme Bekleyen / Onay Bekleyen Başvurular";
+            }
+
+            return { viewMode, searched, paidList, pendingList, activeRecords, reportLabel };
+        }
+
         function createRecordRow(r) {
             const isPaid = r.paymentStatus === "paid";
             const tr = document.createElement("tr");
@@ -399,24 +433,7 @@
         }
 
         function renderRecordsTable() {
-            const searchQ = document.getElementById("filterSearchInput").value.trim().toLocaleLowerCase("tr-TR");
-            const viewMode = document.getElementById("viewModeSelect").value;
-
-            const searched = allRecords.filter(r => {
-                if (!searchQ) return true;
-                const hay = [
-                    r.className,
-                    r.studentNo,
-                    r.studentName,
-                    r.parentName,
-                    r.parentPhone,
-                    (r.vrTitles || []).join(" ")
-                ].join(" ").toLocaleLowerCase("tr-TR");
-                return hay.includes(searchQ);
-            });
-
-            const paidList = searched.filter(r => r.paymentStatus === "paid");
-            const pendingList = searched.filter(r => r.paymentStatus !== "paid");
+            const { viewMode, paidList, pendingList, activeRecords, reportLabel } = getFilteredDataset();
 
             const splitContainer = document.getElementById("splitListsContainer");
             const singleContainer = document.getElementById("singleListContainer");
@@ -442,25 +459,154 @@
                 splitContainer.classList.add("hidden");
                 singleContainer.classList.remove("hidden");
 
-                let activeList = searched;
-                let titleText = `Tüm Başvurular (${searched.length})`;
-
-                if (viewMode === "paid") {
-                    activeList = paidList;
-                    titleText = `Ödeme Yapılan / Onaylanan Başvurular (${paidList.length})`;
-                } else if (viewMode === "pending") {
-                    activeList = pendingList;
-                    titleText = `Ödeme Bekleyen / Onay Bekleyen Başvurular (${pendingList.length})`;
-                }
-
-                document.getElementById("singleListTitle").textContent = titleText;
-                document.getElementById("singleListBadge").textContent = `${activeList.length} kayıt`;
+                document.getElementById("singleListTitle").textContent = `${reportLabel} (${activeRecords.length})`;
+                document.getElementById("singleListBadge").textContent = `${activeRecords.length} kayıt`;
                 renderTbodyRows(
                     document.getElementById("recordsTableBody"),
-                    activeList,
+                    activeRecords,
                     "Gösterilecek kayıt bulunamadı."
                 );
             }
+        }
+
+        function exportToExcel() {
+            const { activeRecords, reportLabel } = getFilteredDataset();
+            if (!activeRecords.length) {
+                return showToast("warning", "Veri Yok", "Dışa aktarılacak kayıt bulunamadı.");
+            }
+            if (typeof XLSX === "undefined") {
+                return showToast("error", "Kütüphane Hatası", "Excel modülü yüklenemedi. İnternet bağlantısını kontrol ediniz.");
+            }
+
+            const rows = activeRecords.map((r, idx) => ({
+                "Sıra": idx + 1,
+                "Katılımcı Türü": r.recordTypeLabel || "Öğrenci",
+                "Sınıf / Şube": r.className || "",
+                "Okul No": r.studentNo || "",
+                "Katılımcı Adı Soyadı": r.studentName || "",
+                "Ödeme Durumu": r.paymentStatus === "paid" ? "Ödendi (Onaylı)" : "Ödeme Bekliyor",
+                "Tutar (TL)": r.paymentStatus === "paid" ? (Number(r.amount) || 150) : 0,
+                "Veli Adı Soyadı": r.parentName || "",
+                "Veli Telefon": r.parentPhone || "",
+                "Seçilen VR İçerikleri": (r.vrTitles || []).join(", "),
+                "Ödeme Notu": r.paymentNote || "",
+                "Tarih / Saat": r.updatedAt || ""
+            }));
+
+            const ws = XLSX.utils.json_to_sheet(rows);
+            ws["!cols"] = [
+                { wch: 6 }, { wch: 15 }, { wch: 12 }, { wch: 10 }, { wch: 28 },
+                { wch: 18 }, { wch: 12 }, { wch: 24 }, { wch: 16 }, { wch: 45 },
+                { wch: 24 }, { wch: 18 }
+            ];
+
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "VR_Kayit_Listesi");
+
+            const stamp = new Date().toISOString().slice(0, 10);
+            const safeSuffix = reportLabel.toLowerCase().includes("yapılan")
+                ? "odenenler"
+                : reportLabel.toLowerCase().includes("bekleyen")
+                    ? "bekleyenler"
+                    : "tum_liste";
+            XLSX.writeFile(wb, `Saffet_Cam_VR_${safeSuffix}_${stamp}.xlsx`);
+            showToast("success", "Excel İndirildi", `${activeRecords.length} kayıt Excel dosyası olarak indirildi.`);
+        }
+
+        function escapeHtml(str) {
+            return String(str || "")
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;");
+        }
+
+        function exportToPdfPrint() {
+            const { activeRecords, reportLabel } = getFilteredDataset();
+            if (!activeRecords.length) {
+                return showToast("warning", "Veri Yok", "Yazdırılacak veya PDF oluşturulacak kayıt bulunamadı.");
+            }
+
+            const paidCount = activeRecords.filter(r => r.paymentStatus === "paid").length;
+            const pendingCount = activeRecords.length - paidCount;
+            const totalTl = activeRecords
+                .filter(r => r.paymentStatus === "paid")
+                .reduce((sum, r) => sum + (Number(r.amount) || 150), 0);
+
+            const tableRowsHtml = activeRecords.map((r, i) => {
+                const isPaid = r.paymentStatus === "paid";
+                return `
+                    <tr>
+                        <td>${i + 1}</td>
+                        <td>${escapeHtml(r.className)}</td>
+                        <td>${escapeHtml(r.studentNo)}</td>
+                        <td><strong>${escapeHtml(r.studentName)}</strong></td>
+                        <td>${escapeHtml(r.parentName)}<br><small>${escapeHtml(r.parentPhone)}</small></td>
+                        <td>${escapeHtml((r.vrTitles || []).join(", "))}</td>
+                        <td style="font-weight:bold;color:${isPaid ? "#065f46" : "#92400e"};">
+                            ${isPaid ? `Ödendi (${Number(r.amount) || 150} TL)` : "Ödeme Bekliyor"}
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+
+            const win = window.open("", "_blank");
+            if (!win) {
+                return showToast("warning", "Açılır Pencere Engellendi", "PDF/Yazdırma ekranı için tarayıcıda açılır pencerelere izin veriniz.");
+            }
+
+            win.document.write(`
+                <!DOCTYPE html>
+                <html lang="tr">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Saffet Çam Ortaokulu - VR Etkinliği Listesi</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; color: #111827; padding: 20px; font-size: 11px; }
+                        .header { text-align: center; border-bottom: 2px solid #1e1b4b; padding-bottom: 10px; margin-bottom: 14px; }
+                        .header h1 { margin: 0; font-size: 16px; color: #1e1b4b; }
+                        .header p { margin: 4px 0 0; font-size: 12px; color: #374151; }
+                        .meta { display: flex; justify-content: space-between; background: #f3f4f6; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; font-weight: bold; }
+                        table { width: 100%; border-collapse: collapse; }
+                        th, td { border: 1px solid #d1d5db; padding: 6px 8px; text-align: left; vertical-align: top; }
+                        th { background: #1e1b4b; color: #ffffff; font-size: 11px; }
+                        tr:nth-child(even) { background: #f9fafb; }
+                        @media print {
+                            body { padding: 0; }
+                            @page { size: A4 landscape; margin: 12mm; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>SAFFET ÇAM ORTAOKULU MÜDÜRLÜĞÜ</h1>
+                        <p>Uzay Çadırı ve VR Etkinliği — ${escapeHtml(reportLabel)}</p>
+                    </div>
+                    <div class="meta">
+                        <span>Toplam Listelenen: ${activeRecords.length} | Ödeme Yapılan: ${paidCount} | Ödeme Bekleyen: ${pendingCount} | Tahsilat: ${totalTl} TL</span>
+                        <span>Tarih: ${new Date().toLocaleString("tr-TR")}</span>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th style="width:32px;">Sıra</th>
+                                <th style="width:65px;">Şube</th>
+                                <th style="width:55px;">No</th>
+                                <th style="width:155px;">Katılımcı Adı Soyadı</th>
+                                <th style="width:130px;">Veli / Telefon</th>
+                                <th>Seçilen VR İçerikleri</th>
+                                <th style="width:110px;">Ödeme Durumu</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRowsHtml}</tbody>
+                    </table>
+                    <script>
+                        window.onload = function() { window.print(); };
+                    <\/script>
+                </body>
+                </html>
+            `);
+            win.document.close();
         }
 
         async function handleTogglePayment(id, targetStatus) {
@@ -526,6 +672,8 @@
 
         document.getElementById("filterSearchInput").addEventListener("input", renderRecordsTable);
         document.getElementById("viewModeSelect").addEventListener("change", renderRecordsTable);
+        document.getElementById("exportExcelBtn").addEventListener("click", exportToExcel);
+        document.getElementById("exportPdfBtn").addEventListener("click", exportToPdfPrint);
 
         document.getElementById("refreshBtn").addEventListener("click", async () => {
             try {
@@ -550,6 +698,3 @@
     </script>
 </body>
 </html>
-```[cite: 4]
-
-Sayman panelinde kayıtları varsayılan olarak iki ayrı listede mi görmek istersiniz, yoksa yalnızca tek bir liste üzerinden durum seçerek mi ilerlemek istersiniz?
