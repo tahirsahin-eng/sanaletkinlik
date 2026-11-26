@@ -497,6 +497,24 @@
       document.getElementById("formAlert").className = "alert";
     }
 
+    function sendGetPayloadFallback(payloadStr) {
+      try {
+        const script = document.createElement("script");
+        const cb = "vr_mob_cb_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
+        window[cb] = function () {
+          try { delete window[cb]; } catch (_) {}
+          try { script.remove(); } catch (_) {}
+        };
+        setTimeout(() => {
+          try { delete window[cb]; } catch (_) {}
+          try { script.remove(); } catch (_) {}
+        }, 12000);
+        const url = `${GOOGLE_SCRIPT_URL}?payload=${encodeURIComponent(payloadStr)}&callback=${cb}`;
+        script.src = url;
+        document.body.appendChild(script);
+      } catch (_) {}
+    }
+
     function submitApplication() {
       const parentPhone = document.getElementById("parentPhone").value.trim();
       const paymentNote = document.getElementById("paymentNote").value.trim();
@@ -587,18 +605,28 @@
       btn.disabled = true;
       btn.textContent = "E-Tabloya Gönderiliyor...";
 
-      // 1. Doğrudan HTML Form POST (57 kaydın sorunsuz aktığı klasik tarayıcı gönderimi)
-      const form = document.getElementById("gsPostForm");
-      const field = document.getElementById("gsPayloadField");
-      field.value = payloadStr;
-      form.submit();
+      // 1. Doğrudan HTML Form POST
+      try {
+        const form = document.getElementById("gsPostForm");
+        const field = document.getElementById("gsPayloadField");
+        if (form && field) {
+          field.value = payloadStr;
+          form.submit();
+        }
+      } catch (_) {}
 
-      // 2. Arka planda no-cors fetch yedeği
+      // 2. Fetch (no-cors) ve sendBeacon ile POST yedeği
       try {
         const fd = new URLSearchParams();
         fd.append("payload", payloadStr);
         fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", body: fd }).catch(() => {});
+        if (navigator.sendBeacon) {
+          navigator.sendBeacon(GOOGLE_SCRIPT_URL, fd);
+        }
       } catch (_) {}
+
+      // 3. Mobilde POST engellenirse doGet üzerinden işlenmesi için GET/JSONP yedeği
+      sendGetPayloadFallback(payloadStr);
 
       setTimeout(() => {
         if (!existing) {
