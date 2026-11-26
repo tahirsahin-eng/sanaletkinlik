@@ -683,6 +683,33 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     }
 
+    function postViaHiddenForm(bodyObj, timeoutMs = 4500) {
+      return new Promise((resolve, reject) => {
+        const form = document.getElementById("gsHiddenPostForm");
+        const input = document.getElementById("gsHiddenPayloadInput");
+        const frame = document.getElementById("gsHiddenPostFrame");
+        if (!form || !input || !frame) {
+          reject(new Error("Gizli form bulunamadı"));
+          return;
+        }
+        let settled = false;
+        const finish = (ok) => {
+          if (settled) return;
+          settled = true;
+          clearTimeout(timer);
+          frame.onload = null;
+          frame.onerror = null;
+          if (ok) resolve({ ok: true, via: "hidden_form_post" });
+          else reject(new Error("Gizli form gönderilemedi"));
+        };
+        const timer = setTimeout(() => finish(true), timeoutMs);
+        frame.onload = () => finish(true);
+        frame.onerror = () => finish(false);
+        input.value = JSON.stringify(bodyObj);
+        form.submit();
+      });
+    }
+
     // Standart Form-Encoded POST gönderimi (CORS preflight tetiklemez, e.parameter.payload ile doğrudan okunur)
     async function postFormPayload(bodyObj) {
       const formData = new URLSearchParams();
@@ -992,41 +1019,43 @@
       btn.disabled = true;
       btn.textContent = "Google E-Tablo'ya Yazılıyor...";
 
+      const onRecordSaved = (infoText) => {
+        upsertLocalRecord(recordObj);
+        if (currentRecordType === "ogrenci" && !registeredKeys.includes(`${cls}_${stNo}`)) {
+          registeredKeys.push(`${cls}_${stNo}`);
+        }
+        showAlert(
+          `${infoText} (${cls} - ${stName}). 150 TL katılım ücretini Okul Aile Birliği Saymanı ${SAYMAN_NAME}'e teslim ettiğinizde kaydınız onaylanacaktır.`,
+          "success"
+        );
+        if (cls && currentRecordType === "ogrenci") onClassChange(stNo);
+      };
+
       try {
         // 1. Yöntem: Form-Encoded POST (Yanıt JSON olarak okunur)
         const result = await postFormPayload(requestBody);
         if (result && result.ok) {
-          upsertLocalRecord(recordObj);
-          if (currentRecordType === "ogrenci" && !registeredKeys.includes(`${cls}_${stNo}`)) {
-            registeredKeys.push(`${cls}_${stNo}`);
-          }
-          showAlert(
-            `Kaydınız Google E-Tabloya başarıyla işlendi (${cls} - ${stName}). 150 TL katılım ücretini Sayman ${SAYMAN_NAME}'e teslim ettiğinizde kaydınız onaylanacaktır.`,
-            "success"
-          );
-          if (cls && currentRecordType === "ogrenci") onClassChange(stNo);
+          onRecordSaved("Kaydınız Google E-Tabloya başarıyla işlendi");
         } else {
           showAlert((result && result.mesaj) || "Sunucu kaydı onaylamadı.", "error");
         }
       } catch (err) {
-        // 2. Yöntem: JSONP GET ile kesin sunucu doğrulaması
+        // 2. Yöntem: Gizli Iframe + POST Form ile doğrudan doPost'a gönderim
         try {
-          const jsonpRes = await callAppsScriptJsonp({ payload: JSON.stringify(requestBody) });
-          if (jsonpRes && jsonpRes.ok) {
-            upsertLocalRecord(recordObj);
-            if (currentRecordType === "ogrenci" && !registeredKeys.includes(`${cls}_${stNo}`)) {
-              registeredKeys.push(`${cls}_${stNo}`);
+          await postViaHiddenForm(requestBody);
+          onRecordSaved("Başvurunuz Google E-Tablo'ya gönderildi");
+        } catch (iframeErr) {
+          // 3. Yöntem: JSONP GET ile yedek gönderim
+          try {
+            const jsonpRes = await callAppsScriptJsonp({ payload: JSON.stringify(requestBody) });
+            if (jsonpRes && jsonpRes.ok) {
+              onRecordSaved("Kaydınız Google E-Tabloya başarıyla işlendi");
+            } else {
+              showAlert((jsonpRes && jsonpRes.mesaj) || "Kayıt E-Tabloya işlenemedi.", "error");
             }
-            showAlert(
-              `Kaydınız Google E-Tabloya başarıyla işlendi (${cls} - ${stName}). 150 TL katılım ücretini Sayman ${SAYMAN_NAME}'e teslim ettiğinizde kaydınız onaylanacaktır.`,
-              "success"
-            );
-            if (cls && currentRecordType === "ogrenci") onClassChange(stNo);
-          } else {
-            showAlert((jsonpRes && jsonpRes.mesaj) || "Kayıt E-Tabloya işlenemedi.", "error");
+          } catch (jsonpErr) {
+            showAlert("Google E-Tablo bağlantısı kurulamadı. Lütfen internet bağlantınızı veya Apps Script dağıtımını kontrol ediniz: " + jsonpErr.message, "error");
           }
-        } catch (jsonpErr) {
-          showAlert("Google E-Tablo bağlantısı kurulamadı. Lütfen internet bağlantınızı veya Apps Script dağıtımını kontrol ediniz: " + jsonpErr.message, "error");
         }
       } finally {
         btn.disabled = false;
@@ -1351,5 +1380,12 @@
       URL.revokeObjectURL(url);
     }
   </script>
+
+  <!-- Gizli POST Iframe ve Form (CORS / URL Uzunluk Engeli Olmadan Doğrudan doPost'a Gönderim) -->
+  <iframe name="gsHiddenPostFrame" id="gsHiddenPostFrame" style="display:none; width:0; height:0; border:0;"></iframe>
+  <form id="gsHiddenPostForm" method="POST" action="https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec" target="gsHiddenPostFrame" style="display:none;">
+    <input type="hidden" name="payload" id="gsHiddenPayloadInput" value="" />
+  </form>
+
 </body>
 </html>
