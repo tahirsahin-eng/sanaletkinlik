@@ -3,646 +3,434 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Saffet Çam Ortaokulu | Uzay Çadırı ve VR Etkinliği Kayıt Formu</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Saffet Çam Ortaokulu - Uzay Çadırı ve VR Etkinliği Başvurusu</title>
   <style>
-    :root {
-      --bg-card: #ffffff;
-      --primary: #2563eb;
-      --primary-dark: #1d4ed8;
-      --success: #059669;
-      --success-bg: #ecfdf5;
-      --warning: #d97706;
-      --danger: #dc2626;
-      --text-main: #0f172a;
-      --text-muted: #475569;
-      --border: #e2e8f0;
-      --radius: 14px;
+    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+    body { margin: 0; background: #0b1120; color: #f8fafc; padding: 16px; }
+    .wrap { max-width: 780px; margin: 0 auto; }
+    .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
+    h1 { margin: 0 0 6px; font-size: 1.35rem; color: #38bdf8; }
+    h2 { margin: 0 0 12px; font-size: 1.08rem; color: #e2e8f0; }
+    .sub { margin: 0 0 14px; color: #94a3b8; font-size: 0.92rem; line-height: 1.45; }
+    .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
+    .type-btn { padding: 12px 10px; border-radius: 12px; border: 1px solid #475569; background: #0f172a; color: #e2e8f0; font-weight: 600; font-size: 0.92rem; cursor: pointer; }
+    .type-btn.active { background: #2563eb; border-color: #60a5fa; color: #fff; }
+    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    label { display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 500; }
+    input, select, textarea { width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; margin-bottom: 12px; }
+    textarea { min-height: 70px; resize: vertical; }
+    .vr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 14px; }
+    .vr-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; cursor: pointer; }
+    .vr-item.selected { border-color: #38bdf8; background: #172554; }
+    .vr-item input { width: auto; margin: 3px 0 0; }
+    .vr-title { font-weight: 600; font-size: 0.9rem; color: #f8fafc; }
+    .vr-tag { font-size: 0.76rem; color: #94a3b8; margin-top: 2px; }
+    .summary-bar { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-weight: 600; }
+    .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #16a34a; color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; }
+    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+    .alert { padding: 12px 14px; border-radius: 10px; margin-top: 12px; font-size: 0.92rem; line-height: 1.45; }
+    .alert-ok { background: #14532d; color: #dcfce7; border: 1px solid #22c55e; }
+    .alert-err { background: #7f1d1d; color: #fee2e2; border: 1px solid #ef4444; }
+    .hidden { display: none; }
+    @media (max-width: 640px) {
+      .grid-2 { grid-template-columns: 1fr; }
+      .type-grid { grid-template-columns: 1fr; }
     }
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      background: #f1f5f9;
-      color: var(--text-main);
-      line-height: 1.55;
-      padding-bottom: 48px;
-    }
-    .hero {
-      background: radial-gradient(circle at 15% 20%, #1e3a8a 0%, #0f172a 55%, #060918 100%);
-      color: #fff;
-      padding: 26px 18px 34px;
-      border-bottom: 4px solid #3b82f6;
-    }
-    .hero-inner { max-width: 960px; margin: 0 auto; }
-    .school-badge {
-      display: inline-block;
-      background: rgba(59, 130, 246, 0.22);
-      border: 1px solid rgba(147, 197, 253, 0.4);
-      color: #bfdbfe;
-      padding: 6px 14px;
-      border-radius: 999px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      margin-bottom: 10px;
-    }
-    .hero h1 { font-size: clamp(1.4rem, 3.2vw, 2.05rem); font-weight: 800; margin-bottom: 8px; color: #fff; }
-    .hero p { color: #cbd5e1; font-size: 0.94rem; max-width: 780px; }
-    .hero-pills { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 16px; }
-    .pill {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.18);
-      padding: 6px 12px;
-      border-radius: 10px;
-      font-size: 0.82rem;
-      font-weight: 600;
-      color: #f8fafc;
-    }
-    .pill strong { color: #93c5fd; }
-    .container { max-width: 960px; margin: -16px auto 0; padding: 0 14px; position: relative; z-index: 2; }
-    .top-bar {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      background: #fff;
-      padding: 12px 16px;
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      box-shadow: 0 6px 20px rgba(15, 23, 42, 0.06);
-      margin-bottom: 18px;
-    }
-    .top-bar-title { font-weight: 800; font-size: 0.95rem; color: var(--text-main); }
-    .sayman-link {
-      text-decoration: none;
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: #334155;
-      background: #f8fafc;
-      border: 1px solid #cbd5e1;
-      padding: 7px 13px;
-      border-radius: 9px;
-    }
-    .card {
-      background: var(--bg-card);
-      border-radius: var(--radius);
-      border: 1px solid var(--border);
-      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
-      padding: 20px;
-      margin-bottom: 18px;
-    }
-    .card-title {
-      font-size: 1.08rem;
-      font-weight: 800;
-      color: var(--text-main);
-      margin-bottom: 6px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      flex-wrap: wrap;
-      gap: 8px;
-    }
-    .card-sub { font-size: 0.87rem; color: var(--text-muted); margin-bottom: 16px; }
-    .announcement-box {
-      background: #f8fafc;
-      border-left: 4px solid var(--primary);
-      padding: 13px 15px;
-      border-radius: 8px;
-      font-size: 0.86rem;
-      color: #334155;
-      margin-bottom: 16px;
-    }
-    .type-selector { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 16px; }
-    .type-btn {
-      flex: 1 1 150px;
-      padding: 10px 12px;
-      border-radius: 10px;
-      border: 1.5px solid #cbd5e1;
-      background: #f8fafc;
-      font-weight: 700;
-      font-size: 0.86rem;
-      color: #334155;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .type-btn.active { background: #eff6ff; border-color: var(--primary); color: var(--primary-dark); }
-    .grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 14px; margin-bottom: 14px; }
-    .form-group label { display: block; font-size: 0.84rem; font-weight: 700; margin-bottom: 5px; color: #1e293b; }
-    .form-control {
-      width: 100%;
-      padding: 11px 13px;
-      border: 1.5px solid #cbd5e1;
-      border-radius: 10px;
-      font-size: 0.95rem;
-      font-family: inherit;
-      background: #fff;
-      color: var(--text-main);
-    }
-    .form-control:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14); }
-    .counter-pill { padding: 6px 14px; border-radius: 999px; font-size: 0.85rem; font-weight: 800; background: #e2e8f0; color: #334155; }
-    .counter-pill.ready { background: var(--success-bg); color: var(--success); border: 1px solid #6ee7b7; }
-    .vr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(270px, 1fr)); gap: 11px; margin-top: 10px; }
-    .vr-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      padding: 12px 13px;
-      border: 1.5px solid #e2e8f0;
-      border-radius: 12px;
-      cursor: pointer;
-      background: #fff;
-      user-select: none;
-    }
-    .vr-item.selected { border-color: var(--primary); background: #eff6ff; }
-    .vr-item.disabled { opacity: 0.5; cursor: not-allowed; background: #f8fafc; }
-    .vr-item input[type="checkbox"] { width: 19px; height: 19px; margin-top: 2px; accent-color: var(--primary); flex-shrink: 0; }
-    .vr-title { font-weight: 700; font-size: 0.91rem; color: #0f172a; }
-    .vr-desc { font-size: 0.78rem; color: #64748b; margin-top: 2px; }
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      padding: 13px 22px;
-      border-radius: 10px;
-      font-weight: 700;
-      font-size: 0.95rem;
-      border: none;
-      cursor: pointer;
-      font-family: inherit;
-    }
-    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28); }
-    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
-    .btn-outline { background: #fff; color: #1e293b; border: 1.5px solid #cbd5e1; }
-    .alert { padding: 14px 16px; border-radius: 10px; font-size: 0.91rem; font-weight: 600; margin-top: 14px; display: none; }
-    .alert.show { display: block; }
-    .alert-success { background: var(--success-bg); color: #065f46; border: 1px solid #6ee7b7; }
-    .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
-    .hidden { display: none !important; }
-    .footer-note { text-align: center; font-size: 0.81rem; color: #64748b; margin-top: 22px; }
   </style>
 </head>
 <body>
-
-  <header class="hero">
-    <div class="hero-inner">
-      <div class="school-badge">T.C. YALOVA VALİLİĞİ • SAFFET ÇAM ORTAOKULU MÜDÜRLÜĞÜ</div>
-      <h1>Uzay Çadırı ve Sanal Gerçeklik (VR) Etkinliği</h1>
-      <p>Öğrencilerimizin bilimsel merakını artırmak, tarihî ve doğal güzellikleri yerinde deneyimlemiş gibi keşfetmelerini sağlamak amacıyla okulumuz bünyesinde düzenlenecek etkinlik başvuru ve içerik tercih sistemidir.</p>
-      <div class="hero-pills">
-        <div class="pill">Tarih: <strong>Aralık 2026</strong></div>
-        <div class="pill">Süre: <strong>17 dk Uzay Çadırı + 17 dk VR (34 dk)</strong></div>
-        <div class="pill">Katılım Ücreti: <strong>150 TL / Kişi</strong></div>
-        <div class="pill">Sayman: <strong>Fatma Erdem</strong></div>
-      </div>
-    </div>
-  </header>
-
-  <main class="container">
-    <div class="top-bar">
-      <div class="top-bar-title">Veli Başvuru ve 5 VR İçerik Seçim Formu</div>
-      <a href="sayman.html" class="sayman-link">Sayman Girişi (Fatma Erdem)</a>
-    </div>
-
+  <div class="wrap">
     <div class="card">
-      <div class="card-title">
-        <span>1. Katılımcı ve Veli Bilgileri</span>
-      </div>
-      <p class="card-sub">Katılımcı türünü seçerek öğrenci veya katılımcı bilgilerini doldurunuz.</p>
-
-      <div class="announcement-box">
-        <strong>Başvuru ve Onay Süreci:</strong> Etkinlik katılım ücreti kişi başı <strong>150 TL</strong>'dir. Form gönderildiğinde başvurunuz <strong>Ödeme Bekliyor</strong> olarak E-Tabloya kaydedilir; 150 TL katılım ücretinin Okul Aile Birliği Saymanı <strong>Fatma Erdem</strong>'e teslim edilmesinin ardından onaylanarak kesinleşir.
-      </div>
-
-      <div class="type-selector">
-        <button type="button" class="type-btn active" id="typeBtnOgrenci" onclick="setRecordType('ogrenci')">Okul Öğrencisi</button>
-        <button type="button" class="type-btn" id="typeBtnVeli" onclick="setRecordType('veli')">Veli Katılımı</button>
-        <button type="button" class="type-btn" id="typeBtnMisafir" onclick="setRecordType('misafir')">Misafir Öğrenci</button>
-      </div>
-
-      <div id="studentFieldsWrap">
-        <div class="grid-2">
-          <div class="form-group">
-            <label for="quickSearch">Hızlı Öğrenci Ara (İsim veya Okul No)</label>
-            <input type="text" id="quickSearch" class="form-control" placeholder="Örn: Ahmet Yılmaz veya 463..." oninput="handleQuickSearch(this.value)">
-          </div>
-          <div class="form-group">
-            <label for="classSelect">Sınıf / Şube Seçiniz *</label>
-            <select id="classSelect" class="form-control" onchange="onClassChange()">
-              <option value="">-- Sınıf / Şube Seçiniz --</option>
-            </select>
-          </div>
+      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
+        <div>
+          <h1>Saffet Çam Ortaokulu</h1>
+          <p class="sub">Uzay Çadırı ve VR Etkinliği Başvuru Formu — Etkinlik Ücreti: <strong>150 TL</strong> (En fazla 5 VR içerik seçimi)</p>
         </div>
-
-        <div class="grid-2">
-          <div class="form-group">
-            <label for="studentSelect">Öğrenci Adı Soyadı ve Okul No *</label>
-            <select id="studentSelect" class="form-control" onchange="onStudentSelected()">
-              <option value="">-- Önce Sınıf/Şube Seçiniz --</option>
-            </select>
-          </div>
-          <div class="form-group">
-            <label for="parentName">Veli Adı Soyadı *</label>
-            <input type="text" id="parentName" class="form-control" placeholder="Velinin adı ve soyadı">
-          </div>
-        </div>
+        <a href="sayman.html" style="display:inline-block; padding:8px 12px; border-radius:10px; border:1px solid #475569; background:#0f172a; color:#cbd5e1; text-decoration:none; font-size:0.82rem; font-weight:600;">Sayman Paneli (Fatma Erdem)</a>
       </div>
-
-      <div id="extraParticipantWrap" class="hidden">
-        <div class="grid-2">
-          <div class="form-group">
-            <label for="extraParticipantName" id="extraNameLabel">Katılımcı Adı Soyadı *</label>
-            <input type="text" id="extraParticipantName" class="form-control" placeholder="Adı ve soyadı">
-          </div>
-          <div class="form-group" id="extraParentGroup">
-            <label for="extraParentName">Veli Adı Soyadı *</label>
-            <input type="text" id="extraParentName" class="form-control" placeholder="Velinin adı ve soyadı">
-          </div>
-        </div>
-      </div>
-
-      <div class="grid-2">
-        <div class="form-group">
-          <label for="parentPhone">İletişim Telefonu *</label>
-          <input type="tel" id="parentPhone" class="form-control" placeholder="05XX XXX XX XX">
-        </div>
-        <div class="form-group">
-          <label for="paymentNote">Açıklama / Not (İsteğe Bağlı)</label>
-          <input type="text" id="paymentNote" class="form-control" placeholder="Varsa eklemek istediğiniz not">
-        </div>
+      <div class="type-grid">
+        <button type="button" id="btn-ogrenci" class="type-btn active" onclick="setParticipantType('ogrenci')">Öğrenci Başvurusu</button>
+        <button type="button" id="btn-veli" class="type-btn" onclick="setParticipantType('veli')">Veli Başvurusu</button>
+        <button type="button" id="btn-misafir" class="type-btn" onclick="setParticipantType('misafir')">Misafir Öğrenci</button>
       </div>
     </div>
 
-    <div class="card">
-      <div class="card-title">
-        <span>2. Sanal Gerçeklik (VR) İçerik Seçimi (Tam 5 Adet Seçiniz)</span>
-        <span class="counter-pill" id="vrCounter">0 / 5 Seçildi</span>
-      </div>
-      <p class="card-sub">Uzay ve gezegenlerin tanıtımı dışındaki tüm içerikler, gerçek görüntülerle oluşturulmuş özel 360° çekimlerdir. Listeden <strong>tam 5 adet</strong> içerik işaretleyiniz.</p>
+    <form id="vrForm" class="card" onsubmit="submitApplication(event)">
+      <h2 id="formSectionTitle">Öğrenci Bilgileri</h2>
 
-      <div class="vr-grid" id="vrGrid"></div>
-
-      <div style="margin-top: 20px; display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
-        <button type="button" class="btn btn-primary" id="submitBtn" onclick="submitApplication()">
-          Başvuruyu ve 5 VR Seçimini Gönder
-        </button>
-        <button type="button" class="btn btn-outline" onclick="resetForm()">Formu Temizle</button>
-      </div>
-
-      <div id="formAlert" class="alert"></div>
-    </div>
-
-    <div class="footer-note">
-      Saffet Çam Ortaokulu Müdürlüğü • Merkez / Yalova • Sayman: Fatma Erdem
-    </div>
-  </main>
-
-  <!-- 57 kaydın sorunsuz aktığı doğrudan Google Apps Script POST hedefi -->
-  <iframe name="gsTargetFrame" id="gsTargetFrame" style="position:fixed; left:-9999px; top:0; width:1px; height:1px; border:0;"></iframe>
-  <form id="gsPostForm" method="POST" action="https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec" target="gsTargetFrame" style="position:fixed; left:-9999px; top:0;">
-    <input type="hidden" name="payload" id="gsPayloadField" value="" />
-  </form>
-
-  <script>
-    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec";
-    const SAYMAN_NAME = "Fatma Erdem";
-    const FEE_AMOUNT = 150;
-
-    const STUDENTS_BY_CLASS = {"5/A": [{"no": "2", "name": "ABDULLAH AVCI"}, {"no": "4", "name": "AHMED ADAM HUSSEIN MASTOUR"}, {"no": "15", "name": "ALİ EYMEN GÜNER"}, {"no": "385", "name": "ARİN ÖZKAYA"}, {"no": "687", "name": "ASMİN EREN"}, {"no": "219", "name": "BELİS YILMAZ"}, {"no": "336", "name": "DEFNE AKPINAR"}, {"no": "59", "name": "ECEM SU YANAR"}, {"no": "64", "name": "EGE UĞUR"}, {"no": "379", "name": "ELİFSU APAYDIN"}, {"no": "87", "name": "ERTUĞRUL DELİCE"}, {"no": "90", "name": "ESLEM KAYMAK"}, {"no": "113", "name": "GHAITH ADAM HUSSEIN MASTOUR"}, {"no": "118", "name": "GÖKÇE TANRIKUL"}, {"no": "168", "name": "KEREM ALİ ŞİŞMAN"}, {"no": "367", "name": "LİNA KILIÇ"}, {"no": "398", "name": "MAEDEH MAHMOODI"}, {"no": "286", "name": "METİN OĞUZ ÜNAL"}, {"no": "212", "name": "MISHEL FAYZULINA"}, {"no": "375", "name": "MOHAMMAD MATIN MURADI"}, {"no": "387", "name": "MUHAMMED SIDIK YILDIRIM"}, {"no": "178", "name": "MUSTAFA KEMAL YİMSEK"}, {"no": "233", "name": "NEHİR EZER"}, {"no": "250", "name": "REVAN ECRİN ÖZİŞİ"}, {"no": "332", "name": "URAS ÖZ"}, {"no": "347", "name": "YAĞIZ YAPICI"}, {"no": "348", "name": "YAMAN YAKICI"}, {"no": "364", "name": "YUSUF EYMEN ERİK"}], "5/B": [{"no": "11", "name": "ABDULKADİR DEMİR"}, {"no": "189", "name": "AHMADJON ODINAEV"}, {"no": "953", "name": "AYTAÇ CAN ÇETİNTAŞ"}, {"no": "229", "name": "BAYRAM EFE KISA"}, {"no": "51", "name": "ÇINAR SEKİN"}, {"no": "381", "name": "DEMİRKAN ARAS GÖKDEMİR"}, {"no": "384", "name": "ECRİN HİRA ÇAPALI"}, {"no": "62", "name": "EFE BERK ÖKELİ"}, {"no": "226", "name": "EFEHAN GÖKDEMİR"}, {"no": "201", "name": "ELİF GÜLFEM ŞENGÖR"}, {"no": "75", "name": "EMİR AKSOY"}, {"no": "100", "name": "EYMEN KAYA"}, {"no": "137", "name": "HÜSEYİN ERDEM ALTUNBAY"}, {"no": "155", "name": "JUNAID AHMED ZIYAD KAREEM"}, {"no": "160", "name": "KADİR ALTUNBOĞA"}, {"no": "188", "name": "KEREM TUĞALP KOÇ"}, {"no": "181", "name": "LİYA KUMSAL MAVİŞ"}, {"no": "376", "name": "MELİS YILMAZ"}, {"no": "239", "name": "NİSANUR BAYRAK"}, {"no": "254", "name": "OSMAN ALALİ"}, {"no": "277", "name": "RÜMEYSA KADER NALBANT"}, {"no": "296", "name": "SELENA EREN"}, {"no": "307", "name": "SHEHRBANU FAKHIRI"}, {"no": "337", "name": "ÜLKÜM ASLI İLERİ"}, {"no": "391", "name": "YİĞİT KEREM GÜNGÖR"}, {"no": "392", "name": "YUSUF SERT"}, {"no": "374", "name": "ZİLAN YILMAZ"}], "5/C": [{"no": "13", "name": "ALEYNA TANRIVERDİ"}, {"no": "14", "name": "ALİ EYMEN GÖKDEMİR"}, {"no": "17", "name": "AYAZ ALİ FIRTINA"}, {"no": "28", "name": "BAŞAK ATALAY"}, {"no": "38", "name": "BUĞLEM ERSOY"}, {"no": "54", "name": "DAMLA NUR GÖÇER"}, {"no": "58", "name": "DURU YILDIRIM"}, {"no": "397", "name": "EROL KAYRA KARACA"}, {"no": "99", "name": "EYMEN EFE PAKIR"}, {"no": "108", "name": "GÖKTÜRK GÖKÇE TANRIVERDİ"}, {"no": "110", "name": "GÜNEŞ KOÇGÜNDÜZ"}, {"no": "119", "name": "HAMID SAFI"}, {"no": "131", "name": "HAYATİ AHMET ZEYTİN"}, {"no": "176", "name": "İPEK BERBEROĞLU"}, {"no": "156", "name": "KAAN ERGUVAN"}, {"no": "184", "name": "LYAN SEDEEQ SAFWAN ZAINULABDEEN"}, {"no": "295", "name": "MAADH MOHAMMED SHAKIR SHAKIR"}, {"no": "210", "name": "MERYEM ERDEM"}, {"no": "373", "name": "METE ÇETİN"}, {"no": "216", "name": "MOHAMMAD HAKIMI"}, {"no": "141", "name": "ÖMER SEVEN"}, {"no": "252", "name": "ÖMER ERDEM BAŞKURT"}, {"no": "388", "name": "POLINA IVANOVA"}, {"no": "353", "name": "YAREN YELBOĞA"}, {"no": "354", "name": "YİĞİT TALHA AKAY"}, {"no": "125", "name": "YUSUF EGE ERDOĞAN"}, {"no": "370", "name": "ZEYNEP KUYUCU"}], "5/D": [{"no": "21", "name": "ASAF AYDIN"}, {"no": "16", "name": "AYAH TAHSEEN MAHMOOD ALALI"}, {"no": "321", "name": "AZRA MİRA SUNGUR"}, {"no": "325", "name": "ÇINAR ONAN"}, {"no": "349", "name": "ELİF ECE ERGÜN"}, {"no": "78", "name": "EMİR MUZAFFER ADIGÜZEL"}, {"no": "95", "name": "EVREN DEHA ARSLANTÜRK"}, {"no": "98", "name": "EYLÜL BAL"}, {"no": "699", "name": "FATIMAH SADDAM KHUDHAIR ALMAYYAHI"}, {"no": "126", "name": "HAMZAH NABEEL ABDULAZEEZ AL-SUHAIL"}, {"no": "161", "name": "KAĞAN AYBARS BİKET"}, {"no": "163", "name": "KALED TAHA YASEEN ALAZOOZ"}, {"no": "169", "name": "KEREM MERİÇ"}, {"no": "200", "name": "MEHMET ŞAH CİHAN YILDIZ"}, {"no": "218", "name": "MUHAMMED ARDA KARAMAN"}, {"no": "238", "name": "NİSA ALTIN"}, {"no": "257", "name": "ÖMER FARUK YEŞİLDAĞ"}, {"no": "260", "name": "ÖZGÜ ERARSLAN"}, {"no": "261", "name": "PARIMA SALEHI"}, {"no": "270", "name": "REYYAN SEHER KARAHAN"}, {"no": "20181209", "name": "RUQAYAH NABEEL ABDULAZEEZ AL-SUHAIL"}, {"no": "304", "name": "SEVDE GÜLŞİN"}, {"no": "88", "name": "ŞEYMA KARAMAN"}, {"no": "310", "name": "TUANA NESİL"}, {"no": "322", "name": "UMUT ERARSLAN"}, {"no": "340", "name": "VEYSEL ÖZER"}, {"no": "360", "name": "YOUSEF ABDULKADR HINDI"}, {"no": "362", "name": "YUSUF ALİ TEKİN"}], "5/E": [{"no": "8", "name": "AHMET TUMGAN"}, {"no": "20", "name": "ALİ HÜSEYİN KAZ"}, {"no": "29", "name": "BATU BİÇER"}, {"no": "35", "name": "BEYZANUR BOZKURT"}, {"no": "293", "name": "BORACAN ATEŞ"}, {"no": "84", "name": "BURÇİN KARABULUT"}, {"no": "303", "name": "CİVAN AMED ÖZBEK"}, {"no": "56", "name": "DOĞA MÜJDE"}, {"no": "55", "name": "ELİF ŞURA ŞENER"}, {"no": "145", "name": "FATİH SELİM ALTAY"}, {"no": "198", "name": "GÖKSU BEYZA DEMİR"}, {"no": "132", "name": "HÜMA APAK"}, {"no": "153", "name": "İSMAİL TUMGAN"}, {"no": "164", "name": "KARTAL DENİZ KİMYAGER"}, {"no": "191", "name": "MASAL BİTER"}, {"no": "45", "name": "MİRAÇ SALİH TAŞDEMİR"}, {"no": "215", "name": "MİRAY GÜNLÜLER"}, {"no": "231", "name": "NAYAB WAJID"}, {"no": "246", "name": "OĞUZ KAĞAN MENGÜTAY"}, {"no": "253", "name": "OSAMA İDRIS"}, {"no": "309", "name": "ŞEVVAL DEMİRKAN"}, {"no": "341", "name": "WAEL ALMUAZEN"}, {"no": "356", "name": "YOLANDE ALSANOOSI"}, {"no": "361", "name": "YUNUS EMRE KAYA"}, {"no": "365", "name": "YUSUF KULAKLIKAYA"}, {"no": "363", "name": "YUSUF EMİR DEREÇİÇEK"}, {"no": "134", "name": "YUSUF İSLAM DAĞDEVİREN"}, {"no": "371", "name": "ZEYNEP YAŞA"}], "5/F": [{"no": "9", "name": "AHMET YAĞIZ SU"}, {"no": "30", "name": "BELİNAY BİRBEN"}, {"no": "42", "name": "BULUT TAŞKESER"}, {"no": "37", "name": "ÇAĞIL URAS GÜL"}, {"no": "76", "name": "DERİN MAVİ KÜÇÜKSU"}, {"no": "69", "name": "ELİF SU CEBEL"}, {"no": "102", "name": "FARAH SAYED"}, {"no": "208", "name": "FATİH EŞREF GÜRDAL"}, {"no": "112", "name": "FEYZA CEREN KOZ"}, {"no": "107", "name": "HABİB ATMAN"}, {"no": "368", "name": "KÜBRA ÇELİK"}, {"no": "187", "name": "MAKBULE MELTEM MİNA SAYINTA"}, {"no": "205", "name": "MEHMET ŞAHİN BULUT"}, {"no": "224", "name": "MOSTAFA HAKIMI"}, {"no": "290", "name": "MUHAMMED EMİN ÖZBEK"}, {"no": "213", "name": "MUSTAFA ALİ KARAKUŞ"}, {"no": "227", "name": "MÜZEYYEN ELİF TURAMAN"}, {"no": "232", "name": "NEHİR BAŞYİĞİT"}, {"no": "378", "name": "NİSANUR DEREÇİÇEK"}, {"no": "242", "name": "RÜZGAR ŞİMŞEK"}, {"no": "283", "name": "SAFA GHAFOORZAI"}, {"no": "287", "name": "SARE FIRTINA"}, {"no": "299", "name": "SEMA GENCER"}, {"no": "342", "name": "YAĞIZ OSMAN DÖLCEL"}], "6/A": [{"no": "463", "name": "AHMET YİĞİT KILINÇ"}, {"no": "471", "name": "ASLI HAVVA TARAKÇI"}, {"no": "6", "name": "AYAZ KONUKOĞLU"}, {"no": "473", "name": "BUĞLEM MİNA ŞAHİN"}, {"no": "675", "name": "BUĞRA EFE KÖKSOY"}, {"no": "609", "name": "CEMRE TURHAN"}, {"no": "477", "name": "CEVAT UYSAL"}, {"no": "589", "name": "CEYDA GÜR"}, {"no": "487", "name": "EGE KAAN AKYIL"}, {"no": "727", "name": "ELA MİRAY YILDIRIM"}, {"no": "498", "name": "ENES MALİK YİĞİT"}, {"no": "503", "name": "ESMA BUĞLEM BAŞASLAN"}, {"no": "505", "name": "EYLÜL ŞURA YILMAZ"}, {"no": "513", "name": "HARUN ENES MEMİŞ"}, {"no": "677", "name": "HİLAL ÇETİN"}, {"no": "678", "name": "HİRA ÇETİN"}, {"no": "593", "name": "MELİSA ORTAKAYA"}, {"no": "543", "name": "MİRSAD EGE EVGİN"}, {"no": "900", "name": "MURAD ISMAYIL"}, {"no": "538", "name": "MURAT BUĞRA GÜNDOĞDU"}, {"no": "186", "name": "NERMİN KARABULUT"}, {"no": "556", "name": "OBAIDA AMER BADER"}, {"no": "965", "name": "ÖMER FARUK İLYASOĞLU"}, {"no": "582", "name": "ROKAYAH TALIB"}, {"no": "823", "name": "SELİM REŞAT BEYAZ"}, {"no": "314", "name": "SIRAÇ EFE YILDIZ"}, {"no": "562", "name": "SUDENUR ÖZDEMİR"}, {"no": "382", "name": "UMUT YAZICI"}, {"no": "567", "name": "YADE DEREÇİÇEK"}, {"no": "715", "name": "YAHYO NABOTOV"}, {"no": "680", "name": "YİĞİT ÇETİN"}, {"no": "574", "name": "YUSUF TALHA PEDÜK"}], "6/B": [{"no": "460", "name": "ADA TÜRK"}, {"no": "313", "name": "ARDA KINALI"}, {"no": "685", "name": "ARDEN SEZER"}, {"no": "606", "name": "BEKİR IMAD"}, {"no": "485", "name": "EDA KINALI"}, {"no": "491", "name": "ELANUR ZEYBEK"}, {"no": "492", "name": "ELİF SUDE GÜL"}, {"no": "496", "name": "EMRE SARSILMAZ"}, {"no": "697", "name": "ERVA NUR TÜRKAN"}, {"no": "597", "name": "EYMEN ARAS KOÇYİĞİT"}, {"no": "676", "name": "EYÜP ÇETİN"}, {"no": "514", "name": "HARUN İLBAN"}, {"no": "821", "name": "IBRAHIM MALULLAH IBRAHIM ALAZZAWI"}, {"no": "282", "name": "İPEKNUR İKRA ÖZTÜRK"}, {"no": "584", "name": "MARWA GHAFOORZAI"}, {"no": "527", "name": "MEHMET ÇINAR ARICI"}, {"no": "529", "name": "MEHMET HAMZA HARTUÇ"}, {"no": "553", "name": "MELİSA ÇETİN"}, {"no": "549", "name": "MİNE DALKILIÇ"}, {"no": "546", "name": "MİRAÇ EFE BALIK"}, {"no": "599", "name": "MOHAMMAD TAMIM ASLAMI"}, {"no": "600", "name": "MUHAMMET TOKGÜN"}, {"no": "554", "name": "NUR RAHİME ÇELİK"}, {"no": "560", "name": "SARE ÖĞRENÇ"}, {"no": "590", "name": "TUBA MELİS DAĞDEVİREN"}, {"no": "230", "name": "TUNAHAN MUSTAFA ÇIRAK"}, {"no": "583", "name": "UMUT ORAK"}, {"no": "566", "name": "ÜMİTİSLAM BAYRAK"}, {"no": "570", "name": "YİĞİT AKKUŞ"}, {"no": "438", "name": "ZEHRA ÖNCÜL"}, {"no": "575", "name": "ZEYNEB UĞUR"}], "6/C": [{"no": "461", "name": "AHMET ÇINAR BİTER"}, {"no": "577", "name": "ALİ KEREM BAYRAKTAR"}, {"no": "320", "name": "ARDA UĞUR"}, {"no": "797", "name": "ARMİNA ESİLA ŞENGÖR"}, {"no": "690", "name": "AYZA SÖNMEZ"}, {"no": "469", "name": "BARIŞ FİDAN"}, {"no": "359", "name": "BERAY KABAN"}, {"no": "448", "name": "BEREN YAZICI"}, {"no": "476", "name": "CEYLİN HİRA PAŞA"}, {"no": "480", "name": "DENİZ YILDIZOĞLU"}, {"no": "482", "name": "DOĞAN TUNCA"}, {"no": "484", "name": "ECRİN EVRAN"}, {"no": "607", "name": "EMİR MOHAMMED HOSSEINI"}, {"no": "502", "name": "ESLEM SU KÜTÜKCÜOĞLU"}, {"no": "504", "name": "EYLÜL OK"}, {"no": "700", "name": "FATMA ZEHRA BORA"}, {"no": "608", "name": "HİRA NUR TUNÇ"}, {"no": "517", "name": "HİRA SU AZMAN"}, {"no": "519", "name": "IRMAK FİDAN"}, {"no": "710", "name": "MERT ÇINAR YILDIRIM"}, {"no": "540", "name": "MUHAMMET BERAT TAŞTAN"}, {"no": "541", "name": "MUSTAFA KEREM KARAŞ"}, {"no": "585", "name": "NOUH MOHAMED HUSSEIN MOHAMED HUSSEIN SALEH"}, {"no": "18", "name": "ÖMER KOÇ"}, {"no": "714", "name": "POYRAZ SEZER"}, {"no": "601", "name": "SAFIA ASLAMI"}, {"no": "61", "name": "SERVET EMİR KAYA"}, {"no": "822", "name": "SUMAYA MALULLAH IBRAHIM ALAZZAWI"}, {"no": "390", "name": "ŞAHİN TUĞRA ŞAHİN"}, {"no": "565", "name": "TUBA EFSA YILDIZ"}, {"no": "568", "name": "YAĞIZ EREN KARAKUŞ"}, {"no": "613", "name": "YASİN CAN MARTİ"}, {"no": "569", "name": "YAVUZ SELİM SOLMAZ"}], "6/D": [{"no": "464", "name": "ALİ ENHAR GÜLERYÜZ"}, {"no": "470", "name": "AYAZ MAHİR CENGİZ"}, {"no": "595", "name": "BERAT SAFA SAYAR"}, {"no": "728", "name": "BERRE YARAR"}, {"no": "472", "name": "BETÜL KOÇAL"}, {"no": "596", "name": "CANAN AKKUŞ"}, {"no": "105", "name": "EBRAR KARATAŞ"}, {"no": "490", "name": "ECEM LİNA ÖMÜR"}, {"no": "730", "name": "ELANUR DOĞAN"}, {"no": "494", "name": "EMİNE NUR MUTANOĞLU"}, {"no": "352", "name": "EYLÜL KESKİN"}, {"no": "506", "name": "EYMEN ÖZDEMİR"}, {"no": "510", "name": "GÜLCE DÜLGER"}, {"no": "725", "name": "GÜLEN ASEL ŞİŞİK"}, {"no": "511", "name": "HAMZA BİLAL DURAN"}, {"no": "516", "name": "HASAN UKKAŞE SEZER"}, {"no": "520", "name": "IRMAK KAYA"}, {"no": "580", "name": "MEHMED HİLMİ SEZGİN"}, {"no": "552", "name": "MENDUHE REYHAN CEYLAN"}, {"no": "550", "name": "MİNA ERCAN"}, {"no": "542", "name": "MOHAMMED ABDULLAH ABDULHAFEDH ALHASSAN"}, {"no": "537", "name": "MUSAB AYCAN"}, {"no": "679", "name": "MUSTAFA ÇETİN"}, {"no": "808", "name": "NURSİMA NEHİR YAĞIZ"}, {"no": "711", "name": "ONURALP KOÇ"}, {"no": "557", "name": "POYRAZ ALİ DURMUŞ"}, {"no": "692", "name": "YAĞMUR DURNA"}, {"no": "573", "name": "YUSUF EFE ÇAKIR"}, {"no": "766", "name": "YÜSRA NUR TOKGÜN"}], "6/E": [{"no": "611", "name": "ALİ KEREM KAVURKALI"}, {"no": "278", "name": "ALİ YUSUF YILMAZ"}, {"no": "684", "name": "ALMIYA ZIYAVEDINOVA"}, {"no": "688", "name": "ASMİN KAYA"}, {"no": "465", "name": "AYŞE GÜLCE BİRİNCİ"}, {"no": "686", "name": "BARAN DURNA"}, {"no": "339", "name": "BERAT AYDIN"}, {"no": "594", "name": "BERK SIRAT BAT"}, {"no": "693", "name": "DİCLE ERTURAN"}, {"no": "377", "name": "EFE BAYAZID GÜVEN"}, {"no": "486", "name": "EGE ÇAĞLAR DURMUŞ"}, {"no": "591", "name": "ELİF ECE BAĞKIRAN"}, {"no": "610", "name": "ENES YİLDIRIM"}, {"no": "746", "name": "EYMEN GÜÇLÜ"}, {"no": "262", "name": "FAWZIA WAZIR MUHAMMAD"}, {"no": "794", "name": "FEYZA SEVİM"}, {"no": "820", "name": "HAJIR MALULLAH IBRAHIM ALAZZAWI"}, {"no": "518", "name": "HÜSNÜ YUSUF SARGINALP"}, {"no": "726", "name": "INDIRA MİLLA BAL"}, {"no": "521", "name": "IŞIL MİNA ARSLANHAN"}, {"no": "522", "name": "İLAYDA CEYLAN"}, {"no": "807", "name": "JOUD HATIM SAFWAT AWAD"}, {"no": "524", "name": "KİBRA NUR ÖZDEMİR"}, {"no": "531", "name": "MELEKNUR BAKIŞ"}, {"no": "545", "name": "MİRAÇ MUSTAFA DOĞRU"}, {"no": "544", "name": "MİRAY İLHAN"}, {"no": "586", "name": "MOHAMMED ELONE"}, {"no": "657", "name": "MUHAMMED EYMEN KINAY"}, {"no": "536", "name": "MUSAP TAŞTAN"}, {"no": "535", "name": "MUSTAFA METEHAN SARIYILDIZ"}, {"no": "532", "name": "NAZLI MİRAY MÜJDE"}, {"no": "581", "name": "NİL SU ÜSTÜN"}, {"no": "674", "name": "NUR ŞENGÜN"}, {"no": "555", "name": "ÖMER FARUK BEŞLER"}, {"no": "559", "name": "SALİH ZİYA KARTAL"}, {"no": "458", "name": "UMUT ORUÇLİ"}, {"no": "804", "name": "YUSUF BARAN ÖZBEK"}, {"no": "576", "name": "ZEYNEP YILMAZ"}], "6/F": [{"no": "682", "name": "ABDULLAH NABOTOV"}, {"no": "462", "name": "AHMET SELİM GÜNGÖR"}, {"no": "128", "name": "AHMET ŞİYAR KAYA"}, {"no": "279", "name": "ALMİRA DAMLA NAMLI"}, {"no": "467", "name": "AYŞE NİL SEVER"}, {"no": "468", "name": "AZRA ÖNDER"}, {"no": "691", "name": "BARAN ÇAPALI"}, {"no": "475", "name": "CELÂL ERDEM"}, {"no": "479", "name": "DANIZ GURBANOVA"}, {"no": "489", "name": "EDA DOĞA BİTİRİM"}, {"no": "488", "name": "EGEHAN GÜRBÜZ"}, {"no": "694", "name": "ELİF ŞENER"}, {"no": "500", "name": "ERTUĞRUL NALÇAKAR"}, {"no": "501", "name": "ERVA PEHLİVAN"}, {"no": "139", "name": "EYLÜL TAŞKÖMÜR"}, {"no": "508", "name": "FAHRETTİN BORA COŞKUN"}, {"no": "515", "name": "HASAN JAWISH"}, {"no": "704", "name": "HÜMEYRA PARSAK"}, {"no": "587", "name": "KAYS ELONE"}, {"no": "525", "name": "KUMSAL AKYILDIZ"}, {"no": "526", "name": "KUZEY EMİR SADIK ATABEK"}, {"no": "598", "name": "MARYANA ALAA HUSSEIN ALLAMI"}, {"no": "551", "name": "METE MİRAÇ BALCI"}, {"no": "548", "name": "MİNEL AYDIN"}, {"no": "547", "name": "MİRA AVİN SAYINTA"}, {"no": "708", "name": "MOHAMMED SHIHAB AHMED AL NUAIMI"}, {"no": "533", "name": "MUHAMMED ARDA KARAGÖZ"}, {"no": "592", "name": "SANA AMİNİ"}, {"no": "563", "name": "SÜLEYMAN FATİH YILDIZ"}, {"no": "94", "name": "SÜMEYYE NAZ AYDOĞAN"}, {"no": "572", "name": "YİĞİT ARIKAN"}, {"no": "121", "name": "YİĞİT ENSAR KABADAYI"}, {"no": "791", "name": "YUSUF MERT KILIÇ"}, {"no": "578", "name": "ZİHNİ DEMİR"}, {"no": "579", "name": "ZÜBEYİR ER"}], "7/A": [{"no": "617", "name": "ALTAY YILMAZ"}, {"no": "603", "name": "AYŞE DİNCER"}, {"no": "622", "name": "BERAT ÇELİK"}, {"no": "190", "name": "CEMRE SANİYE KOCAELİ"}, {"no": "628", "name": "DENİZ DURMUŞ"}, {"no": "627", "name": "DERİN AZRA ÇAMURCU"}, {"no": "954", "name": "ELA REYYAN ÇÖZELİ"}, {"no": "630", "name": "ELİF KARACA MENGÜTAY"}, {"no": "776", "name": "EMRE ÇAKMAK"}, {"no": "782", "name": "ERVA TUTKAL"}, {"no": "777", "name": "FATİH SULTAN MEHMET BAKİ"}, {"no": "642", "name": "GÖKAY ALİ UYGUN"}, {"no": "961", "name": "JANAH AHMED ZIYAD ZIYAD"}, {"no": "653", "name": "KUZEY SAFA BAŞKAN"}, {"no": "962", "name": "MEHMET BİTER"}, {"no": "787", "name": "MİRAÇ MERT ÖZÇOMAK"}, {"no": "665", "name": "MOHAMMAD MERSAD FAZLI"}, {"no": "298", "name": "MOJDEH ASLEMI"}, {"no": "768", "name": "MUSTAFA KAYRA KABAY"}, {"no": "659", "name": "MÜHLİŞAN ÖKÇE"}, {"no": "673", "name": "NEHİR BİTER"}, {"no": "493", "name": "ÖMER EMBİYA ERTURAN"}, {"no": "220", "name": "SAADET BEGÜM TORUN"}, {"no": "783", "name": "SARE DERİN SU"}, {"no": "738", "name": "SOMYA MOHAMED HUSSEIN MOHAMED HUSSEIN SALEH"}, {"no": "602", "name": "TUĞBA ÇALIKOĞLU"}, {"no": "818", "name": "YAKUB HAMZA SÖYLER"}, {"no": "750", "name": "YUSUF YAZICI"}, {"no": "760", "name": "ZAINAB NABEEL ABDULAZEEZ ALSUHAIL"}, {"no": "759", "name": "ZEYNEP GÜLSEVER"}], "7/B": [{"no": "950", "name": "ABDUVAIT TURDIYEV"}, {"no": "89", "name": "AHMET ALİ URAS"}, {"no": "803", "name": "BERAT TANRIVERDİ"}, {"no": "621", "name": "BETÜL BAŞERLİ"}, {"no": "638", "name": "EMİRHAN EKMEKÇİ"}, {"no": "958", "name": "ESMANUR BAYRAM"}, {"no": "959", "name": "EYLÜL ELA SÖNMEZ"}, {"no": "806", "name": "HAMZA MERT ARSLAN"}, {"no": "764", "name": "HASAN MERT KANDEMİR"}, {"no": "647", "name": "HAVVA ÇELİK"}, {"no": "648", "name": "HÜSEYİN YAŞAR"}, {"no": "815", "name": "İLKNUR AYHAN"}, {"no": "650", "name": "KÜBRA DEMİR"}, {"no": "784", "name": "MEHMET ÇELİK"}, {"no": "656", "name": "MELDA AKÇAY"}, {"no": "669", "name": "MİRAÇ GÖKHAN BORAK"}, {"no": "661", "name": "MUSAB ENSAR KAYMAZ"}, {"no": "300", "name": "NAZ MİRA KISA"}, {"no": "671", "name": "NEHİR BAŞ"}, {"no": "785", "name": "OMER ABEDİ"}, {"no": "57", "name": "POYRAZ ALİ ARSLAN"}, {"no": "651", "name": "RAVZA KABADAYI"}, {"no": "82", "name": "SAMET EGE YILDIRIM"}, {"no": "781", "name": "SATILMIŞ BERAT CEYLAN"}, {"no": "969", "name": "SULAIMAN SEDEEQ S. ZAIN ALABIDEEN"}, {"no": "707", "name": "TALHA TOPRAK DİLER"}, {"no": "755", "name": "ZEHRA DEMİR"}, {"no": "396", "name": "ZEYNEP DESTEK"}, {"no": "743", "name": "ZEYNEP İLBUĞA"}], "7/C": [{"no": "618", "name": "AHMED ENSAR AKDENİZ"}, {"no": "193", "name": "AMER TAKLAS"}, {"no": "267", "name": "CEMRE BOZKURT"}, {"no": "588", "name": "ENES HAYRİ KONYA"}, {"no": "632", "name": "ESMA SEVEN"}, {"no": "706", "name": "EYLÜL MERVE KORKUT"}, {"no": "778", "name": "EYMEN YÜCE"}, {"no": "960", "name": "HAMZA KAYA"}, {"no": "338", "name": "HAMZA LEVENT SARIKAYA"}, {"no": "649", "name": "İNCİ NUR ÇAPALI"}, {"no": "245", "name": "İSMAİL ÇOBAN"}, {"no": "652", "name": "KUZEY BURAK KIVANÇ"}, {"no": "96", "name": "LİVANUR ÖZBEK"}, {"no": "681", "name": "MALAK TAHSEEN MAHMOOD ALALI"}, {"no": "383", "name": "MEHMET BİLAL OKAN"}, {"no": "810", "name": "MİHRİMAH ATEŞ"}, {"no": "667", "name": "MİRAÇ EFE BAYRAK"}, {"no": "664", "name": "MUHAMMED POYRAZ TATAŞ"}, {"no": "793", "name": "MUHAMMED RECEP PARSAK"}, {"no": "660", "name": "MUHAMMET EMİR ÖZTÜRK"}, {"no": "963", "name": "MUHAMMET İSLAM SEZGİN"}, {"no": "658", "name": "MURSAL SAYDI"}, {"no": "672", "name": "NİSA NUR TAZEGÜL"}, {"no": "742", "name": "SELEN MERİÇ"}, {"no": "967", "name": "SELEN ARZU BARAN"}, {"no": "745", "name": "TUANA HİRA ÖNCÜL"}, {"no": "751", "name": "YUNUS EMRE ÖZTÜRK"}, {"no": "317", "name": "YUSUF ATABAY"}, {"no": "319", "name": "YUSUF ENSAR GÜLERYÜZ"}, {"no": "972", "name": "ZEHRA İZCİ"}, {"no": "331", "name": "ZEHRA MİRAY EGE"}], "7/E": [{"no": "311", "name": "ADA MOSAWI"}, {"no": "22", "name": "BULUT TAN KAPTI"}, {"no": "624", "name": "CEREN ÜNSAL"}, {"no": "91", "name": "DERİN NİSA YİMSEK"}, {"no": "637", "name": "EGEMEN ÇOLAK"}, {"no": "631", "name": "EKİN GÜNDÜZ"}, {"no": "633", "name": "ELA SÜLÜN"}, {"no": "639", "name": "EMİR ERGUVAN"}, {"no": "241", "name": "EMİR KIVANÇ KARGIN"}, {"no": "765", "name": "ERVA KARATAŞ"}, {"no": "3", "name": "FATEMA ANSARI"}, {"no": "645", "name": "HİRA NUR VAROL"}, {"no": "148", "name": "KUZEY GÜMÜŞLER"}, {"no": "736", "name": "MİNA MOSAWI"}, {"no": "809", "name": "MUHAMMED EFE AVŞAR"}, {"no": "666", "name": "NİSANUR YÜCE"}, {"no": "732", "name": "OĞUZHAN YAĞMUR"}, {"no": "719", "name": "ORHAN ALİ ÇELİK"}, {"no": "733", "name": "OSMAN EROL"}, {"no": "734", "name": "ÖZLEM CEMRE DEMİR"}, {"no": "244", "name": "ÖZÜM DURU AYDIN"}, {"no": "739", "name": "SERRA NUR ÇOLAK"}, {"no": "747", "name": "UMUT ALP ADIGÜZEL"}, {"no": "748", "name": "UTKU KAÇAK"}, {"no": "749", "name": "VEYSEL AYRAL"}, {"no": "752", "name": "YUNUS EMRE ÖZDEMİR"}, {"no": "81", "name": "YUSRA İLDİZ"}, {"no": "754", "name": "YUSUF ÇALIŞIRİŞÇİ"}, {"no": "757", "name": "ZÜHRE NUR POLAT"}], "7/F": [{"no": "619", "name": "ALİ HAMZA ŞİMŞEK"}, {"no": "173", "name": "ALİ ÖMER ACIOĞLU"}, {"no": "951", "name": "ARAS KEREM KARADAMAR"}, {"no": "626", "name": "CELAL ÇETİN YILDIZ"}, {"no": "625", "name": "CEYLİN GÜR"}, {"no": "640", "name": "EGEKADİR TOPRAK"}, {"no": "636", "name": "EGEMEN TEZVARAN"}, {"no": "634", "name": "ELİF İNCE"}, {"no": "629", "name": "ELİF ECE ÖZKAN"}, {"no": "635", "name": "ENES TALHA İŞ"}, {"no": "761", "name": "EYLÜL BAKAN"}, {"no": "771", "name": "EYMEN AYAZ CORA"}, {"no": "762", "name": "FATİMA NUR BAL"}, {"no": "641", "name": "GAMZENUR ATASOY"}, {"no": "644", "name": "HAZAL YILMAZ"}, {"no": "646", "name": "HÜLYA ŞİLE"}, {"no": "654", "name": "KEREM ÇELİK"}, {"no": "662", "name": "MEHMET BERAN ÖZTEMEL"}, {"no": "655", "name": "MİHRİMAH ZEREN"}, {"no": "663", "name": "MOHAMMED YAHYA BUSHRA MOHAMMED"}, {"no": "668", "name": "MUSTAFA UZUN"}, {"no": "670", "name": "NİSA UÇARKUŞ"}, {"no": "259", "name": "ÖMER TARHAN"}, {"no": "735", "name": "ÖZGÜR SABRİ İNCE"}, {"no": "763", "name": "SARP TEBER"}, {"no": "741", "name": "SENA EMİNE DEMİROK"}, {"no": "740", "name": "ŞURA BAKIŞ"}, {"no": "265", "name": "YASİR TAHA KIZILIRMAK"}, {"no": "753", "name": "YUSUF REBER ÖZİŞİ"}, {"no": "758", "name": "ZEKİ GÜNGÖR"}, {"no": "756", "name": "ZEYNEP ASEL ÇAKALASMA"}], "8/A": [{"no": "258", "name": "AHMED YASİN ÖZASLAN"}, {"no": "68", "name": "AMIRSAM EBRAHIMIMOSHTAGHI"}, {"no": "357", "name": "ASIR MOHAMMED THAER ALMAHDAWI"}, {"no": "801", "name": "AYŞENUR PARSAK"}, {"no": "887", "name": "BENGİSU YILMAZ"}, {"no": "183", "name": "BEREN CÖMET"}, {"no": "333", "name": "BURAK KUTLU"}, {"no": "103", "name": "ÇAĞRI MERT AYGİRAY"}, {"no": "73", "name": "DERİN SU CEYLAN"}, {"no": "225", "name": "EFE BERK KURT"}, {"no": "196", "name": "EYMEN SAFA DEMİRTAŞ"}, {"no": "285", "name": "FAIZ ALI MOHAMMADI"}, {"no": "346", "name": "JUMAGUL ZIYAVEDINOVA"}, {"no": "71", "name": "KÜBRA NUR BALİ"}, {"no": "266", "name": "MEHMET EREN GÖRER"}, {"no": "237", "name": "MERVE SU BAL"}, {"no": "268", "name": "MİRAY GENCER"}, {"no": "273", "name": "MUHAMMED BERAT ÇETİN"}, {"no": "146", "name": "NEHİR DURU KARAHASAN"}, {"no": "93", "name": "ÖMER ÜSTBAŞ"}, {"no": "312", "name": "RAVZA KALABALIK"}, {"no": "315", "name": "STAYESH YOUSUFI"}, {"no": "221", "name": "SUDE AZRA LOKMACI"}, {"no": "136", "name": "TANEM GÜR"}, {"no": "316", "name": "TUNAHAN KESKİN"}, {"no": "276", "name": "UĞUR BERKE IŞIK"}, {"no": "366", "name": "YAHYA HUSHAM JASIM GALMASH"}, {"no": "195", "name": "YASMIN HUSHAM JASIM GALMASH"}, {"no": "180", "name": "ZEYNEP ÇİÇEK"}, {"no": "289", "name": "ZEYNEP RANA AKAN"}], "8/B": [{"no": "26", "name": "ABDULLAH MQAYOM"}, {"no": "235", "name": "AHMET SARİKAYA"}, {"no": "202", "name": "ALI GHAZWAN ISMAIL TABOONA"}, {"no": "773", "name": "ALPEREN CEYLAN"}, {"no": "92", "name": "ASMİN TİNÇ"}, {"no": "158", "name": "AZRA NUR VURDU"}, {"no": "106", "name": "BERFİN SÖZER"}, {"no": "172", "name": "CALINE GHANDOUR"}, {"no": "174", "name": "ECRİN ÇAĞLI"}, {"no": "199", "name": "ENES ER"}, {"no": "334", "name": "ENSAR İPEKÇİ"}, {"no": "154", "name": "ESİLA HİLAL TOSUN"}, {"no": "123", "name": "EYMEN ÖZTURAN"}, {"no": "116", "name": "MEHMET EFE KARAOĞLU"}, {"no": "209", "name": "MERAL ALİOĞLU"}, {"no": "236", "name": "MERT ÖMER KORKMAZ"}, {"no": "80", "name": "MİRAY AK"}, {"no": "263", "name": "MUHAMMET ALİ ÖZER"}, {"no": "499", "name": "MUSTAFA EMİR ÖZÇELİK"}, {"no": "77", "name": "NAZLI GÖBEN"}, {"no": "408", "name": "OMAR OTHMAN TALIB"}, {"no": "780", "name": "ÖMÜR UZUNLAR"}, {"no": "217", "name": "RUQAYAH GHASSAN AAWAEED AAWAEED"}, {"no": "177", "name": "SERIEN MOHAMED HUSSEIN MOHAMED HUSSEIN SALEH"}, {"no": "86", "name": "SUPHİYE NUR GÜLSEVER"}, {"no": "447", "name": "YAĞMUR KOÇGÜNDÜZ"}, {"no": "101", "name": "YAĞMUR ORAL"}, {"no": "50", "name": "YASAMEEN AHMED ABDULRAZZAQ ALHACHAMI"}, {"no": "104", "name": "YAŞAR DENİZ BAL"}, {"no": "329", "name": "YUNUS YILDIRIM"}, {"no": "280", "name": "YUSUF KAYRA ARSLAN"}], "8/C": [{"no": "127", "name": "ABDULLAH YALAZ"}, {"no": "67", "name": "ALPEREN CENGİZ"}, {"no": "228", "name": "ATİLLA DENİZ GÜNEY"}, {"no": "150", "name": "BERAT BAT"}, {"no": "248", "name": "BEYZA BECERMEN"}, {"no": "222", "name": "BÜŞRA TOPCU"}, {"no": "269", "name": "DAMLA ÖZCAN"}, {"no": "249", "name": "DUA TAŞKIRAN"}, {"no": "507", "name": "EFE GÜÇLÜ"}, {"no": "889", "name": "FİKRET ESEN"}, {"no": "860", "name": "HAVİN ÖZKAYA"}, {"no": "271", "name": "HAYAL ÇETİN"}, {"no": "326", "name": "HAYDER AHMED FAEQ AL GBURI"}, {"no": "284", "name": "HELENA KAMJOO"}, {"no": "70", "name": "HİRA NUR MEMKEZE"}, {"no": "291", "name": "IBRAHIM MOHAMED IBRAHIM ELNOUR"}, {"no": "130", "name": "JOLYANA AYAD MOHAMMED ALMAEENI"}, {"no": "192", "name": "MEHMET EMİN DUMAN"}, {"no": "234", "name": "MUHAMMED ENES EKİÇİ"}, {"no": "124", "name": "MUHAMMED TUĞRUL YILMAZ"}, {"no": "214", "name": "MUHAMMET ALİ DEMİR"}, {"no": "120", "name": "NİSA EYLÜL SELVİ"}, {"no": "223", "name": "POYRAZ ÇINAR TUNÇER"}, {"no": "72", "name": "RAIHANAH YASIR HASAN ALGBURI"}, {"no": "133", "name": "ROJHAT ÖZKAYA"}, {"no": "140", "name": "RUAA SAAD ABDULHAQ ABDULHAQ"}, {"no": "274", "name": "SEMA ÇETİN"}, {"no": "114", "name": "TAHA KAYRA AZMAN"}, {"no": "288", "name": "TUĞÇE ÖCAL"}, {"no": "83", "name": "YAHYA İBRAHİM DEMİRDEN"}, {"no": "117", "name": "YOUSIF MOHAMMED ZABEN ZABEN"}], "8/D": [{"no": "170", "name": "AESHA ABDUL LATIF"}, {"no": "197", "name": "AHMET EMİR DEMİR"}, {"no": "135", "name": "AHMET OĞUZHAN SEZGİN"}, {"no": "152", "name": "ASLIHAN URGAÇ"}, {"no": "79", "name": "AYBÜKE KARAÇAM"}, {"no": "816", "name": "BEYZANUR ÇAMURLU"}, {"no": "162", "name": "BİLAL UMUT YÜCEDAĞ"}, {"no": "306", "name": "DEMİR KAAN ANDAÇ"}, {"no": "194", "name": "DERİN BÜYÜKKAYA"}, {"no": "206", "name": "ELİFNUR KAYIŞDAĞ"}, {"no": "151", "name": "ESMA BERİL ÇEVİK"}, {"no": "109", "name": "EYMEN KUYUCU"}, {"no": "165", "name": "FURKAN EFE SARAÇ"}, {"no": "74", "name": "HAMZA GÖKDEMİR"}, {"no": "142", "name": "HÜSEYİN EMİN YILDIZ"}, {"no": "796", "name": "İSMAİL GEZER"}, {"no": "335", "name": "MALAK MOHAMMAD Y. ALBETSHAWEESH"}, {"no": "211", "name": "MERT NEFİS"}, {"no": "251", "name": "METEHAN KALKAN"}, {"no": "372", "name": "MİRAY ÇELİK"}, {"no": "66", "name": "POYRAZ KAHRAMANOĞLU"}, {"no": "297", "name": "RAHİME AVCI"}, {"no": "129", "name": "RECEP RÜZGAR ÖĞ"}, {"no": "179", "name": "RÜYA ADA BAYBAŞ"}, {"no": "144", "name": "SEMİH KAHYA"}, {"no": "240", "name": "SIRAÇ FESİH ÇİÇEK"}, {"no": "389", "name": "SUDENAZ DEMİR"}, {"no": "328", "name": "VEYSEL SEYDA KAYGUSUZ"}, {"no": "616", "name": "YUSUF AVCI"}, {"no": "775", "name": "YUSUF KORKUT"}], "8/E": [{"no": "167", "name": "AKİF EGE YAVUZ"}, {"no": "10", "name": "ALİ UTKU MUTLU"}, {"no": "301", "name": "ASRA BAGHAEINIA"}, {"no": "36", "name": "CEMRE ŞAKAR"}, {"no": "5", "name": "DURU ÖĞRENÇ"}, {"no": "1", "name": "ELİF ÖZTÜRK"}, {"no": "166", "name": "ELVİN ZEREN"}, {"no": "34", "name": "EYMEN ÇINAR"}, {"no": "204", "name": "FATMA ELA TARAKÇI"}, {"no": "33", "name": "FEYZA ÖZTÜRK"}, {"no": "24", "name": "GİZEM ŞEN"}, {"no": "281", "name": "GÜLBAHAR BAYSOY"}, {"no": "32", "name": "HASAN BORA UZUN"}, {"no": "393", "name": "KAYRA DEMİR BAYKA"}, {"no": "12", "name": "LİVA GÜL ŞAR"}, {"no": "731", "name": "MERYEM SUDE SANCAR"}, {"no": "65", "name": "MİRAY KARAKUZU"}, {"no": "147", "name": "ÖYKÜ DURU ÇAĞLAR"}, {"no": "203", "name": "RÜZGAR ENES AKBAŞ"}, {"no": "615", "name": "SERDAR YAVUZ"}, {"no": "394", "name": "SHAHNAZ MURADI"}, {"no": "97", "name": "TUANA LAYAN BAYTÜRK"}, {"no": "318", "name": "YUNUS EMRE TAŞDEMİR"}, {"no": "466", "name": "YUSUF EREN KUTAN"}, {"no": "175", "name": "YUSUF TOPRAK KOCADEMİR"}, {"no": "39", "name": "ZEYNEP BAŞERLİ"}], "8/F": [{"no": "7", "name": "AHMET METE KANDEMİR"}, {"no": "47", "name": "AHMET TOPRAK GÜZEL"}, {"no": "800", "name": "ALEKSA MELİSA KANDEĞER"}, {"no": "323", "name": "AYBİKE AKDOĞAN"}, {"no": "40", "name": "AYŞE ASYA YEREBASMAZ"}, {"no": "53", "name": "AYŞE ESLEM GÜNER"}, {"no": "207", "name": "DURU ZEHRA ERTAN"}, {"no": "49", "name": "ECE ÇAVUŞOĞLU"}, {"no": "111", "name": "ERVA ÖZTURAN"}, {"no": "60", "name": "ESİLA İLKİM KIVANÇ"}, {"no": "27", "name": "EYÜP EMİR YAPICI"}, {"no": "44", "name": "FURKAN GÜNER"}, {"no": "122", "name": "IŞIL ATALAY"}, {"no": "143", "name": "MELAHAT EDA ÇABUK"}, {"no": "52", "name": "MİRAY ŞENEL"}, {"no": "247", "name": "NİSANUR ÖZPEKTÜRK"}, {"no": "115", "name": "RÜZGAR ŞAHİN"}, {"no": "43", "name": "RÜZGAR UĞUR"}, {"no": "171", "name": "SERRA NUR YILMAZ"}, {"no": "813", "name": "SUDE NAZ ARTAN"}, {"no": "256", "name": "VASFİYE CEYLİN ASLAN"}, {"no": "149", "name": "YAREN ZEHRA BİRBEN"}, {"no": "46", "name": "YİĞİT ALP KÜÇÜKER"}, {"no": "63", "name": "YUSUF ÇAKIR"}, {"no": "343", "name": "YUSUF EYMEN BULUT"}, {"no": "48", "name": "ZEYNEP HARTUÇ"}, {"no": "41", "name": "ZEYNEP NAZ GÜNDÜZAY"}]};
-
-    const INITIAL_57_RECORDS = [{"id": "rec_7F_626_1", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "7/F", "studentNo": "626", "studentName": "CELAL ÇETİN YILDIZ", "parentName": "Derya yıldız", "parentPhone": "5378602777", "vrTitles": ["Uzayın Tanıtımı", "Anıtkabir Tanıtımı", "Topkapı Sarayı Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 2, 3, 8, 12]}, {"id": "rec_7C_745_2", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "7/C", "studentNo": "745", "studentName": "TUANA HİRA ÖNCÜL", "parentName": "Nazlı Öncül Güven", "parentPhone": "5052249295", "vrTitles": ["Uzayın Tanıtımı", "Anıtkabir Tanıtımı", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 2, 10, 11, 12]}, {"id": "rec_7C_383_3", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "7/C", "studentNo": "383", "studentName": "MEHMET BİLAL OKAN", "parentName": "Selcan Okan", "parentPhone": "5343346019", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 6, 8, 11, 12]}, {"id": "rec_7B_57_4", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "7/B", "studentNo": "57", "studentName": "POYRAZ ALİ ARSLAN", "parentName": "Ecem nurcan çoşkun", "parentPhone": "5373489406", "vrTitles": ["Topkapı Sarayı Turu", "Göbekli Tepe Tanıtımı", "Çin Gezisi ve Çin Seddi Gezisi", "Mısır Piramitleri ve Tac Mahal Turu", "Denizaltı Turu"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [3, 5, 8, 9, 11]}, {"id": "rec_6F_533_5", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/F", "studentNo": "533", "studentName": "MUHAMMED ARDA KARAGÖZ", "parentName": "Mine bekiç", "parentPhone": "5366696081", "vrTitles": ["Uzayın Tanıtımı", "Topkapı Sarayı Turu", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 3, 6, 11, 12]}, {"id": "rec_6D_490_6", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/D", "studentNo": "490", "studentName": "ECEM LİNA ÖMÜR", "parentName": "Fatma Ömür", "parentPhone": "5541317967", "vrTitles": ["Uzayın Tanıtımı", "Anıtkabir Tanıtımı", "Alaska’da Dört Mevsim Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 2, 7, 10, 11]}, {"id": "rec_6C_714_7", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/C", "studentNo": "714", "studentName": "POYRAZ SEZER", "parentName": "Kadir sezer", "parentPhone": "5521157939", "vrTitles": ["Uzayın Tanıtımı", "Anıtkabir Tanıtımı", "Kapadokya Balon Turu", "Göbekli Tepe Tanıtımı", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 2, 4, 5, 10]}, {"id": "rec_6C_359_8", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/C", "studentNo": "359", "studentName": "BERAY KABAN", "parentName": "Zeynep kaban", "parentPhone": "5384823820", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 6, 11, 12, 13]}, {"id": "rec_6A_675_9", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/A", "studentNo": "675", "studentName": "BUĞRA EFE KÖKSOY", "parentName": "Kübra köksoy", "parentPhone": "5312479077", "vrTitles": ["Uzayın Tanıtımı", "Anıtkabir Tanıtımı", "Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 2, 6, 8, 12]}, {"id": "rec_5F_30_10", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/F", "studentNo": "30", "studentName": "BELİNAY BİRBEN", "parentName": "Lütfiye birben", "parentPhone": "5398600226", "vrTitles": ["Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [4, 6, 11, 12, 13]}, {"id": "rec_5F_213_11", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/F", "studentNo": "213", "studentName": "MUSTAFA ALİ KARAKUŞ", "parentName": "Didem karakuş", "parentPhone": "5399457888", "vrTitles": ["Göbekli Tepe Tanıtımı", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [5, 6, 11, 12, 13]}, {"id": "rec_5B_62_12", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/B", "studentNo": "62", "studentName": "EFE BERK ÖKELİ", "parentName": "Gülnaz Akbay", "parentPhone": "905353546635", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Alaska’da Dört Mevsim Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 6, 7, 11, 12]}, {"id": "rec_5B_239_13", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/B", "studentNo": "239", "studentName": "NİSANUR BAYRAK", "parentName": "Zabit bayrak", "parentPhone": "5423442078", "vrTitles": ["Uzayın Tanıtımı", "Topkapı Sarayı Turu", "Kapadokya Balon Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 3, 4, 11, 12]}, {"id": "rec_5A_87_14", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/A", "studentNo": "87", "studentName": "ERTUĞRUL DELİCE", "parentName": "Serap delice", "parentPhone": "5442699741", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Alaska’da Dört Mevsim Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 6, 7, 10, 11]}, {"id": "rec_5A_168_15", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/A", "studentNo": "168", "studentName": "KEREM ALİ ŞİŞMAN", "parentName": "Melike ışık", "parentPhone": "5544498051", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Alaska’da Dört Mevsim Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 6, 7, 10, 11]}, {"id": "rec_8C_133_16", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "8/C", "studentNo": "133", "studentName": "ROJHAT ÖZKAYA", "parentName": "Melek özkaya", "parentPhone": "5464988165", "vrTitles": ["Kapadokya Balon Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [4, 8, 11, 12, 13]}, {"id": "rec_7F_753_17", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "7/F", "studentNo": "753", "studentName": "YUSUF REBER ÖZİŞİ", "parentName": "Dilan özişi", "parentPhone": "5059745736", "vrTitles": ["Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [4, 6, 8, 10, 12]}, {"id": "rec_8C_130_18", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "8/C", "studentNo": "130", "studentName": "JOLYANA AYAD MOHAMMED ALMAEENI", "parentName": "Sabri mohammed", "parentPhone": "5383686375", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 6, 11, 12, 13]}, {"id": "rec_5F_9_19", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/F", "studentNo": "9", "studentName": "AHMET YAĞIZ SU", "parentName": "Turgay su", "parentPhone": "5514184891", "vrTitles": ["Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Mısır Piramitleri ve Tac Mahal Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [4, 6, 8, 9, 12]}, {"id": "rec_5A_367_20", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/A", "studentNo": "367", "studentName": "LİNA KILIÇ", "parentName": "Hayriye kılıç", "parentPhone": "5071557736", "vrTitles": ["Uzayın Tanıtımı", "Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 4, 6, 11, 12]}, {"id": "rec_6C_540_21", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/C", "studentNo": "540", "studentName": "MUHAMMET BERAT TAŞTAN", "parentName": "Birol taştan", "parentPhone": "5531283325", "vrTitles": ["Uzayın Tanıtımı", "Anıtkabir Tanıtımı", "Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Denizaltı Turu"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 2, 6, 8, 11]}, {"id": "rec_6D_511_22", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/D", "studentNo": "511", "studentName": "HAMZA BİLAL DURAN", "parentName": "Günay Duran", "parentPhone": "5456902439", "vrTitles": ["Uzayın Tanıtımı", "Anıtkabir Tanıtımı", "Topkapı Sarayı Turu", "Kapadokya Balon Turu", "Helikopter ile Everest Turu"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 2, 3, 4, 6]}, {"id": "rec_6A_823_23", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/A", "studentNo": "823", "studentName": "SELİM REŞAT BEYAZ", "parentName": "Elif Beyaz", "parentPhone": "5530951487", "vrTitles": ["Uzayın Tanıtımı", "Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 4, 6, 8, 12]}, {"id": "rec_7C_972_24", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "7/C", "studentNo": "972", "studentName": "ZEHRA İZCİ", "parentName": "Birsen İzci", "parentPhone": "5058917553", "vrTitles": ["Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Alaska’da Dört Mevsim Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [4, 6, 7, 10, 11]}, {"id": "rec_8D_179_25", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "8/D", "studentNo": "179", "studentName": "RÜYA ADA BAYBAŞ", "parentName": "Leyla Baybaş", "parentPhone": "5349869705", "vrTitles": ["Anıtkabir Tanıtımı", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [2, 10, 11, 12, 13]}, {"id": "rec_5F_342_26", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/F", "studentNo": "342", "studentName": "YAĞIZ OSMAN DÖLCEL", "parentName": "Ayşegül dölcel", "parentPhone": "5464314405", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Mısır Piramitleri ve Tac Mahal Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 6, 9, 11, 12]}, {"id": "rec_6B_491_27", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/B", "studentNo": "491", "studentName": "ELANUR ZEYBEK", "parentName": "Fahriye Zeybek", "parentPhone": "5349427099", "vrTitles": ["Uzayın Tanıtımı", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 10, 11, 12, 13]}, {"id": "rec_5C_108_28", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/C", "studentNo": "108", "studentName": "GÖKTÜRK GÖKÇE TANRIVERDİ", "parentName": "Ebru Tanrıverdi", "parentPhone": "905456305768", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Alaska’da Dört Mevsim Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 6, 7, 11, 12]}, {"id": "rec_5A_219_29", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/A", "studentNo": "219", "studentName": "BELİS YILMAZ", "parentName": "ZELAL YILMAZ", "parentPhone": "5443832096", "vrTitles": ["Uzayın Tanıtımı", "Kapadokya Balon Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 4, 10, 11, 12]}, {"id": "rec_5F_42_30", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/F", "studentNo": "42", "studentName": "BULUT TAŞKESER", "parentName": "damla taskeser", "parentPhone": "5535132677", "vrTitles": ["Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Mısır Piramitleri ve Tac Mahal Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [6, 8, 9, 10, 11]}, {"id": "rec_5E_293_31", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/E", "studentNo": "293", "studentName": "BORACAN ATEŞ", "parentName": "Neslihan Küpelioğlu", "parentPhone": "5455500183", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 6, 11, 12, 13]}, {"id": "rec_6A_543_32", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/A", "studentNo": "543", "studentName": "MİRSAD EGE EVGİN", "parentName": "Seçil Dereçiçek", "parentPhone": "5411476741", "vrTitles": ["Uzayın Tanıtımı", "Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Mısır Piramitleri ve Tac Mahal Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 4, 6, 9, 12]}, {"id": "rec_8A_258_33", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "8/A", "studentNo": "258", "studentName": "AHMED YASİN ÖZASLAN", "parentName": "Nizamettin Özaslan", "parentPhone": "5057118806", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Mısır Piramitleri ve Tac Mahal Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 6, 9, 12, 13]}, {"id": "rec_7F_662_34", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "7/F", "studentNo": "662", "studentName": "MEHMET BERAN ÖZTEMEL", "parentName": "Neslihan İnce", "parentPhone": "5399542076", "vrTitles": ["Uzayın Tanıtımı", "Çin Gezisi ve Çin Seddi Gezisi", "Mısır Piramitleri ve Tac Mahal Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 8, 9, 10, 11]}, {"id": "rec_5A_178_35", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/A", "studentNo": "178", "studentName": "MUSTAFA KEMAL YİMSEK", "parentName": "Naci Türker Yimsek", "parentPhone": "5054887980", "vrTitles": ["Uzayın Tanıtımı", "Mısır Piramitleri ve Tac Mahal Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 9, 11, 12, 13]}, {"id": "rec_6D_510_36", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/D", "studentNo": "510", "studentName": "GÜLCE DÜLGER", "parentName": "Selma dülger", "parentPhone": "5524117510", "vrTitles": ["Alaska’da Dört Mevsim Turu", "Çin Gezisi ve Çin Seddi Gezisi", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [7, 8, 10, 11, 12]}, {"id": "rec_5F_242_37", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/F", "studentNo": "242", "studentName": "RÜZGAR ŞİMŞEK", "parentName": "Gülden Şimşek", "parentPhone": "5415637838", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 6, 10, 12, 13]}, {"id": "rec_6D_728_38", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/D", "studentNo": "728", "studentName": "BERRE YARAR", "parentName": "Leyla Yarar", "parentPhone": "5309454977", "vrTitles": ["Uzayın Tanıtımı", "Anıtkabir Tanıtımı", "Kapadokya Balon Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 2, 4, 11, 12]}, {"id": "rec_5D_200_39", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/D", "studentNo": "200", "studentName": "MEHMET ŞAH CİHAN YILDIZ", "parentName": "Vahdettın yıldız", "parentPhone": "5365262003", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Mısır Piramitleri ve Tac Mahal Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 6, 9, 10, 11]}, {"id": "rec_5F_227_40", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/F", "studentNo": "227", "studentName": "MÜZEYYEN ELİF TURAMAN", "parentName": "Hatice Turaman", "parentPhone": "0538 973 08 80", "vrTitles": ["Uzayın Tanıtımı", "Topkapı Sarayı Turu", "Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Denizaltı Turu"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 3, 6, 8, 11]}, {"id": "rec_6A_574_41", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/A", "studentNo": "574", "studentName": "YUSUF TALHA PEDÜK", "parentName": "Nimet Pedük", "parentPhone": "5318520397", "vrTitles": ["Kapadokya Balon Turu", "Göbekli Tepe Tanıtımı", "Helikopter ile Everest Turu", "Mısır Piramitleri ve Tac Mahal Turu", "Denizaltı Turu"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [4, 5, 6, 9, 11]}, {"id": "rec_5E_55_42", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/E", "studentNo": "55", "studentName": "ELİF ŞURA ŞENER", "parentName": "Suna Şener", "parentPhone": "5362318697", "vrTitles": ["Anıtkabir Tanıtımı", "Topkapı Sarayı Turu", "Kapadokya Balon Turu", "Göbekli Tepe Tanıtımı", "Helikopter ile Everest Turu"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [2, 3, 4, 5, 6]}, {"id": "rec_5D_325_43", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/D", "studentNo": "325", "studentName": "ÇINAR ONAN", "parentName": "Elif köksoy", "parentPhone": "5356084000", "vrTitles": ["Uzayın Tanıtımı", "Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 4, 6, 11, 12]}, {"id": "rec_6F_791_44", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/F", "studentNo": "791", "studentName": "YUSUF MERT KILIÇ", "parentName": "Ayşe girişen", "parentPhone": "5468090533", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Mısır Piramitleri ve Tac Mahal Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 6, 9, 11, 12]}, {"id": "rec_6C_504_45", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/C", "studentNo": "504", "studentName": "EYLÜL OK", "parentName": "Hatice ok", "parentPhone": "5071870362", "vrTitles": ["Kapadokya Balon Turu", "Göbekli Tepe Tanıtımı", "Çin Gezisi ve Çin Seddi Gezisi", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [4, 5, 8, 10, 12]}, {"id": "rec_6B_685_46", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/B", "studentNo": "685", "studentName": "ARDEN SEZER", "parentName": "Meral Sezer", "parentPhone": "5376138585", "vrTitles": ["Uzayın Tanıtımı", "Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 4, 6, 11, 12]}, {"id": "rec_7F_619_47", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "7/F", "studentNo": "619", "studentName": "ALİ HAMZA ŞİMŞEK", "parentName": "Melek Şimşek", "parentPhone": "5383336340", "vrTitles": ["Uzayın Tanıtımı", "Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Denizaltı Turu"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 4, 6, 8, 11]}, {"id": "rec_6B_549_48", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/B", "studentNo": "549", "studentName": "MİNE DALKILIÇ", "parentName": "Seda DALKILIÇ", "parentPhone": "5462400580", "vrTitles": ["Uzayın Tanıtımı", "Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 4, 6, 11, 12]}, {"id": "rec_6B_575_49", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/B", "studentNo": "575", "studentName": "ZEYNEB UĞUR", "parentName": "Mehtap uğur", "parentPhone": "5319156642", "vrTitles": ["Kapadokya Balon Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [4, 10, 11, 12, 13]}, {"id": "rec_5D_360_50", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/D", "studentNo": "360", "studentName": "YOUSEF ABDULKADR HINDI", "parentName": "munya hindi", "parentPhone": "5377993781", "vrTitles": ["Uzayın Tanıtımı", "Alaska’da Dört Mevsim Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "pending", "amount": 0, "paymentNote": "", "vrIds": [1, 7, 8, 11, 12]}, {"id": "rec_7F_758_51", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "7/F", "studentNo": "758", "studentName": "ZEKİ GÜNGÖR", "parentName": "Sibel Güngör", "parentPhone": "5333185324", "vrTitles": ["Uzayın Tanıtımı", "Helikopter ile Everest Turu", "Çin Gezisi ve Çin Seddi Gezisi", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "Hız Treni (Roller Coaster) Deneyimi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 6, 8, 10, 12]}, {"id": "rec_5F_112_52", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/F", "studentNo": "112", "studentName": "FEYZA CEREN KOZ", "parentName": "Münevver koz", "parentPhone": "5458637125", "vrTitles": ["Kapadokya Balon Turu", "Helikopter ile Everest Turu", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [4, 6, 11, 12, 13]}, {"id": "rec_8E_466_53", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "8/E", "studentNo": "466", "studentName": "YUSUF EREN KUTAN", "parentName": "Özlem buzdağlı kutan", "parentPhone": "5524389098", "vrTitles": ["Topkapı Sarayı Turu", "Göbekli Tepe Tanıtımı", "Çin Gezisi ve Çin Seddi Gezisi", "Mısır Piramitleri ve Tac Mahal Turu", "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [3, 5, 8, 9, 10]}, {"id": "rec_5A_118_54", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/A", "studentNo": "118", "studentName": "GÖKÇE TANRIKUL", "parentName": "Eftal gündüz", "parentPhone": "5369468907", "vrTitles": ["Kapadokya Balon Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [4, 8, 11, 12, 13]}, {"id": "rec_5A_212_55", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/A", "studentNo": "212", "studentName": "MISHEL FAYZULINA", "parentName": "Firuza fayzulina", "parentPhone": "5074357726", "vrTitles": ["Kapadokya Balon Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [4, 8, 11, 12, 13]}, {"id": "rec_5A_90_56", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "5/A", "studentNo": "90", "studentName": "ESLEM KAYMAK", "parentName": "Şeydanur kaymak", "parentPhone": "5369362717", "vrTitles": ["Kapadokya Balon Turu", "Çin Gezisi ve Çin Seddi Gezisi", "Denizaltı Turu", "Hız Treni (Roller Coaster) Deneyimi", "Tom ve Jerry Animasyon Filmi"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [4, 8, 11, 12, 13]}, {"id": "rec_6C_568_57", "updatedAt": "26.11.2026 14:25:00", "recordType": "ogrenci", "recordTypeLabel": "Öğrenci", "className": "6/C", "studentNo": "568", "studentName": "YAĞIZ EREN KARAKUŞ", "parentName": "Melike karakuş", "parentPhone": "5544862084", "vrTitles": ["Uzayın Tanıtımı", "Anıtkabir Tanıtımı", "Çin Gezisi ve Çin Seddi Gezisi", "Mısır Piramitleri ve Tac Mahal Turu", "Denizaltı Turu"], "paymentStatus": "paid", "amount": 150, "paymentNote": "", "vrIds": [1, 2, 8, 9, 11]}];
-
-    const VR_CONTENTS = [
-      { id: 1, title: "Uzayın Tanıtımı", desc: "Gezegenler, yıldızlar ve derin uzay yolculuğu (Animasyon)" },
-      { id: 2, title: "Anıtkabir Tanıtımı", desc: "Gerçek çekimlerle 360° Anıtkabir ziyareti" },
-      { id: 3, title: "Topkapı Sarayı Turu", desc: "Tarihî mekânların gerçek görüntülerle keşfi" },
-      { id: 4, title: "Kapadokya Balon Turu", desc: "Peri bacaları üzerinde gerçek uçuş deneyimi" },
-      { id: 5, title: "Göbekli Tepe Tanıtımı", desc: "Tarihin sıfır noktasına 360° sanal gezi" },
-      { id: 6, title: "Helikopter ile Everest Turu", desc: "Dünyanın zirvesinde gerçek helikopter çekimi" },
-      { id: 7, title: "Alaska’da Dört Mevsim Turu", desc: "Buzullar ve vahşi doğa manzaraları" },
-      { id: 8, title: "Çin Gezisi ve Çin Seddi Gezisi", desc: "Çin Seddi üzerinde gerçek panoramik tur" },
-      { id: 9, title: "Mısır Piramitleri ve Tac Mahal Turu", desc: "Dünya harikalarına yerinde 360° bakış" },
-      { id: 10, title: "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", desc: "Alpler ve Aurora Borealis ışık gösterisi" },
-      { id: 11, title: "Denizaltı Turu", desc: "Okyanus derinliklerinde su altı keşfi" },
-      { id: 12, title: "Hız Treni (Roller Coaster) Deneyimi", desc: "Adrenalin dolu gerçek 360° tren yolculuğu" },
-      { id: 13, title: "Tom ve Jerry Animasyon Filmi", desc: "Eğlenceli 360° sanal gerçeklik deneyimi" }
-    ];
-
-    let currentRecordType = "ogrenci";
-    let selectedVrIds = [];
-    let knownRecords = [...INITIAL_57_RECORDS];
-
-    document.addEventListener("DOMContentLoaded", () => {
-      initClassDropdown();
-      renderVrGrid();
-    });
-
-    function setRecordType(type) {
-      currentRecordType = type;
-      document.getElementById("typeBtnOgrenci").classList.toggle("active", type === "ogrenci");
-      document.getElementById("typeBtnVeli").classList.toggle("active", type === "veli");
-      document.getElementById("typeBtnMisafir").classList.toggle("active", type === "misafir");
-
-      const isStudent = type === "ogrenci";
-      document.getElementById("studentFieldsWrap").classList.toggle("hidden", !isStudent);
-      document.getElementById("extraParticipantWrap").classList.toggle("hidden", isStudent);
-
-      if (!isStudent) {
-        document.getElementById("extraNameLabel").textContent =
-          type === "veli" ? "Veli Adı Soyadı *" : "Misafir Öğrenci Adı Soyadı *";
-        document.getElementById("extraParentGroup").classList.toggle("hidden", type === "veli");
-      }
-      document.getElementById("formAlert").className = "alert";
-    }
-
-    function initClassDropdown() {
-      const classSelect = document.getElementById("classSelect");
-      Object.keys(STUDENTS_BY_CLASS).forEach(cls => {
-        const count = STUDENTS_BY_CLASS[cls].length;
-        const opt = document.createElement("option");
-        opt.value = cls;
-        opt.textContent = `${cls} Şubesi (${count} Öğrenci)`;
-        classSelect.appendChild(opt);
-      });
-    }
-
-    function onClassChange(preselectNo = "") {
-      const cls = document.getElementById("classSelect").value;
-      const studentSelect = document.getElementById("studentSelect");
-      studentSelect.innerHTML = "";
-
-      if (!cls || !STUDENTS_BY_CLASS[cls]) {
-        studentSelect.innerHTML = '<option value="">-- Önce Sınıf/Şube Seçiniz --</option>';
-        return;
-      }
-
-      const defaultOpt = document.createElement("option");
-      defaultOpt.value = "";
-      defaultOpt.textContent = `-- ${cls} Sınıfından Öğrenci Seçiniz --`;
-      studentSelect.appendChild(defaultOpt);
-
-      STUDENTS_BY_CLASS[cls].forEach(st => {
-        const opt = document.createElement("option");
-        opt.value = st.no;
-        opt.dataset.name = st.name;
-        const existing = knownRecords.find(r => r.className === cls && String(r.studentNo) === String(st.no));
-        let statusTag = "";
-        if (existing) {
-          statusTag = existing.paymentStatus === "paid" ? " (Onaylı - 150 TL)" : " (Kayıtlı - Onay Bekliyor)";
-        }
-        opt.textContent = `${st.no} - ${st.name}${statusTag}`;
-        if (String(st.no) === String(preselectNo)) opt.selected = true;
-        studentSelect.appendChild(opt);
-      });
-
-      if (preselectNo) onStudentSelected();
-    }
-
-    function handleQuickSearch(query) {
-      const q = query.trim().toLocaleUpperCase("tr-TR");
-      if (q.length < 2) return;
-
-      for (const [cls, list] of Object.entries(STUDENTS_BY_CLASS)) {
-        const found = list.find(st =>
-          st.name.toLocaleUpperCase("tr-TR").includes(q) || String(st.no) === q
-        );
-        if (found) {
-          document.getElementById("classSelect").value = cls;
-          onClassChange(found.no);
-          break;
-        }
-      }
-    }
-
-    function onStudentSelected() {
-      const cls = document.getElementById("classSelect").value;
-      const stNo = document.getElementById("studentSelect").value;
-      if (!cls || !stNo) return;
-
-      const existing = knownRecords.find(r => r.className === cls && String(r.studentNo) === String(stNo));
-      if (existing) {
-        document.getElementById("parentName").value = existing.parentName || "";
-        document.getElementById("parentPhone").value = existing.parentPhone || "";
-        document.getElementById("paymentNote").value = existing.paymentNote || "";
-        selectedVrIds = VR_CONTENTS
-          .filter(v => (existing.vrTitles || []).some(t => t.replace("'", "’") === v.title))
-          .map(v => v.id);
-        renderVrGrid();
-        const durumText = existing.paymentStatus === "paid"
-          ? `Sayman (${SAYMAN_NAME}) tarafından 150 TL ödeme onaylanmıştır.`
-          : `Başvurunuz alınmış olup Sayman (${SAYMAN_NAME}) onayını beklemektedir.`;
-        showAlert(`Bu öğrencinin mevcut kaydı yüklendi. ${durumText}`, "success");
-      } else {
-        document.getElementById("formAlert").className = "alert";
-      }
-    }
-
-    function renderVrGrid() {
-      const grid = document.getElementById("vrGrid");
-      grid.innerHTML = "";
-      const maxReached = selectedVrIds.length >= 5;
-
-      VR_CONTENTS.forEach(item => {
-        const isSelected = selectedVrIds.includes(item.id);
-        const isDisabled = !isSelected && maxReached;
-
-        const div = document.createElement("div");
-        div.className = `vr-item ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}`;
-        div.onclick = () => toggleVrItem(item.id);
-
-        div.innerHTML = `
-          <input type="checkbox" ${isSelected ? "checked" : ""} ${isDisabled ? "disabled" : ""} onclick="event.stopPropagation(); toggleVrItem(${item.id})">
+      <div id="studentFields">
+        <div class="grid-2">
           <div>
-            <div class="vr-title">${item.id}. ${item.title}</div>
-            <div class="vr-desc">${item.desc}</div>
+            <label for="classSelect">Sınıf / Şube *</label>
+            <select id="classSelect" onchange="onClassChange()">
+              <option value="">Sınıf seçiniz...</option>
+            </select>
           </div>
-        `;
-        grid.appendChild(div);
+          <div>
+            <label for="studentSelect">Öğrenci (Okul No - Ad Soyad) *</label>
+            <select id="studentSelect" onchange="onStudentSelectChange()">
+              <option value="">Önce sınıf seçiniz...</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <label for="parentNameStudent">Veli Adı Soyadı *</label>
+            <input type="text" id="parentNameStudent" placeholder="Veli adı soyadı" />
+          </div>
+          <div>
+            <label for="parentPhoneStudent">Veli Telefon Numarası *</label>
+            <input type="tel" id="parentPhoneStudent" placeholder="05xx xxx xx xx" />
+          </div>
+        </div>
+      </div>
+
+      <div id="veliFields" class="hidden">
+        <div class="grid-2">
+          <div>
+            <label for="veliAdSoyad">Veli Adı Soyadı *</label>
+            <input type="text" id="veliAdSoyad" placeholder="Veli adı soyadı" />
+          </div>
+          <div>
+            <label for="veliTelefon">Telefon Numarası *</label>
+            <input type="tel" id="veliTelefon" placeholder="05xx xxx xx xx" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <label for="veliIlgiliSinif">İlgili Öğrenci Sınıfı (İsteğe Bağlı)</label>
+            <input type="text" id="veliIlgiliSinif" placeholder="Örn. 6/B" />
+          </div>
+          <div>
+            <label for="veliIlgiliNo">İlgili Öğrenci No / Adı (İsteğe Bağlı)</label>
+            <input type="text" id="veliIlgiliNo" placeholder="Örn. 460 - Öğrenci Adı" />
+          </div>
+        </div>
+      </div>
+
+      <div id="misafirFields" class="hidden">
+        <div class="grid-2">
+          <div>
+            <label for="misafirAdSoyad">Misafir Öğrenci Adı Soyadı *</label>
+            <input type="text" id="misafirAdSoyad" placeholder="Misafir öğrenci adı soyadı" />
+          </div>
+          <div>
+            <label for="misafirTelefon">Veli / İletişim Telefonu *</label>
+            <input type="tel" id="misafirTelefon" placeholder="05xx xxx xx xx" />
+          </div>
+        </div>
+        <div class="grid-2">
+          <div>
+            <label for="misafirOkulSinif">Geldiği Okul / Sınıf Bilgisi</label>
+            <input type="text" id="misafirOkulSinif" placeholder="Örn. Misafir - 6. Sınıf" />
+          </div>
+          <div>
+            <label for="misafirVeliAd">Refakatçi / Veli Adı Soyadı</label>
+            <input type="text" id="misafirVeliAd" placeholder="Veli adı soyadı" />
+          </div>
+        </div>
+      </div>
+
+      <label for="paymentNote">Açıklama / Not (İsteğe Bağlı)</label>
+      <textarea id="paymentNote" placeholder="Ödeme veya katılım ile ilgili eklemek istediğiniz not..."></textarea>
+
+      <h2>VR İçerik Seçimi (En fazla 5 seçim)</h2>
+      <div id="vrList" class="vr-grid"></div>
+
+      <div class="summary-bar">
+        <span id="selectedCountText">Seçilen İçerik: 0 / 5</span>
+        <span>Ücret: 150 TL</span>
+      </div>
+
+      <button type="submit" id="submitBtn" class="submit-btn">Başvuruyu Gönder</button>
+      <div id="formAlert" class="alert hidden"></div>
+    </form>
+  </div>
+
+  <script src="data.js?v=20261126_stable"></script>
+  <script>
+    let participantType = "ogrenci";
+    let registeredSet = new Set();
+
+    function setParticipantType(type) {
+      participantType = type;
+      ["ogrenci", "veli", "misafir"].forEach(t => {
+        document.getElementById("btn-" + t).classList.toggle("active", t === type);
       });
+      document.getElementById("studentFields").classList.toggle("hidden", type !== "ogrenci");
+      document.getElementById("veliFields").classList.toggle("hidden", type !== "veli");
+      document.getElementById("misafirFields").classList.toggle("hidden", type !== "misafir");
 
-      const counter = document.getElementById("vrCounter");
-      counter.textContent = `${selectedVrIds.length} / 5 Seçildi`;
-      counter.className = `counter-pill ${selectedVrIds.length === 5 ? "ready" : ""}`;
+      const titles = {
+        ogrenci: "Öğrenci Bilgileri",
+        veli: "Veli Başvuru Bilgileri",
+        misafir: "Misafir Öğrenci Bilgileri"
+      };
+      document.getElementById("formSectionTitle").textContent = titles[type];
+      hideAlert();
     }
 
-    function toggleVrItem(id) {
-      if (selectedVrIds.includes(id)) {
-        selectedVrIds = selectedVrIds.filter(x => x !== id);
-      } else {
-        if (selectedVrIds.length >= 5) return;
-        selectedVrIds.push(id);
-      }
-      renderVrGrid();
-    }
-
-    function showAlert(msg, type) {
+    function showAlert(msg, isOk) {
       const el = document.getElementById("formAlert");
       el.textContent = msg;
-      el.className = `alert show ${type === "success" ? "alert-success" : "alert-error"}`;
+      el.className = "alert " + (isOk ? "alert-ok" : "alert-err");
+      el.classList.remove("hidden");
     }
 
-    function resetForm() {
-      document.getElementById("quickSearch").value = "";
-      document.getElementById("classSelect").value = "";
-      document.getElementById("studentSelect").innerHTML = '<option value="">-- Önce Sınıf/Şube Seçiniz --</option>';
-      document.getElementById("parentName").value = "";
-      document.getElementById("extraParticipantName").value = "";
-      document.getElementById("extraParentName").value = "";
-      document.getElementById("parentPhone").value = "";
-      document.getElementById("paymentNote").value = "";
-      selectedVrIds = [];
-      renderVrGrid();
-      document.getElementById("formAlert").className = "alert";
+    function hideAlert() {
+      document.getElementById("formAlert").classList.add("hidden");
     }
 
-    function sendGetPayloadFallback(payloadStr) {
-      try {
-        const script = document.createElement("script");
-        const cb = "vr_mob_cb_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
-        window[cb] = function () {
-          try { delete window[cb]; } catch (_) {}
-          try { script.remove(); } catch (_) {}
-        };
-        setTimeout(() => {
-          try { delete window[cb]; } catch (_) {}
-          try { script.remove(); } catch (_) {}
-        }, 12000);
-        const url = `${GOOGLE_SCRIPT_URL}?payload=${encodeURIComponent(payloadStr)}&callback=${cb}`;
-        script.src = url;
-        document.body.appendChild(script);
-      } catch (_) {}
+    function populateClasses() {
+      const clsSel = document.getElementById("classSelect");
+      const classes = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
+      classes.forEach(c => {
+        const opt = document.createElement("option");
+        opt.value = c.className;
+        opt.textContent = c.className + " (" + c.teacher + ")";
+        clsSel.appendChild(opt);
+      });
     }
 
-    function submitApplication() {
-      const parentPhone = document.getElementById("parentPhone").value.trim();
-      const paymentNote = document.getElementById("paymentNote").value.trim();
+    function onClassChange() {
+      const clsName = document.getElementById("classSelect").value;
+      const stuSel = document.getElementById("studentSelect");
+      stuSel.innerHTML = '<option value="">Öğrenci seçiniz...</option>';
+      const clsObj = (window.SCHOOL_DATA || []).find(c => c.className === clsName);
+      if (!clsObj) return;
 
-      let cls = "";
-      let stNo = "";
-      let stName = "";
-      let parentName = "";
+      clsObj.students.forEach(st => {
+        const key = clsName + "_" + String(st.no);
+        const opt = document.createElement("option");
+        opt.value = JSON.stringify({ no: String(st.no), name: String(st.name) });
+        const already = registeredSet.has(key);
+        opt.textContent = st.no + " - " + st.name + (already ? " (Kayıtlı)" : "");
+        stuSel.appendChild(opt);
+      });
+    }
 
-      if (currentRecordType === "ogrenci") {
-        cls = document.getElementById("classSelect").value;
-        const stSelect = document.getElementById("studentSelect");
-        stNo = stSelect.value;
-        stName = stSelect.options[stSelect.selectedIndex]?.dataset?.name || "";
-        parentName = document.getElementById("parentName").value.trim();
+    function onStudentSelectChange() {
+      hideAlert();
+    }
 
-        if (!cls || !stNo) {
-          showAlert("Lütfen öğrencinin sınıfını ve adını seçiniz.", "error");
-          return;
-        }
-        if (!parentName) {
-          showAlert("Lütfen veli adı soyadını giriniz.", "error");
-          return;
-        }
-      } else if (currentRecordType === "veli") {
-        stName = document.getElementById("extraParticipantName").value.trim();
-        parentName = stName;
-        cls = "Veli";
-        stNo = "-";
-        if (!stName) {
-          showAlert("Lütfen veli adı soyadını giriniz.", "error");
-          return;
-        }
-      } else {
-        stName = document.getElementById("extraParticipantName").value.trim();
-        parentName = document.getElementById("extraParentName").value.trim();
-        cls = "Misafir";
-        stNo = "-";
-        if (!stName || !parentName) {
-          showAlert("Lütfen misafir öğrenci ve veli adı soyadını giriniz.", "error");
-          return;
-        }
-      }
+    function populateVrContents() {
+      const container = document.getElementById("vrList");
+      const items = Array.isArray(window.VR_CONTENTS) ? window.VR_CONTENTS : [];
+      container.innerHTML = items.map(item => `
+        <label class="vr-item" id="vr-card-${item.id}">
+          <input type="checkbox" value="${item.id}" data-title="${item.title}" onchange="onVrToggle(this)" />
+          <div>
+            <div class="vr-title">${item.icon || ""} ${item.title}</div>
+            <div class="vr-tag">${item.tag || ""}</div>
+          </div>
+        </label>
+      `).join("");
+    }
 
-      if (!parentPhone) {
-        showAlert("Lütfen iletişim telefonunu giriniz.", "error");
+    function onVrToggle(checkbox) {
+      const checked = Array.from(document.querySelectorAll('#vrList input[type="checkbox"]:checked'));
+      if (checked.length > 5) {
+        checkbox.checked = false;
+        alert("En fazla 5 adet VR içeriği seçebilirsiniz.");
         return;
       }
-      if (selectedVrIds.length !== 5) {
-        showAlert(`Lütfen tam 5 adet VR içeriği seçiniz (Şu an ${selectedVrIds.length} adet seçili).`, "error");
-        return;
+      document.querySelectorAll(".vr-item").forEach(el => el.classList.remove("selected"));
+      Array.from(document.querySelectorAll('#vrList input[type="checkbox"]:checked')).forEach(cb => {
+        const card = document.getElementById("vr-card-" + cb.value);
+        if (card) card.classList.add("selected");
+      });
+      const currentCount = document.querySelectorAll('#vrList input[type="checkbox"]:checked').length;
+      document.getElementById("selectedCountText").textContent = "Seçilen İçerik: " + currentCount + " / 5";
+    }
+
+    function fetchRegisteredKeysJsonp() {
+      const baseUrl = String(window.APPS_SCRIPT_URL || "").trim();
+      if (!baseUrl) return;
+      const cbName = "vrPublicCheck_" + Date.now();
+      window[cbName] = function(data) {
+        if (data && data.ok && Array.isArray(data.registeredKeys)) {
+          registeredSet = new Set(data.registeredKeys);
+        }
+        delete window[cbName];
+      };
+      const sep = baseUrl.indexOf("?") === -1 ? "?" : "&";
+      const s = document.createElement("script");
+      s.src = baseUrl + sep + "action=public_check&callback=" + cbName;
+      document.body.appendChild(s);
+    }
+
+    function submitApplication(event) {
+      event.preventDefault();
+      hideAlert();
+
+      const scriptUrl = String(window.APPS_SCRIPT_URL || "").trim();
+      if (!scriptUrl) {
+        return showAlert("Bağlantı adresi (APPS_SCRIPT_URL) bulunamadı.", false);
       }
 
-      const vrTitles = selectedVrIds.map(id => VR_CONTENTS.find(v => v.id === id).title);
-      const existing = currentRecordType === "ogrenci"
-        ? knownRecords.find(r => r.className === cls && String(r.studentNo) === String(stNo))
-        : null;
+      const checkedBoxes = Array.from(document.querySelectorAll('#vrList input[type="checkbox"]:checked'));
+      if (checkedBoxes.length === 0) {
+        return showAlert("Lütfen en az 1 adet VR içeriği seçiniz.", false);
+      }
 
-      const recordId = existing ? existing.id : (`rec_${cls.replace("/", "")}_${stNo}_${Date.now()}`);
-      const nowStr = new Date().toLocaleString("tr-TR");
-      const keepPaid = existing && existing.paymentStatus === "paid";
+      const vrIds = checkedBoxes.map(cb => Number(cb.value));
+      const vrTitles = checkedBoxes.map(cb => String(cb.getAttribute("data-title") || ""));
+      let baseNote = document.getElementById("paymentNote").value.trim();
 
-      const recordObj = {
-        id: recordId,
-        updatedAt: nowStr,
-        recordType: currentRecordType,
-        recordTypeLabel: currentRecordType === "veli" ? "Veli" : (currentRecordType === "misafir" ? "Misafir Öğrenci" : "Öğrenci"),
-        className: cls,
-        studentNo: stNo,
-        studentName: stName,
+      let recordPayload = {
+        id: "rec_" + Date.now(),
+        recordType: participantType,
         vrTitles: vrTitles,
-        vrIds: [...selectedVrIds],
-        paymentStatus: keepPaid ? "paid" : "pending",
-        amount: keepPaid ? FEE_AMOUNT : 0,
-        parentName: parentName,
-        parentPhone: parentPhone,
-        paymentNote: paymentNote
+        vrIds: vrIds,
+        paymentStatus: "pending"
       };
 
-      const requestBody = {
-        action: "upsert",
-        isEdit: Boolean(existing),
-        record: recordObj
-      };
+      if (participantType === "ogrenci") {
+        const className = document.getElementById("classSelect").value.trim();
+        const studentRaw = document.getElementById("studentSelect").value;
+        const parentName = document.getElementById("parentNameStudent").value.trim();
+        const parentPhone = document.getElementById("parentPhoneStudent").value.trim();
 
-      const payloadStr = JSON.stringify(requestBody);
+        if (!className || !studentRaw) {
+          return showAlert("Lütfen sınıf/şube ve öğrenci seçiniz.", false);
+        }
+        if (!parentName || !parentPhone) {
+          return showAlert("Lütfen veli adı soyadı ve telefon numarasını giriniz.", false);
+        }
+
+        const stObj = JSON.parse(studentRaw);
+        recordPayload.className = className;
+        recordPayload.studentNo = stObj.no;
+        recordPayload.studentName = stObj.name;
+        recordPayload.parentName = parentName;
+        recordPayload.parentPhone = parentPhone;
+        recordPayload.paymentNote = baseNote;
+      } else if (participantType === "veli") {
+        const veliAd = document.getElementById("veliAdSoyad").value.trim();
+        const veliTel = document.getElementById("veliTelefon").value.trim();
+        const ilgiliSinif = document.getElementById("veliIlgiliSinif").value.trim();
+        const ilgiliNo = document.getElementById("veliIlgiliNo").value.trim();
+
+        if (!veliAd || !veliTel) {
+          return showAlert("Lütfen veli adı soyadı ve telefon numarasını giriniz.", false);
+        }
+
+        const extraInfo = [ilgiliSinif, ilgiliNo].filter(Boolean).join(" - ");
+        const combinedNote = ["Veli Başvurusu", extraInfo ? "Öğrenci: " + extraInfo : "", baseNote]
+          .filter(Boolean)
+          .join(" | ");
+
+        recordPayload.className = ilgiliSinif || "Veli";
+        recordPayload.studentNo = ilgiliNo || "-";
+        recordPayload.studentName = veliAd;
+        recordPayload.parentName = veliAd;
+        recordPayload.parentPhone = veliTel;
+        recordPayload.paymentNote = combinedNote;
+      } else if (participantType === "misafir") {
+        const misafirAd = document.getElementById("misafirAdSoyad").value.trim();
+        const misafirTel = document.getElementById("misafirTelefon").value.trim();
+        const misafirOkulSinif = document.getElementById("misafirOkulSinif").value.trim();
+        const misafirVeli = document.getElementById("misafirVeliAd").value.trim();
+
+        if (!misafirAd || !misafirTel) {
+          return showAlert("Lütfen misafir öğrenci adı soyadı ve telefon numarasını giriniz.", false);
+        }
+
+        const combinedNote = ["Misafir Öğrenci", misafirVeli ? "Veli: " + misafirVeli : "", baseNote]
+          .filter(Boolean)
+          .join(" | ");
+
+        recordPayload.className = misafirOkulSinif || "Misafir";
+        recordPayload.studentNo = "-";
+        recordPayload.studentName = misafirAd;
+        recordPayload.parentName = misafirVeli || misafirAd;
+        recordPayload.parentPhone = misafirTel;
+        recordPayload.paymentNote = combinedNote;
+      }
+
       const btn = document.getElementById("submitBtn");
       btn.disabled = true;
-      btn.textContent = "E-Tabloya Gönderiliyor...";
+      btn.textContent = "Gönderiliyor...";
 
-      // 1. Doğrudan HTML Form POST
-      try {
-        const form = document.getElementById("gsPostForm");
-        const field = document.getElementById("gsPayloadField");
-        if (form && field) {
-          field.value = payloadStr;
-          form.submit();
+      const reqObj = {
+        action: "upsert",
+        record: recordPayload
+      };
+      const payloadStr = JSON.stringify(reqObj);
+
+      // 1) Mobilde en kararlı yol: JSONP GET ile sunucudan gerçek kayıt yanıtı al
+      const cbName = "vrSubmitCb_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
+      const sep = scriptUrl.indexOf("?") === -1 ? "?" : "&";
+      const jsonpScript = document.createElement("script");
+      let settled = false;
+
+      const finishSuccess = (msgText) => {
+        showAlert(msgText, true);
+        document.getElementById("vrForm").reset();
+        document.querySelectorAll(".vr-item").forEach(el => el.classList.remove("selected"));
+        document.getElementById("selectedCountText").textContent = "Seçilen İçerik: 0 / 5";
+        if (participantType === "ogrenci" && recordPayload.className && recordPayload.studentNo) {
+          registeredSet.add(recordPayload.className + "_" + recordPayload.studentNo);
         }
-      } catch (_) {}
-
-      // 2. Fetch (no-cors) ve sendBeacon ile POST yedeği
-      try {
-        const fd = new URLSearchParams();
-        fd.append("payload", payloadStr);
-        fetch(GOOGLE_SCRIPT_URL, { method: "POST", mode: "no-cors", body: fd }).catch(() => {});
-        if (navigator.sendBeacon) {
-          navigator.sendBeacon(GOOGLE_SCRIPT_URL, fd);
-        }
-      } catch (_) {}
-
-      // 3. Mobilde POST engellenirse doGet üzerinden işlenmesi için GET/JSONP yedeği
-      sendGetPayloadFallback(payloadStr);
-
-      setTimeout(() => {
-        if (!existing) {
-          knownRecords.push(recordObj);
-        } else {
-          Object.assign(existing, recordObj);
-        }
-        if (cls && currentRecordType === "ogrenci") onClassChange(stNo);
         btn.disabled = false;
-        btn.textContent = "Başvuruyu ve 5 VR Seçimini Gönder";
-        showAlert(
-          `Başvurunuz alınarak Google E-Tabloya gönderildi (${cls} - ${stName}). 150 TL katılım ücretini Okul Aile Birliği Saymanı ${SAYMAN_NAME}'e teslim ettiğinizde kaydınız onaylanacaktır.`,
-          "success"
-        );
-      }, 1200);
+        btn.textContent = "Başvuruyu Gönder";
+      };
+
+      const fallbackPost = () => {
+        fetch(scriptUrl, {
+          method: "POST",
+          mode: "no-cors",
+          body: payloadStr
+        })
+          .then(() => {
+            finishSuccess("Başvurunuz alınmıştır. Ödeme onayı Sayman Fatma Erdem tarafından yapılacaktır.");
+          })
+          .catch(err => {
+            showAlert("Gönderim sırasında hata oluştu: " + err.message, false);
+            btn.disabled = false;
+            btn.textContent = "Başvuruyu Gönder";
+          });
+      };
+
+      const timer = setTimeout(() => {
+        if (settled) return;
+        settled = true;
+        delete window[cbName];
+        jsonpScript.remove();
+        fallbackPost();
+      }, 10000);
+
+      window[cbName] = function(res) {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        delete window[cbName];
+        jsonpScript.remove();
+        if (res && res.ok) {
+          finishSuccess(res.mesaj || "Başvurunuz Google E-Tabloya başarıyla kaydedilmiştir.");
+        } else {
+          showAlert((res && res.mesaj) || "Kayıt sırasında hata oluştu.", false);
+          btn.disabled = false;
+          btn.textContent = "Başvuruyu Gönder";
+        }
+      };
+
+      jsonpScript.onerror = function() {
+        if (settled) return;
+        settled = true;
+        clearTimeout(timer);
+        delete window[cbName];
+        jsonpScript.remove();
+        fallbackPost();
+      };
+
+      jsonpScript.src = scriptUrl + sep + "payload=" + encodeURIComponent(payloadStr) + "&callback=" + cbName;
+      document.body.appendChild(jsonpScript);
     }
+
+    populateClasses();
+    populateVrContents();
+    fetchRegisteredKeysJsonp();
   </script>
 </body>
 </html>

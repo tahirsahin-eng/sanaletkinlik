@@ -1,5 +1,5 @@
 // Saffet Çam Ortaokulu - Uzay Çadırı ve VR Etkinliği Ortak Veri Modülü (Aralık 2026)
-window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxcDlWpIZ4PHQ_yeSRweZe-snaMd7VUdTlMfPJgFBtSXcUuhW9Gbl2ev0lFFieCPbK8/exec";
+window.APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec";
 
 window.VR_CONTENTS = [
     { id: 1, title: "Uzayın Tanıtımı", icon: "🌌", tag: "Uzay & Gezegenler" },
