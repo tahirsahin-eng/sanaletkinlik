@@ -1070,80 +1070,40 @@
         if (cls && currentRecordType === "ogrenci") onClassChange(stNo);
       };
 
-      const isMobileDevice = /Android|iPhone|iPad|iPod|Mobile/i.test(navigator.userAgent || "");
       const payloadStr = JSON.stringify(requestBody);
 
-      const triggerHiddenFormFireAndForget = () => {
-        try {
-          const form = document.getElementById("gsHiddenPostForm");
-          const input = document.getElementById("gsHiddenPayloadInput");
-          if (form && input) {
-            input.value = payloadStr;
-            form.submit();
-          }
-        } catch (_) {}
-      };
-
-      const triggerBeaconOrNoCorsPost = () => {
-        try {
-          const formData = new URLSearchParams();
-          formData.append("payload", payloadStr);
-          if (navigator.sendBeacon) {
-            const sent = navigator.sendBeacon(GOOGLE_SCRIPT_URL, formData);
-            if (sent) return true;
-          }
-        } catch (_) {}
-        try {
-          const formData2 = new URLSearchParams();
-          formData2.append("payload", payloadStr);
-          fetch(GOOGLE_SCRIPT_URL, {
-            method: "POST",
-            mode: "no-cors",
-            body: formData2
-          }).catch(() => {});
-        } catch (_) {}
-        return false;
-      };
-
       try {
-        if (isMobileDevice) {
-          triggerHiddenFormFireAndForget();
-          triggerBeaconOrNoCorsPost();
-          try {
-            const jsonpRes = await callAppsScriptJsonp({ payload: payloadStr });
-            if (jsonpRes && jsonpRes.ok) {
-              onRecordSaved("Kaydınız Google E-Tabloya başarıyla işlendi");
-            } else {
-              onRecordSaved("Başvurunuz Google E-Tablo'ya gönderildi");
-            }
-          } catch (_) {
-            // Gizli POST form ve beacon/no-cors tetiklendi; mobilde yanıt engellense dahi kayıt sunucuya iletilir
-            onRecordSaved("Başvurunuz Google E-Tablo'ya gönderildi");
-          }
-        } else {
-          const result = await postFormPayload(requestBody);
-          if (result && result.ok) {
-            onRecordSaved("Kaydınız Google E-Tabloya başarıyla işlendi");
-          } else {
-            showAlert((result && result.mesaj) || "Sunucu kaydı onaylamadı.", "error");
-          }
+        // 1. Adım: Doğrudan POST ile yanıtı oku
+        const result = await postFormPayload(requestBody);
+        if (result && result.ok) {
+          onRecordSaved("Kaydınız Google E-Tabloya başarıyla işlendi");
+          return;
         }
-      } catch (err) {
+        throw new Error((result && result.mesaj) || "POST yanıtı okunamadı");
+      } catch (postErr) {
         try {
-          triggerBeaconOrNoCorsPost();
-          await postViaHiddenForm(requestBody, isMobileDevice ? 2500 : 4000);
-          onRecordSaved("Başvurunuz Google E-Tablo'ya gönderildi");
-        } catch (iframeErr) {
-          try {
-            const jsonpRes = await callAppsScriptJsonp({ payload: payloadStr });
-            if (jsonpRes && jsonpRes.ok) {
-              onRecordSaved("Kaydınız Google E-Tabloya başarıyla işlendi");
-            } else {
-              onRecordSaved("Başvurunuz Google E-Tablo'ya gönderildi");
-            }
-          } catch (_) {
-            onRecordSaved("Başvurunuz Google E-Tablo'ya gönderildi");
+          // 2. Adım: JSONP GET ile sunucudan 'ok: true' doğrulaması al
+          const jsonpRes = await callAppsScriptJsonp({ payload: payloadStr });
+          if (jsonpRes && jsonpRes.ok) {
+            onRecordSaved("Kaydınız Google E-Tabloya başarıyla işlendi");
+            return;
           }
+          throw new Error((jsonpRes && jsonpRes.mesaj) || "JSONP doğrulaması başarısız");
+        } catch (jsonpErr) {
+          // 3. Adım: Gizli POST formu tetikle ve sunucu doğrulaması alınamadığını bildir
+          try {
+            const form = document.getElementById("gsHiddenPostForm");
+            const input = document.getElementById("gsHiddenPayloadInput");
+            if (form && input) {
+              input.value = payloadStr;
+              form.submit();
+            }
+          } catch (_) {}
+
+          showAlert(
+            "Bağlantıda E-Tablo sunucu onayı alınamadı. Linki Chrome veya Safari tarayıcısında açıp Wi-Fi / Mobil Veri bağlantınızı kontrol ederek tekrar deneyiniz.",
+            "error"
+          );
         }
       } finally {
         btn.disabled = false;
