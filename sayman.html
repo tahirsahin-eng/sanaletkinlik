@@ -6,8 +6,8 @@
     <title>Saffet Çam Ortaokulu - VR Etkinliği Sayman Yönetim Paneli</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="data.js?v=20261126_clean"></script>
     <style>
         body {
             font-family: 'Inter', sans-serif;
@@ -42,7 +42,7 @@
                 <h1 class="text-lg sm:text-xl font-extrabold text-white">VR Etkinliği Kayıt ve Ödeme Takibi (150 TL)</h1>
             </div>
             <div class="flex items-center gap-2">
-                <a href="index.html" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-200 transition">
+                <a href="?" class="px-3.5 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-700 text-xs font-semibold text-slate-200 transition">
                     ← Başvuru Formuna Dön
                 </a>
                 <button type="button" id="logoutBtn" class="hidden px-3.5 py-2 rounded-xl bg-rose-950/80 hover:bg-rose-900 border border-rose-500/40 text-xs font-semibold text-rose-200 transition">
@@ -109,7 +109,10 @@
                         📊 Excel İndir
                     </button>
                     <button type="button" id="exportPdfBtn" class="px-3.5 py-2 rounded-xl bg-rose-700 hover:bg-rose-600 text-xs font-bold text-white transition">
-                        🖨️ PDF / Yazdır
+                        📄 PDF İndir
+                    </button>
+                    <button type="button" id="printListBtn" class="px-3.5 py-2 rounded-xl bg-slate-700 hover:bg-slate-600 text-xs font-bold text-white transition">
+                        🖨️ Yazdır
                     </button>
                     <button type="button" id="refreshBtn" class="px-3.5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-xs font-bold text-white transition">
                         🔄 Yenile
@@ -193,17 +196,8 @@
         </section>
     </main>
 
-    <iframe name="saymanActionFrame" id="saymanActionFrame" style="position:fixed; left:-9999px; top:0; width:1px; height:1px; border:0;"></iframe>
-    <form id="saymanActionForm" method="POST" action="https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec" target="saymanActionFrame" style="position:fixed; left:-9999px; top:0;">
-        <input type="hidden" name="payload" id="saymanActionPayload" value="" />
-    </form>
-
     <script>
-        const SAYMAN_ENDPOINT = (typeof window.APPS_SCRIPT_URL === "string" && window.APPS_SCRIPT_URL.trim())
-            ? window.APPS_SCRIPT_URL.trim()
-            : "https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec";
         const EVENT_FEE = 150;
-
         let saymanPassword = "";
         let allRecords = [];
         let toastTimeout = null;
@@ -229,92 +223,20 @@
             toastTimeout = setTimeout(() => box.classList.add("translate-x-full", "opacity-0"), 6000);
         }
 
-        function jsonpRequest(url, timeoutMs = 16000) {
+        function runGasServer(fnName, ...args) {
             return new Promise((resolve, reject) => {
-                const cbName = "gs_sayman_cb_" + Date.now() + "_" + Math.random().toString(36).slice(2);
-                const script = document.createElement("script");
-                let settled = false;
-
-                function cleanup() {
-                    clearTimeout(timer);
-                    try { delete window[cbName]; } catch (_) { window[cbName] = undefined; }
-                    if (script && script.parentNode) script.parentNode.removeChild(script);
+                if (!(window.google && google.script && google.script.run)) {
+                    return reject(new Error("Google Apps Script sunucu bağlantısı bulunamadı."));
                 }
-
-                const timer = setTimeout(() => {
-                    if (settled) return;
-                    settled = true;
-                    cleanup();
-                    reject(new Error("Sunucu yanıt süresi aşıldı."));
-                }, timeoutMs);
-
-                window[cbName] = (data) => {
-                    if (settled) return;
-                    settled = true;
-                    cleanup();
-                    resolve(data);
-                };
-
-                script.onerror = () => {
-                    if (settled) return;
-                    settled = true;
-                    cleanup();
-                    reject(new Error("Sunucu betiği yüklenemedi."));
-                };
-
-                const sep = url.indexOf("?") === -1 ? "?" : "&";
-                script.src = `${url}${sep}callback=${cbName}&_ts=${Date.now()}`;
-                script.async = true;
-                (document.body || document.documentElement).appendChild(script);
+                google.script.run
+                    .withSuccessHandler(res => resolve(res))
+                    .withFailureHandler(err => reject(new Error((err && err.message) || "Sunucu hatası oluştu.")))
+                    [fnName](...args);
             });
-        }
-
-        function submitHiddenFormPost(fullPayload) {
-            try {
-                const form = document.getElementById("saymanActionForm");
-                const input = document.getElementById("saymanActionPayload");
-                if (form && input) {
-                    form.action = SAYMAN_ENDPOINT;
-                    input.value = JSON.stringify(fullPayload);
-                    form.submit();
-                    return true;
-                }
-            } catch (_) {}
-            return false;
-        }
-
-        async function sendSaymanAction(payloadObj) {
-            const fullPayload = { ...payloadObj, sifre: saymanPassword };
-            const encoded = encodeURIComponent(JSON.stringify(fullPayload));
-            const actionUrl = `${SAYMAN_ENDPOINT}?payload=${encoded}`;
-
-            try {
-                return await jsonpRequest(actionUrl, 15000);
-            } catch (_) {
-                submitHiddenFormPost(fullPayload);
-                return { ok: true, mesaj: "İşlem Google E-Tabloya gönderildi." };
-            }
         }
 
         async function loadSaymanRecords() {
-            const q = new URLSearchParams({
-                action: "list",
-                sifre: saymanPassword,
-                _ts: String(Date.now())
-            });
-            const listUrl = `${SAYMAN_ENDPOINT}?${q.toString()}`;
-
-            try {
-                const d1 = await jsonpRequest(listUrl, 16000);
-                return applyLoadedRecords(d1);
-            } catch (e1) {
-                throw new Error(
-                    "Mobil bağlantıda sayman listesi alınamadı. İnternet bağlantınızı veya tarayıcıdaki reklam/izleyici engelleyicisini kontrol edip tekrar deneyiniz."
-                );
-            }
-        }
-
-        function applyLoadedRecords(data) {
+            const data = await runGasServer("getSaymanRecordsForHtml", saymanPassword);
             if (!data || !data.ok) {
                 throw new Error((data && data.mesaj) || "Kayıtlar alınamadı.");
             }
@@ -452,7 +374,7 @@
                 return showToast("warning", "Veri Yok", "Dışa aktarılacak kayıt bulunamadı.");
             }
             if (typeof XLSX === "undefined") {
-                return showToast("error", "Kütüphane Hatası", "Excel modülü yüklenemedi. İnternet bağlantısını kontrol ediniz.");
+                return showToast("error", "Kütüphane Hatası", "Excel modülü yüklenemedi.");
             }
 
             const rows = activeRecords.map((r, idx) => ({
@@ -498,12 +420,7 @@
                 .replace(/"/g, "&quot;");
         }
 
-        function exportToPdfPrint() {
-            const { activeRecords, reportLabel } = getFilteredDataset();
-            if (!activeRecords.length) {
-                return showToast("warning", "Veri Yok", "Yazdırılacak veya PDF oluşturulacak kayıt bulunamadı.");
-            }
-
+        function buildPrintableReportHtml(activeRecords, reportLabel) {
             const paidCount = activeRecords.filter(r => r.paymentStatus === "paid").length;
             const pendingCount = activeRecords.length - paidCount;
             const totalTl = activeRecords
@@ -513,23 +430,111 @@
             const tableRowsHtml = activeRecords.map((r, i) => {
                 const isPaid = r.paymentStatus === "paid";
                 return `
-                    <tr>
-                        <td>${i + 1}</td>
-                        <td>${escapeHtml(r.className)}</td>
-                        <td>${escapeHtml(r.studentNo)}</td>
-                        <td><strong>${escapeHtml(r.studentName)}</strong></td>
-                        <td>${escapeHtml(r.parentName)}<br><small>${escapeHtml(r.parentPhone)}</small></td>
-                        <td>${escapeHtml((r.vrTitles || []).join(", "))}</td>
-                        <td style="font-weight:bold;color:${isPaid ? "#065f46" : "#92400e"};">
+                    <tr style="background:${i % 2 === 1 ? "#f8fafc" : "#ffffff"};page-break-inside:avoid;">
+                        <td style="border:1px solid #cbd5e1;padding:6px 7px;text-align:center;">${i + 1}</td>
+                        <td style="border:1px solid #cbd5e1;padding:6px 7px;font-weight:bold;">${escapeHtml(r.className)}</td>
+                        <td style="border:1px solid #cbd5e1;padding:6px 7px;">${escapeHtml(r.studentNo)}</td>
+                        <td style="border:1px solid #cbd5e1;padding:6px 7px;"><strong>${escapeHtml(r.studentName)}</strong></td>
+                        <td style="border:1px solid #cbd5e1;padding:6px 7px;">${escapeHtml(r.parentName)}<br><span style="color:#475569;font-size:10px;">${escapeHtml(r.parentPhone)}</span></td>
+                        <td style="border:1px solid #cbd5e1;padding:6px 7px;font-size:10px;">${escapeHtml((r.vrTitles || []).join(", "))}</td>
+                        <td style="border:1px solid #cbd5e1;padding:6px 7px;font-weight:bold;color:${isPaid ? "#065f46" : "#92400e"};">
                             ${isPaid ? `Ödendi (${Number(r.amount) || EVENT_FEE} TL)` : "Ödeme Bekliyor"}
                         </td>
                     </tr>
                 `;
             }).join("");
 
+            return `
+                <div style="font-family:Arial,Helvetica,sans-serif;color:#0f172a;background:#ffffff;padding:16px;font-size:11px;">
+                    <div style="text-align:center;border-bottom:2px solid #1e1b4b;padding-bottom:10px;margin-bottom:12px;">
+                        <h1 style="margin:0;font-size:16px;color:#1e1b4b;">T.C. YALOVA VALİLİĞİ • SAFFET ÇAM ORTAOKULU MÜDÜRLÜĞÜ</h1>
+                        <p style="margin:4px 0 0;font-size:12px;color:#334155;font-weight:bold;">Uzay Çadırı ve Sanal Gerçeklik (VR) Etkinliği — ${escapeHtml(reportLabel)}</p>
+                    </div>
+                    <div style="display:flex;justify-content:space-between;background:#f1f5f9;border:1px solid #cbd5e1;padding:8px 12px;border-radius:6px;margin-bottom:12px;font-weight:bold;font-size:11px;">
+                        <span>Toplam: ${activeRecords.length} | Ödeme Yapılan: ${paidCount} | Bekleyen: ${pendingCount} | Tahsilat: ${totalTl} TL</span>
+                        <span>Rapor Tarihi: ${new Date().toLocaleString("tr-TR")}</span>
+                    </div>
+                    <table style="width:100%;border-collapse:collapse;font-size:10.5px;">
+                        <thead>
+                            <tr>
+                                <th style="border:1px solid #1e1b4b;background:#1e1b4b;color:#ffffff;padding:7px;width:34px;text-align:center;">Sıra</th>
+                                <th style="border:1px solid #1e1b4b;background:#1e1b4b;color:#ffffff;padding:7px;width:58px;">Şube</th>
+                                <th style="border:1px solid #1e1b4b;background:#1e1b4b;color:#ffffff;padding:7px;width:55px;">No</th>
+                                <th style="border:1px solid #1e1b4b;background:#1e1b4b;color:#ffffff;padding:7px;width:155px;">Katılımcı Adı Soyadı</th>
+                                <th style="border:1px solid #1e1b4b;background:#1e1b4b;color:#ffffff;padding:7px;width:130px;">Veli / Telefon</th>
+                                <th style="border:1px solid #1e1b4b;background:#1e1b4b;color:#ffffff;padding:7px;">Seçilen VR İçerikleri</th>
+                                <th style="border:1px solid #1e1b4b;background:#1e1b4b;color:#ffffff;padding:7px;width:105px;">Ödeme Durumu</th>
+                            </tr>
+                        </thead>
+                        <tbody>${tableRowsHtml}</tbody>
+                    </table>
+                    <div style="margin-top:18px;display:flex;justify-content:space-between;font-size:11px;color:#334155;">
+                        <div>Okul Aile Birliği Saymanı: <strong>Fatma ERDEM</strong></div>
+                        <div>Okul Müdürü: <strong>Tahir ŞAHİN</strong></div>
+                    </div>
+                </div>
+            `;
+        }
+
+        async function exportToPdfDownload() {
+            const { activeRecords, reportLabel } = getFilteredDataset();
+            if (!activeRecords.length) {
+                return showToast("warning", "Veri Yok", "PDF oluşturulacak kayıt bulunamadı.");
+            }
+
+            const btn = document.getElementById("exportPdfBtn");
+            btn.disabled = true;
+            btn.textContent = "⏳ PDF Hazırlanıyor...";
+
+            const stamp = new Date().toISOString().slice(0, 10);
+            const safeSuffix = reportLabel.toLowerCase().includes("yapılan")
+                ? "odenenler"
+                : reportLabel.toLowerCase().includes("bekleyen")
+                    ? "bekleyenler"
+                    : "tum_liste";
+            const fileName = `Saffet_Cam_VR_${safeSuffix}_${stamp}.pdf`;
+
+            try {
+                if (typeof html2pdf !== "undefined") {
+                    const wrapper = document.createElement("div");
+                    wrapper.style.width = "1040px";
+                    wrapper.style.background = "#ffffff";
+                    wrapper.innerHTML = buildPrintableReportHtml(activeRecords, reportLabel);
+                    document.body.appendChild(wrapper);
+
+                    const opt = {
+                        margin: [8, 8, 8, 8],
+                        filename: fileName,
+                        image: { type: "jpeg", quality: 0.98 },
+                        html2canvas: { scale: 2, useCORS: true, backgroundColor: "#ffffff" },
+                        jsPDF: { unit: "mm", format: "a4", orientation: "landscape" },
+                        pagebreak: { mode: ["css", "legacy"] }
+                    };
+
+                    await html2pdf().set(opt).from(wrapper).save();
+                    wrapper.remove();
+                    showToast("success", "PDF İndirildi", `${activeRecords.length} kayıt "${fileName}" olarak indirildi.`);
+                } else {
+                    exportToPrintWindow();
+                }
+            } catch (err) {
+                exportToPrintWindow();
+            } finally {
+                btn.disabled = false;
+                btn.textContent = "📄 PDF İndir";
+            }
+        }
+
+        function exportToPrintWindow() {
+            const { activeRecords, reportLabel } = getFilteredDataset();
+            if (!activeRecords.length) {
+                return showToast("warning", "Veri Yok", "Yazdırılacak kayıt bulunamadı.");
+            }
+
+            const reportHtml = buildPrintableReportHtml(activeRecords, reportLabel);
             const win = window.open("", "_blank");
             if (!win) {
-                return showToast("warning", "Açılır Pencere Engellendi", "PDF/Yazdırma ekranı için tarayıcıda açılır pencerelere izin veriniz.");
+                return showToast("warning", "Açılır Pencere Engellendi", "Yazdırma ekranı için tarayıcıda açılır pencerelere izin veriniz.");
             }
 
             win.document.write(`
@@ -539,44 +544,14 @@
                     <meta charset="UTF-8">
                     <title>Saffet Çam Ortaokulu - VR Etkinliği Listesi</title>
                     <style>
-                        body { font-family: Arial, sans-serif; color: #111827; padding: 20px; font-size: 11px; }
-                        .header { text-align: center; border-bottom: 2px solid #1e1b4b; padding-bottom: 10px; margin-bottom: 14px; }
-                        .header h1 { margin: 0; font-size: 16px; color: #1e1b4b; }
-                        .header p { margin: 4px 0 0; font-size: 12px; color: #374151; }
-                        .meta { display: flex; justify-content: space-between; background: #f3f4f6; padding: 8px 12px; border-radius: 6px; margin-bottom: 12px; font-weight: bold; }
-                        table { width: 100%; border-collapse: collapse; }
-                        th, td { border: 1px solid #d1d5db; padding: 6px 8px; text-align: left; vertical-align: top; }
-                        th { background: #1e1b4b; color: #ffffff; font-size: 11px; }
-                        tr:nth-child(even) { background: #f9fafb; }
                         @media print {
-                            body { padding: 0; }
-                            @page { size: A4 landscape; margin: 12mm; }
+                            body { margin: 0; padding: 0; }
+                            @page { size: A4 landscape; margin: 10mm; }
                         }
                     </style>
                 </head>
                 <body>
-                    <div class="header">
-                        <h1>SAFFET ÇAM ORTAOKULU MÜDÜRLÜĞÜ</h1>
-                        <p>Uzay Çadırı ve VR Etkinliği — ${escapeHtml(reportLabel)}</p>
-                    </div>
-                    <div class="meta">
-                        <span>Toplam Listelenen: ${activeRecords.length} | Ödeme Yapılan: ${paidCount} | Ödeme Bekleyen: ${pendingCount} | Tahsilat: ${totalTl} TL</span>
-                        <span>Tarih: ${new Date().toLocaleString("tr-TR")}</span>
-                    </div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th style="width:32px;">Sıra</th>
-                                <th style="width:65px;">Şube</th>
-                                <th style="width:55px;">No</th>
-                                <th style="width:155px;">Katılımcı Adı Soyadı</th>
-                                <th style="width:130px;">Veli / Telefon</th>
-                                <th>Seçilen VR İçerikleri</th>
-                                <th style="width:110px;">Ödeme Durumu</th>
-                            </tr>
-                        </thead>
-                        <tbody>${tableRowsHtml}</tbody>
-                    </table>
+                    ${reportHtml}
                     <script>
                         window.onload = function() { window.print(); };
                     <\/script>
@@ -588,7 +563,7 @@
 
         async function handleTogglePayment(id, targetStatus) {
             try {
-                const res = await sendSaymanAction({ action: "toggle_payment", id, paymentStatus: targetStatus });
+                const res = await runGasServer("togglePaymentForHtml", saymanPassword, id, targetStatus);
                 if (!res || !res.ok) {
                     return showToast("error", "İşlem Başarısız", (res && res.mesaj) || "Ödeme durumu güncellenemedi.");
                 }
@@ -602,7 +577,7 @@
         async function handleDeleteRecord(id) {
             if (!confirm("Bu kaydı Google E-Tablodan silmek istediğinize emin misiniz?")) return;
             try {
-                const res = await sendSaymanAction({ action: "delete", id });
+                const res = await runGasServer("deleteRecordForHtml", saymanPassword, id);
                 if (!res || !res.ok) {
                     return showToast("error", "Silinemedi", (res && res.mesaj) || "Kayıt silinemedi.");
                 }
@@ -650,7 +625,8 @@
         document.getElementById("filterSearchInput").addEventListener("input", renderRecordsTable);
         document.getElementById("viewModeSelect").addEventListener("change", renderRecordsTable);
         document.getElementById("exportExcelBtn").addEventListener("click", exportToExcel);
-        document.getElementById("exportPdfBtn").addEventListener("click", exportToPdfPrint);
+        document.getElementById("exportPdfBtn").addEventListener("click", exportToPdfDownload);
+        document.getElementById("printListBtn").addEventListener("click", exportToPrintWindow);
 
         document.getElementById("refreshBtn").addEventListener("click", async () => {
             try {
@@ -663,7 +639,7 @@
 
         document.getElementById("backupDriveBtn").addEventListener("click", async () => {
             try {
-                const res = await sendSaymanAction({ action: "backup_drive" });
+                const res = await runGasServer("backupDriveForHtml", saymanPassword);
                 if (!res || !res.ok) {
                     return showToast("error", "Yedekleme Hatası", (res && res.mesaj) || "Drive yedeği alınamadı.");
                 }
