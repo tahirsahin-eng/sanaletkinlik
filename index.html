@@ -668,7 +668,6 @@
       localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
     }
 
-    // JSONP yardımcı fonksiyonu (CORS engeline takılmadan veri okuma ve yazma)
     function callAppsScriptJsonp(paramsObj) {
       return new Promise((resolve, reject) => {
         const cbName = "gs_cb_" + Date.now() + "_" + Math.floor(Math.random() * 100000);
@@ -967,7 +966,6 @@
       btn.textContent = "Google E-Tablo'ya İşleniyor...";
 
       try {
-        // Önce JSONP GET ile kesin yanıt alarak gönder
         const jsonpRes = await callAppsScriptJsonp({ payload: JSON.stringify(requestBody) });
         if (jsonpRes && jsonpRes.ok) {
           upsertLocalRecord(recordObj);
@@ -983,7 +981,6 @@
           throw new Error((jsonpRes && jsonpRes.mesaj) || "Sunucu yanıtı alınamadı");
         }
       } catch (err) {
-        // Yedek olarak POST isteği gönder
         try {
           await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
