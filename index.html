@@ -3,434 +3,50 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Saffet Çam Ortaokulu - Uzay Çadırı ve VR Etkinliği Başvurusu</title>
+  <meta http-equiv="refresh" content="0; url=https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec" />
+  <title>Saffet Çam Ortaokulu - Uzay Çadırı ve VR Etkinliği</title>
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { margin: 0; background: #0b1120; color: #f8fafc; padding: 16px; }
-    .wrap { max-width: 780px; margin: 0 auto; }
-    .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
-    h1 { margin: 0 0 6px; font-size: 1.35rem; color: #38bdf8; }
-    h2 { margin: 0 0 12px; font-size: 1.08rem; color: #e2e8f0; }
-    .sub { margin: 0 0 14px; color: #94a3b8; font-size: 0.92rem; line-height: 1.45; }
-    .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
-    .type-btn { padding: 12px 10px; border-radius: 12px; border: 1px solid #475569; background: #0f172a; color: #e2e8f0; font-weight: 600; font-size: 0.92rem; cursor: pointer; }
-    .type-btn.active { background: #2563eb; border-color: #60a5fa; color: #fff; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    label { display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 500; }
-    input, select, textarea { width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; margin-bottom: 12px; }
-    textarea { min-height: 70px; resize: vertical; }
-    .vr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 14px; }
-    .vr-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; cursor: pointer; }
-    .vr-item.selected { border-color: #38bdf8; background: #172554; }
-    .vr-item input { width: auto; margin: 3px 0 0; }
-    .vr-title { font-weight: 600; font-size: 0.9rem; color: #f8fafc; }
-    .vr-tag { font-size: 0.76rem; color: #94a3b8; margin-top: 2px; }
-    .summary-bar { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-weight: 600; }
-    .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #16a34a; color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; }
-    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .alert { padding: 12px 14px; border-radius: 10px; margin-top: 12px; font-size: 0.92rem; line-height: 1.45; }
-    .alert-ok { background: #14532d; color: #dcfce7; border: 1px solid #22c55e; }
-    .alert-err { background: #7f1d1d; color: #fee2e2; border: 1px solid #ef4444; }
-    .hidden { display: none; }
-    @media (max-width: 640px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      .type-grid { grid-template-columns: 1fr; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #0b1120;
+      color: #f8fafc;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      padding: 20px;
+      text-align: center;
+    }
+    .box {
+      max-width: 440px;
+      background: #1e293b;
+      border: 1px solid #334155;
+      border-radius: 16px;
+      padding: 24px;
+    }
+    h1 { font-size: 1.2rem; color: #38bdf8; margin: 0 0 10px; }
+    p { font-size: 0.92rem; color: #cbd5e1; margin: 0 0 18px; line-height: 1.5; }
+    a {
+      display: inline-block;
+      padding: 12px 18px;
+      border-radius: 10px;
+      background: #16a34a;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 700;
+      font-size: 0.95rem;
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:10px; flex-wrap:wrap;">
-        <div>
-          <h1>Saffet Çam Ortaokulu</h1>
-          <p class="sub">Uzay Çadırı ve VR Etkinliği Başvuru Formu — Etkinlik Ücreti: <strong>150 TL</strong> (En fazla 5 VR içerik seçimi)</p>
-        </div>
-        <a href="sayman.html" style="display:inline-block; padding:8px 12px; border-radius:10px; border:1px solid #475569; background:#0f172a; color:#cbd5e1; text-decoration:none; font-size:0.82rem; font-weight:600;">Sayman Paneli (Fatma Erdem)</a>
-      </div>
-      <div class="type-grid">
-        <button type="button" id="btn-ogrenci" class="type-btn active" onclick="setParticipantType('ogrenci')">Öğrenci Başvurusu</button>
-        <button type="button" id="btn-veli" class="type-btn" onclick="setParticipantType('veli')">Veli Başvurusu</button>
-        <button type="button" id="btn-misafir" class="type-btn" onclick="setParticipantType('misafir')">Misafir Öğrenci</button>
-      </div>
-    </div>
-
-    <form id="vrForm" class="card" onsubmit="submitApplication(event)">
-      <h2 id="formSectionTitle">Öğrenci Bilgileri</h2>
-
-      <div id="studentFields">
-        <div class="grid-2">
-          <div>
-            <label for="classSelect">Sınıf / Şube *</label>
-            <select id="classSelect" onchange="onClassChange()">
-              <option value="">Sınıf seçiniz...</option>
-            </select>
-          </div>
-          <div>
-            <label for="studentSelect">Öğrenci (Okul No - Ad Soyad) *</label>
-            <select id="studentSelect" onchange="onStudentSelectChange()">
-              <option value="">Önce sınıf seçiniz...</option>
-            </select>
-          </div>
-        </div>
-        <div class="grid-2">
-          <div>
-            <label for="parentNameStudent">Veli Adı Soyadı *</label>
-            <input type="text" id="parentNameStudent" placeholder="Veli adı soyadı" />
-          </div>
-          <div>
-            <label for="parentPhoneStudent">Veli Telefon Numarası *</label>
-            <input type="tel" id="parentPhoneStudent" placeholder="05xx xxx xx xx" />
-          </div>
-        </div>
-      </div>
-
-      <div id="veliFields" class="hidden">
-        <div class="grid-2">
-          <div>
-            <label for="veliAdSoyad">Veli Adı Soyadı *</label>
-            <input type="text" id="veliAdSoyad" placeholder="Veli adı soyadı" />
-          </div>
-          <div>
-            <label for="veliTelefon">Telefon Numarası *</label>
-            <input type="tel" id="veliTelefon" placeholder="05xx xxx xx xx" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div>
-            <label for="veliIlgiliSinif">İlgili Öğrenci Sınıfı (İsteğe Bağlı)</label>
-            <input type="text" id="veliIlgiliSinif" placeholder="Örn. 6/B" />
-          </div>
-          <div>
-            <label for="veliIlgiliNo">İlgili Öğrenci No / Adı (İsteğe Bağlı)</label>
-            <input type="text" id="veliIlgiliNo" placeholder="Örn. 460 - Öğrenci Adı" />
-          </div>
-        </div>
-      </div>
-
-      <div id="misafirFields" class="hidden">
-        <div class="grid-2">
-          <div>
-            <label for="misafirAdSoyad">Misafir Öğrenci Adı Soyadı *</label>
-            <input type="text" id="misafirAdSoyad" placeholder="Misafir öğrenci adı soyadı" />
-          </div>
-          <div>
-            <label for="misafirTelefon">Veli / İletişim Telefonu *</label>
-            <input type="tel" id="misafirTelefon" placeholder="05xx xxx xx xx" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div>
-            <label for="misafirOkulSinif">Geldiği Okul / Sınıf Bilgisi</label>
-            <input type="text" id="misafirOkulSinif" placeholder="Örn. Misafir - 6. Sınıf" />
-          </div>
-          <div>
-            <label for="misafirVeliAd">Refakatçi / Veli Adı Soyadı</label>
-            <input type="text" id="misafirVeliAd" placeholder="Veli adı soyadı" />
-          </div>
-        </div>
-      </div>
-
-      <label for="paymentNote">Açıklama / Not (İsteğe Bağlı)</label>
-      <textarea id="paymentNote" placeholder="Ödeme veya katılım ile ilgili eklemek istediğiniz not..."></textarea>
-
-      <h2>VR İçerik Seçimi (En fazla 5 seçim)</h2>
-      <div id="vrList" class="vr-grid"></div>
-
-      <div class="summary-bar">
-        <span id="selectedCountText">Seçilen İçerik: 0 / 5</span>
-        <span>Ücret: 150 TL</span>
-      </div>
-
-      <button type="submit" id="submitBtn" class="submit-btn">Başvuruyu Gönder</button>
-      <div id="formAlert" class="alert hidden"></div>
-    </form>
+  <div class="box">
+    <h1>Saffet Çam Ortaokulu</h1>
+    <p>Uzay Çadırı ve VR Etkinliği başvuru ekranına yönlendiriliyorsunuz...</p>
+    <a href="https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec">Başvuru Formunu Aç</a>
   </div>
-
-  <script src="data.js?v=20261126_stable"></script>
   <script>
-    let participantType = "ogrenci";
-    let registeredSet = new Set();
-
-    function setParticipantType(type) {
-      participantType = type;
-      ["ogrenci", "veli", "misafir"].forEach(t => {
-        document.getElementById("btn-" + t).classList.toggle("active", t === type);
-      });
-      document.getElementById("studentFields").classList.toggle("hidden", type !== "ogrenci");
-      document.getElementById("veliFields").classList.toggle("hidden", type !== "veli");
-      document.getElementById("misafirFields").classList.toggle("hidden", type !== "misafir");
-
-      const titles = {
-        ogrenci: "Öğrenci Bilgileri",
-        veli: "Veli Başvuru Bilgileri",
-        misafir: "Misafir Öğrenci Bilgileri"
-      };
-      document.getElementById("formSectionTitle").textContent = titles[type];
-      hideAlert();
-    }
-
-    function showAlert(msg, isOk) {
-      const el = document.getElementById("formAlert");
-      el.textContent = msg;
-      el.className = "alert " + (isOk ? "alert-ok" : "alert-err");
-      el.classList.remove("hidden");
-    }
-
-    function hideAlert() {
-      document.getElementById("formAlert").classList.add("hidden");
-    }
-
-    function populateClasses() {
-      const clsSel = document.getElementById("classSelect");
-      const classes = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
-      classes.forEach(c => {
-        const opt = document.createElement("option");
-        opt.value = c.className;
-        opt.textContent = c.className + " (" + c.teacher + ")";
-        clsSel.appendChild(opt);
-      });
-    }
-
-    function onClassChange() {
-      const clsName = document.getElementById("classSelect").value;
-      const stuSel = document.getElementById("studentSelect");
-      stuSel.innerHTML = '<option value="">Öğrenci seçiniz...</option>';
-      const clsObj = (window.SCHOOL_DATA || []).find(c => c.className === clsName);
-      if (!clsObj) return;
-
-      clsObj.students.forEach(st => {
-        const key = clsName + "_" + String(st.no);
-        const opt = document.createElement("option");
-        opt.value = JSON.stringify({ no: String(st.no), name: String(st.name) });
-        const already = registeredSet.has(key);
-        opt.textContent = st.no + " - " + st.name + (already ? " (Kayıtlı)" : "");
-        stuSel.appendChild(opt);
-      });
-    }
-
-    function onStudentSelectChange() {
-      hideAlert();
-    }
-
-    function populateVrContents() {
-      const container = document.getElementById("vrList");
-      const items = Array.isArray(window.VR_CONTENTS) ? window.VR_CONTENTS : [];
-      container.innerHTML = items.map(item => `
-        <label class="vr-item" id="vr-card-${item.id}">
-          <input type="checkbox" value="${item.id}" data-title="${item.title}" onchange="onVrToggle(this)" />
-          <div>
-            <div class="vr-title">${item.icon || ""} ${item.title}</div>
-            <div class="vr-tag">${item.tag || ""}</div>
-          </div>
-        </label>
-      `).join("");
-    }
-
-    function onVrToggle(checkbox) {
-      const checked = Array.from(document.querySelectorAll('#vrList input[type="checkbox"]:checked'));
-      if (checked.length > 5) {
-        checkbox.checked = false;
-        alert("En fazla 5 adet VR içeriği seçebilirsiniz.");
-        return;
-      }
-      document.querySelectorAll(".vr-item").forEach(el => el.classList.remove("selected"));
-      Array.from(document.querySelectorAll('#vrList input[type="checkbox"]:checked')).forEach(cb => {
-        const card = document.getElementById("vr-card-" + cb.value);
-        if (card) card.classList.add("selected");
-      });
-      const currentCount = document.querySelectorAll('#vrList input[type="checkbox"]:checked').length;
-      document.getElementById("selectedCountText").textContent = "Seçilen İçerik: " + currentCount + " / 5";
-    }
-
-    function fetchRegisteredKeysJsonp() {
-      const baseUrl = String(window.APPS_SCRIPT_URL || "").trim();
-      if (!baseUrl) return;
-      const cbName = "vrPublicCheck_" + Date.now();
-      window[cbName] = function(data) {
-        if (data && data.ok && Array.isArray(data.registeredKeys)) {
-          registeredSet = new Set(data.registeredKeys);
-        }
-        delete window[cbName];
-      };
-      const sep = baseUrl.indexOf("?") === -1 ? "?" : "&";
-      const s = document.createElement("script");
-      s.src = baseUrl + sep + "action=public_check&callback=" + cbName;
-      document.body.appendChild(s);
-    }
-
-    function submitApplication(event) {
-      event.preventDefault();
-      hideAlert();
-
-      const scriptUrl = String(window.APPS_SCRIPT_URL || "").trim();
-      if (!scriptUrl) {
-        return showAlert("Bağlantı adresi (APPS_SCRIPT_URL) bulunamadı.", false);
-      }
-
-      const checkedBoxes = Array.from(document.querySelectorAll('#vrList input[type="checkbox"]:checked'));
-      if (checkedBoxes.length === 0) {
-        return showAlert("Lütfen en az 1 adet VR içeriği seçiniz.", false);
-      }
-
-      const vrIds = checkedBoxes.map(cb => Number(cb.value));
-      const vrTitles = checkedBoxes.map(cb => String(cb.getAttribute("data-title") || ""));
-      let baseNote = document.getElementById("paymentNote").value.trim();
-
-      let recordPayload = {
-        id: "rec_" + Date.now(),
-        recordType: participantType,
-        vrTitles: vrTitles,
-        vrIds: vrIds,
-        paymentStatus: "pending"
-      };
-
-      if (participantType === "ogrenci") {
-        const className = document.getElementById("classSelect").value.trim();
-        const studentRaw = document.getElementById("studentSelect").value;
-        const parentName = document.getElementById("parentNameStudent").value.trim();
-        const parentPhone = document.getElementById("parentPhoneStudent").value.trim();
-
-        if (!className || !studentRaw) {
-          return showAlert("Lütfen sınıf/şube ve öğrenci seçiniz.", false);
-        }
-        if (!parentName || !parentPhone) {
-          return showAlert("Lütfen veli adı soyadı ve telefon numarasını giriniz.", false);
-        }
-
-        const stObj = JSON.parse(studentRaw);
-        recordPayload.className = className;
-        recordPayload.studentNo = stObj.no;
-        recordPayload.studentName = stObj.name;
-        recordPayload.parentName = parentName;
-        recordPayload.parentPhone = parentPhone;
-        recordPayload.paymentNote = baseNote;
-      } else if (participantType === "veli") {
-        const veliAd = document.getElementById("veliAdSoyad").value.trim();
-        const veliTel = document.getElementById("veliTelefon").value.trim();
-        const ilgiliSinif = document.getElementById("veliIlgiliSinif").value.trim();
-        const ilgiliNo = document.getElementById("veliIlgiliNo").value.trim();
-
-        if (!veliAd || !veliTel) {
-          return showAlert("Lütfen veli adı soyadı ve telefon numarasını giriniz.", false);
-        }
-
-        const extraInfo = [ilgiliSinif, ilgiliNo].filter(Boolean).join(" - ");
-        const combinedNote = ["Veli Başvurusu", extraInfo ? "Öğrenci: " + extraInfo : "", baseNote]
-          .filter(Boolean)
-          .join(" | ");
-
-        recordPayload.className = ilgiliSinif || "Veli";
-        recordPayload.studentNo = ilgiliNo || "-";
-        recordPayload.studentName = veliAd;
-        recordPayload.parentName = veliAd;
-        recordPayload.parentPhone = veliTel;
-        recordPayload.paymentNote = combinedNote;
-      } else if (participantType === "misafir") {
-        const misafirAd = document.getElementById("misafirAdSoyad").value.trim();
-        const misafirTel = document.getElementById("misafirTelefon").value.trim();
-        const misafirOkulSinif = document.getElementById("misafirOkulSinif").value.trim();
-        const misafirVeli = document.getElementById("misafirVeliAd").value.trim();
-
-        if (!misafirAd || !misafirTel) {
-          return showAlert("Lütfen misafir öğrenci adı soyadı ve telefon numarasını giriniz.", false);
-        }
-
-        const combinedNote = ["Misafir Öğrenci", misafirVeli ? "Veli: " + misafirVeli : "", baseNote]
-          .filter(Boolean)
-          .join(" | ");
-
-        recordPayload.className = misafirOkulSinif || "Misafir";
-        recordPayload.studentNo = "-";
-        recordPayload.studentName = misafirAd;
-        recordPayload.parentName = misafirVeli || misafirAd;
-        recordPayload.parentPhone = misafirTel;
-        recordPayload.paymentNote = combinedNote;
-      }
-
-      const btn = document.getElementById("submitBtn");
-      btn.disabled = true;
-      btn.textContent = "Gönderiliyor...";
-
-      const reqObj = {
-        action: "upsert",
-        record: recordPayload
-      };
-      const payloadStr = JSON.stringify(reqObj);
-
-      // 1) Mobilde en kararlı yol: JSONP GET ile sunucudan gerçek kayıt yanıtı al
-      const cbName = "vrSubmitCb_" + Date.now() + "_" + Math.floor(Math.random() * 10000);
-      const sep = scriptUrl.indexOf("?") === -1 ? "?" : "&";
-      const jsonpScript = document.createElement("script");
-      let settled = false;
-
-      const finishSuccess = (msgText) => {
-        showAlert(msgText, true);
-        document.getElementById("vrForm").reset();
-        document.querySelectorAll(".vr-item").forEach(el => el.classList.remove("selected"));
-        document.getElementById("selectedCountText").textContent = "Seçilen İçerik: 0 / 5";
-        if (participantType === "ogrenci" && recordPayload.className && recordPayload.studentNo) {
-          registeredSet.add(recordPayload.className + "_" + recordPayload.studentNo);
-        }
-        btn.disabled = false;
-        btn.textContent = "Başvuruyu Gönder";
-      };
-
-      const fallbackPost = () => {
-        fetch(scriptUrl, {
-          method: "POST",
-          mode: "no-cors",
-          body: payloadStr
-        })
-          .then(() => {
-            finishSuccess("Başvurunuz alınmıştır. Ödeme onayı Sayman Fatma Erdem tarafından yapılacaktır.");
-          })
-          .catch(err => {
-            showAlert("Gönderim sırasında hata oluştu: " + err.message, false);
-            btn.disabled = false;
-            btn.textContent = "Başvuruyu Gönder";
-          });
-      };
-
-      const timer = setTimeout(() => {
-        if (settled) return;
-        settled = true;
-        delete window[cbName];
-        jsonpScript.remove();
-        fallbackPost();
-      }, 10000);
-
-      window[cbName] = function(res) {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timer);
-        delete window[cbName];
-        jsonpScript.remove();
-        if (res && res.ok) {
-          finishSuccess(res.mesaj || "Başvurunuz Google E-Tabloya başarıyla kaydedilmiştir.");
-        } else {
-          showAlert((res && res.mesaj) || "Kayıt sırasında hata oluştu.", false);
-          btn.disabled = false;
-          btn.textContent = "Başvuruyu Gönder";
-        }
-      };
-
-      jsonpScript.onerror = function() {
-        if (settled) return;
-        settled = true;
-        clearTimeout(timer);
-        delete window[cbName];
-        jsonpScript.remove();
-        fallbackPost();
-      };
-
-      jsonpScript.src = scriptUrl + sep + "payload=" + encodeURIComponent(payloadStr) + "&callback=" + cbName;
-      document.body.appendChild(jsonpScript);
-    }
-
-    populateClasses();
-    populateVrContents();
-    fetchRegisteredKeysJsonp();
+    window.location.replace("https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec");
   </script>
 </body>
 </html>
