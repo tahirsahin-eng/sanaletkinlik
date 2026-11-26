@@ -1072,8 +1072,21 @@
 
       const payloadStr = JSON.stringify(requestBody);
 
+      const submitHiddenFormNow = () => {
+        try {
+          const form = document.getElementById("gsHiddenPostForm");
+          const input = document.getElementById("gsHiddenPayloadInput");
+          if (form && input) {
+            input.value = payloadStr;
+            form.submit();
+            return true;
+          }
+        } catch (_) {}
+        return false;
+      };
+
       try {
-        // 1. Adım: Doğrudan POST ile yanıtı oku
+        // 1. Adım: Doğrudan POST ile yanıtı oku (PC ve destekleyen tarayıcılarda kesin yanıt döner)
         const result = await postFormPayload(requestBody);
         if (result && result.ok) {
           onRecordSaved("Kaydınız Google E-Tabloya başarıyla işlendi");
@@ -1081,8 +1094,9 @@
         }
         throw new Error((result && result.mesaj) || "POST yanıtı okunamadı");
       } catch (postErr) {
+        // 2. Adım: Gizli POST form + JSONP GET birlikte tetiklenir (mobil tarayıcı uyumu için)
+        submitHiddenFormNow();
         try {
-          // 2. Adım: JSONP GET ile sunucudan 'ok: true' doğrulaması al
           const jsonpRes = await callAppsScriptJsonp({ payload: payloadStr });
           if (jsonpRes && jsonpRes.ok) {
             onRecordSaved("Kaydınız Google E-Tabloya başarıyla işlendi");
@@ -1090,16 +1104,6 @@
           }
           throw new Error((jsonpRes && jsonpRes.mesaj) || "JSONP doğrulaması başarısız");
         } catch (jsonpErr) {
-          // 3. Adım: Gizli POST formu tetikle ve sunucu doğrulaması alınamadığını bildir
-          try {
-            const form = document.getElementById("gsHiddenPostForm");
-            const input = document.getElementById("gsHiddenPayloadInput");
-            if (form && input) {
-              input.value = payloadStr;
-              form.submit();
-            }
-          } catch (_) {}
-
           showAlert(
             "Bağlantıda E-Tablo sunucu onayı alınamadı. Linki Chrome veya Safari tarayıcısında açıp Wi-Fi / Mobil Veri bağlantınızı kontrol ederek tekrar deneyiniz.",
             "error"
@@ -1411,9 +1415,9 @@
     }
   </script>
 
-  <!-- Gizli POST Iframe ve Form (CORS / URL Uzunluk Engeli Olmadan Doğrudan doPost'a Gönderim) -->
-  <iframe name="gsHiddenPostFrame" id="gsHiddenPostFrame" style="display:none; width:0; height:0; border:0;"></iframe>
-  <form id="gsHiddenPostForm" method="POST" action="https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec" target="gsHiddenPostFrame" style="display:none;">
+  <!-- Gizli POST Iframe ve Form (Mobil tarayıcı uyumlu ekran dışı POST gönderimi) -->
+  <iframe name="gsHiddenPostFrame" id="gsHiddenPostFrame" style="position:fixed; left:-9999px; top:0; width:1px; height:1px; border:0; opacity:0.01;"></iframe>
+  <form id="gsHiddenPostForm" method="POST" action="https://script.google.com/macros/s/AKfycbx5yFErL9RC6BvenL1uYPFDslrvN1uYk3eYu9Bl2iiZ5Qse_E3ojymBmDyD4JXmUsau/exec" target="gsHiddenPostFrame" style="position:fixed; left:-9999px; top:0; width:1px; height:1px; opacity:0.01;">
     <input type="hidden" name="payload" id="gsHiddenPayloadInput" value="" />
   </form>
 
