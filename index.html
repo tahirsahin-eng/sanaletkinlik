@@ -3,379 +3,1207 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Saffet Çam Ortaokulu - Uzay Çadırı ve VR Etkinliği Başvurusu</title>
+  <title>Saffet Çam Ortaokulu | Uzay Çadırı ve VR Etkinliği Kayıt Formu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    * { box-sizing: border-box; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-    body { margin: 0; background: #0b1120; color: #f8fafc; padding: 16px; }
-    .wrap { max-width: 780px; margin: 0 auto; }
-    .card { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 20px; margin-bottom: 16px; }
-    h1 { margin: 0 0 6px; font-size: 1.35rem; color: #38bdf8; }
-    h2 { margin: 0 0 12px; font-size: 1.08rem; color: #e2e8f0; }
-    .sub { margin: 0 0 14px; color: #94a3b8; font-size: 0.92rem; line-height: 1.45; }
-    .type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 14px; }
-    .type-btn { padding: 12px 10px; border-radius: 12px; border: 1px solid #475569; background: #0f172a; color: #e2e8f0; font-weight: 600; font-size: 0.92rem; cursor: pointer; }
-    .type-btn.active { background: #2563eb; border-color: #60a5fa; color: #fff; }
-    .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-    label { display: block; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 6px; font-weight: 500; }
-    input, select, textarea { width: 100%; padding: 11px 12px; border-radius: 10px; border: 1px solid #475569; background: #0f172a; color: #fff; font-size: 0.95rem; margin-bottom: 12px; }
-    textarea { min-height: 70px; resize: vertical; }
-    .vr-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin-bottom: 14px; }
-    .vr-item { display: flex; align-items: flex-start; gap: 10px; padding: 12px; border-radius: 12px; border: 1px solid #334155; background: #0f172a; cursor: pointer; }
-    .vr-item.selected { border-color: #38bdf8; background: #172554; }
-    .vr-item input { width: auto; margin: 3px 0 0; }
-    .vr-title { font-weight: 600; font-size: 0.9rem; color: #f8fafc; }
-    .vr-tag { font-size: 0.76rem; color: #94a3b8; margin-top: 2px; }
-    .summary-bar { display: flex; justify-content: space-between; align-items: center; background: #0f172a; border: 1px solid #334155; border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; font-weight: 600; }
-    .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 12px; background: #16a34a; color: #fff; font-size: 1rem; font-weight: 700; cursor: pointer; }
-    .submit-btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .alert { padding: 12px 14px; border-radius: 10px; margin-top: 12px; font-size: 0.92rem; line-height: 1.45; }
-    .alert-ok { background: #14532d; color: #dcfce7; border: 1px solid #22c55e; }
-    .alert-err { background: #7f1d1d; color: #fee2e2; border: 1px solid #ef4444; }
-    .hidden { display: none; }
-    @media (max-width: 640px) {
-      .grid-2 { grid-template-columns: 1fr; }
-      .type-grid { grid-template-columns: 1fr; }
+    :root {
+      --bg-dark: #090d1e;
+      --bg-card: #ffffff;
+      --primary: #2563eb;
+      --primary-dark: #1d4ed8;
+      --accent: #7c3aed;
+      --success: #059669;
+      --success-bg: #ecfdf5;
+      --warning: #d97706;
+      --warning-bg: #fffbeb;
+      --danger: #dc2626;
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --border: #e2e8f0;
+      --radius: 14px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: #f1f5f9;
+      color: var(--text-main);
+      line-height: 1.55;
+      padding-bottom: 48px;
+    }
+    .hero {
+      background: radial-gradient(circle at 15% 20%, #1e3a8a 0%, #0f172a 55%, #060918 100%);
+      color: #fff;
+      padding: 28px 20px 36px;
+      border-bottom: 4px solid #3b82f6;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-inner {
+      max-width: 1120px;
+      margin: 0 auto;
+    }
+    .school-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(59, 130, 246, 0.22);
+      border: 1px solid rgba(147, 197, 253, 0.4);
+      color: #bfdbfe;
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.3px;
+      margin-bottom: 12px;
+    }
+    .hero h1 {
+      font-size: clamp(1.45rem, 3.2vw, 2.15rem);
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      margin-bottom: 8px;
+      color: #ffffff;
+    }
+    .hero p {
+      color: #cbd5e1;
+      font-size: 0.96rem;
+      max-width: 820px;
+    }
+    .hero-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 18px;
+    }
+    .pill {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      padding: 7px 14px;
+      border-radius: 10px;
+      font-size: 0.84rem;
+      font-weight: 600;
+      color: #f8fafc;
+    }
+    .pill strong { color: #93c5fd; }
+    .container {
+      max-width: 1120px;
+      margin: -18px auto 0;
+      padding: 0 16px;
+      position: relative;
+      z-index: 2;
+    }
+    .nav-tabs {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      background: #ffffff;
+      padding: 10px;
+      border-radius: var(--radius);
+      box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
+      border: 1px solid var(--border);
+      margin-bottom: 20px;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .tab-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .tab-btn {
+      border: 1px solid var(--border);
+      background: #f8fafc;
+      color: var(--text-main);
+      padding: 10px 18px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s;
+      font-family: inherit;
+    }
+    .tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.28);
+    }
+    .sync-badge {
+      font-size: 0.8rem;
+      font-weight: 600;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #a7f3d0;
+    }
+    .card {
+      background: var(--bg-card);
+      border-radius: var(--radius);
+      border: 1px solid var(--border);
+      box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04);
+      padding: 22px;
+      margin-bottom: 20px;
+    }
+    .card-title {
+      font-size: 1.12rem;
+      font-weight: 800;
+      color: var(--text-main);
+      margin-bottom: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+    .card-sub {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+    .announcement-box {
+      background: #f8fafc;
+      border-left: 4px solid var(--primary);
+      padding: 14px 16px;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      color: #334155;
+      margin-bottom: 18px;
+    }
+    .type-selector {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+    .type-btn {
+      flex: 1 1 180px;
+      padding: 11px 14px;
+      border-radius: 10px;
+      border: 1.5px solid #cbd5e1;
+      background: #f8fafc;
+      font-weight: 700;
+      font-size: 0.88rem;
+      color: #334155;
+      cursor: pointer;
+      transition: all 0.18s;
+      font-family: inherit;
+    }
+    .type-btn.active {
+      background: #eff6ff;
+      border-color: var(--primary);
+      color: var(--primary-dark);
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.14);
+    }
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      font-weight: 700;
+      margin-bottom: 6px;
+      color: #1e293b;
+    }
+    .form-control {
+      width: 100%;
+      padding: 11px 13px;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 10px;
+      font-size: 0.94rem;
+      font-family: inherit;
+      background: #fff;
+      color: var(--text-main);
+      transition: border-color 0.2s;
+    }
+    .form-control:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
+    }
+    .counter-pill {
+      padding: 6px 14px;
+      border-radius: 999px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      background: #e2e8f0;
+      color: #334155;
+    }
+    .counter-pill.ready {
+      background: var(--success-bg);
+      color: var(--success);
+      border: 1px solid #6ee7b7;
+    }
+    .vr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .vr-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 11px;
+      padding: 13px 14px;
+      border: 1.5px solid #e2e8f0;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.18s;
+      background: #fff;
+      user-select: none;
+    }
+    .vr-item:hover:not(.disabled) {
+      border-color: #93c5fd;
+      background: #f8fafc;
+    }
+    .vr-item.selected {
+      border-color: var(--primary);
+      background: #eff6ff;
+      box-shadow: 0 2px 8px rgba(37, 99, 235, 0.12);
+    }
+    .vr-item.disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      background: #f8fafc;
+    }
+    .vr-item input[type="checkbox"] {
+      width: 19px;
+      height: 19px;
+      margin-top: 2px;
+      accent-color: var(--primary);
+      flex-shrink: 0;
+    }
+    .vr-title {
+      font-weight: 700;
+      font-size: 0.92rem;
+      color: #0f172a;
+    }
+    .vr-desc {
+      font-size: 0.79rem;
+      color: #64748b;
+      margin-top: 2px;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      padding: 12px 22px;
+      border-radius: 10px;
+      font-weight: 700;
+      font-size: 0.95rem;
+      border: none;
+      cursor: pointer;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.28);
+    }
+    .btn-primary:hover:not(:disabled) { background: var(--primary-dark); }
+    .btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+    .btn-success { background: var(--success); color: #fff; }
+    .btn-danger { background: var(--danger); color: #fff; }
+    .btn-outline {
+      background: #fff;
+      color: #1e293b;
+      border: 1.5px solid #cbd5e1;
+    }
+    .btn-outline:hover { background: #f8fafc; }
+    .btn-sm { padding: 6px 11px; font-size: 0.8rem; border-radius: 8px; }
+    .alert {
+      padding: 14px 16px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      margin-top: 14px;
+      display: none;
+    }
+    .alert.show { display: block; }
+    .alert-success { background: var(--success-bg); color: #065f46; border: 1px solid #6ee7b7; }
+    .alert-error { background: #fef2f2; color: #991b1b; border: 1px solid #fecaca; }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 14px;
+      margin-bottom: 20px;
+    }
+    .stat-card {
+      background: #fff;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+    }
+    .stat-label { font-size: 0.8rem; font-weight: 700; color: var(--text-muted); }
+    .stat-value { font-size: 1.55rem; font-weight: 800; color: var(--text-main); margin-top: 4px; }
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid var(--border);
+      border-radius: 12px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.84rem;
+      text-align: left;
+    }
+    th, td {
+      padding: 11px 12px;
+      border-bottom: 1px solid var(--border);
+      vertical-align: top;
+    }
+    th {
+      background: #f8fafc;
+      font-weight: 800;
+      color: #334155;
+      white-space: nowrap;
+    }
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .badge-paid { background: var(--success-bg); color: var(--success); border: 1px solid #a7f3d0; }
+    .badge-pending { background: var(--warning-bg); color: var(--warning); border: 1px solid #fde68a; }
+    .badge-type { background: #eef2ff; color: #3730a3; border: 1px solid #c7d2fe; font-size: 0.72rem; }
+    .hidden { display: none !important; }
+    .footer-note {
+      text-align: center;
+      font-size: 0.82rem;
+      color: #64748b;
+      margin-top: 24px;
+    }
+    @media print {
+      .no-print { display: none !important; }
+      body { background: #fff; padding: 0; }
+      .card { box-shadow: none; border: none; padding: 0; }
     }
   </style>
 </head>
 <body>
-  <div class="wrap">
-    <div class="card">
-      <h1>Saffet Çam Ortaokulu</h1>
-      <p class="sub">Uzay Çadırı ve VR Etkinliği Başvuru Formu — Etkinlik Ücreti: <strong>150 TL</strong> (En fazla 5 VR içerik seçimi)</p>
-      <div class="type-grid">
-        <button type="button" id="btn-ogrenci" class="type-btn active" onclick="setParticipantType('ogrenci')">Öğrenci Başvurusu</button>
-        <button type="button" id="btn-veli" class="type-btn" onclick="setParticipantType('veli')">Veli Başvurusu</button>
-        <button type="button" id="btn-misafir" class="type-btn" onclick="setParticipantType('misafir')">Misafir Öğrenci</button>
+
+  <header class="hero no-print">
+    <div class="hero-inner">
+      <div class="school-badge">T.C. YALOVA VALİLİĞİ • SAFFET ÇAM ORTAOKULU MÜDÜRLÜĞÜ</div>
+      <h1>Uzay Çadırı ve Sanal Gerçeklik (VR) Etkinliği</h1>
+      <p>Öğrencilerimizin bilimsel merakını artırmak, tarihî ve doğal güzellikleri yerinde deneyimlemiş gibi keşfetmelerini sağlamak amacıyla okulumuz bünyesinde düzenlenecek etkinlik başvuru ve içerik tercih sistemidir.</p>
+      <div class="hero-pills">
+        <div class="pill">Tarih: <strong>Aralık 2026</strong></div>
+        <div class="pill">Süre: <strong>17 dk Uzay Çadırı + 17 dk VR (34 dk)</strong></div>
+        <div class="pill">Katılım Ücreti: <strong>150 TL / Kişi</strong></div>
+        <div class="pill">Okul Aile Birliği Saymanı: <strong>Fatma Erdem</strong></div>
       </div>
     </div>
+  </header>
 
-    <form id="vrForm" class="card" onsubmit="submitApplication(event)">
-      <h2 id="formSectionTitle">Öğrenci Bilgileri</h2>
+  <main class="container">
+    <div class="nav-tabs no-print">
+      <div class="tab-buttons">
+        <button class="tab-btn active" id="tabParentBtn" onclick="switchView('parent')">Veli Başvuru ve İçerik Seçim Formu</button>
+        <button class="tab-btn" id="tabAdminBtn" onclick="openAdminModal()">Sayman Onay & Yönetim Paneli (Fatma Erdem)</button>
+      </div>
+      <div class="sync-badge" id="syncStatusBadge">Google E-Tablo Bağlantısı Hazır</div>
+    </div>
 
-      <div id="studentFields">
+    <!-- VELİ BAŞVURU FORMU -->
+    <section id="parentView">
+      <div class="card">
+        <div class="card-title">
+          <span>1. Katılımcı ve Veli Bilgileri</span>
+        </div>
+        <p class="card-sub">Katılımcı türünü seçerek öğrenci veya katılımcı bilgilerini doldurunuz.</p>
+
+        <div class="announcement-box">
+          <strong>Başvuru ve Sayman Onay Süreci:</strong> Etkinlik katılım ücreti kişi başı <strong>150 TL</strong>'dir. Form gönderildiğinde başvurunuz <strong>Sayman Onayı Bekliyor</strong> olarak E-Tabloya işlenir; 150 TL katılım ücretinin Okul Aile Birliği Saymanı <strong>Fatma Erdem</strong>'e teslim edilmesinin ardından sayman panelinden onaylanarak kesinleşir.
+        </div>
+
+        <div class="type-selector">
+          <button type="button" class="type-btn active" id="typeBtnOgrenci" onclick="setRecordType('ogrenci')">Okul Öğrencisi</button>
+          <button type="button" class="type-btn" id="typeBtnVeli" onclick="setRecordType('veli')">Veli Katılımı</button>
+          <button type="button" class="type-btn" id="typeBtnMisafir" onclick="setRecordType('misafir')">Misafir Öğrenci</button>
+        </div>
+
+        <!-- ÖĞRENCİ SEÇİM ALANI -->
+        <div id="studentFieldsWrap">
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="quickSearch">Hızlı Öğrenci Ara (İsim veya Okul No)</label>
+              <input type="text" id="quickSearch" class="form-control" placeholder="Örn: Ahmet Yılmaz veya 463..." oninput="handleQuickSearch(this.value)">
+            </div>
+            <div class="form-group">
+              <label for="classSelect">Sınıf / Şube Seçiniz *</label>
+              <select id="classSelect" class="form-control" onchange="onClassChange()">
+                <option value="">-- Sınıf / Şube Seçiniz --</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="studentSelect">Öğrenci Adı Soyadı ve Okul No *</label>
+              <select id="studentSelect" class="form-control" onchange="onStudentSelected()">
+                <option value="">-- Önce Sınıf/Şube Seçiniz --</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="parentName">Veli Adı Soyadı *</label>
+              <input type="text" id="parentName" class="form-control" placeholder="Velinin adı ve soyadı">
+            </div>
+          </div>
+        </div>
+
+        <!-- VELİ / MİSAFİR ALANI -->
+        <div id="extraParticipantWrap" class="hidden">
+          <div class="grid-2">
+            <div class="form-group">
+              <label for="extraParticipantName" id="extraNameLabel">Katılımcı Adı Soyadı *</label>
+              <input type="text" id="extraParticipantName" class="form-control" placeholder="Adı ve soyadı">
+            </div>
+            <div class="form-group" id="extraParentGroup">
+              <label for="extraParentName">Veli Adı Soyadı *</label>
+              <input type="text" id="extraParentName" class="form-control" placeholder="Velinin adı ve soyadı">
+            </div>
+          </div>
+        </div>
+
         <div class="grid-2">
-          <div>
-            <label for="classSelect">Sınıf / Şube *</label>
-            <select id="classSelect" onchange="onClassChange()">
-              <option value="">Sınıf seçiniz...</option>
+          <div class="form-group">
+            <label for="parentPhone">İletişim Telefonu *</label>
+            <input type="tel" id="parentPhone" class="form-control" placeholder="05XX XXX XX XX">
+          </div>
+          <div class="form-group">
+            <label for="paymentNote">Açıklama / Not (İsteğe Bağlı)</label>
+            <input type="text" id="paymentNote" class="form-control" placeholder="Varsa eklemek istediğiniz not">
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>2. Sanal Gerçeklik (VR) İçerik Seçimi (Tam 5 Adet Seçiniz)</span>
+          <span class="counter-pill" id="vrCounter">0 / 5 Seçildi</span>
+        </div>
+        <p class="card-sub">Uzay ve gezegenlerin tanıtımı dışındaki tüm içerikler, gerçek görüntülerle oluşturulmuş özel 360° çekimlerdir. Listeden <strong>tam 5 adet</strong> içerik işaretleyiniz.</p>
+
+        <div class="vr-grid" id="vrGrid"></div>
+
+        <div style="margin-top: 22px; display: flex; flex-wrap: wrap; gap: 12px; align-items: center;">
+          <button type="button" class="btn btn-primary" id="submitBtn" onclick="submitApplication()">
+            Başvuruyu ve 5 VR Seçimini Gönder (Sayman Onayına Sun)
+          </button>
+          <button type="button" class="btn btn-outline" onclick="resetForm()">Formu Temizle</button>
+        </div>
+
+        <div id="formAlert" class="alert"></div>
+      </div>
+    </section>
+
+    <!-- SAYMAN & YÖNETİM PANELİ -->
+    <section id="adminView" class="hidden">
+      <div class="stats-grid no-print">
+        <div class="stat-card">
+          <div class="stat-label">Toplam Başvuru</div>
+          <div class="stat-value" id="statTotal">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Sayman Onaylı (150 TL)</div>
+          <div class="stat-value" style="color: var(--success);" id="statPaid">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Onay Bekleyen</div>
+          <div class="stat-value" style="color: var(--warning);" id="statPending">0</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-label">Tahsil Edilen Tutar</div>
+          <div class="stat-value" style="color: var(--primary);" id="statRevenue">0 TL</div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">
+          <span>Sayman Onay ve Kayıt Takip Listesi (Sayman: Fatma Erdem)</span>
+          <div class="no-print" style="display:flex; flex-wrap:wrap; gap:8px;">
+            <button class="btn btn-outline btn-sm" onclick="fetchAdminRecords()">E-Tablodan Yenile</button>
+            <button class="btn btn-outline btn-sm" onclick="backupDrive()">Drive Yedek Al</button>
+            <button class="btn btn-success btn-sm" onclick="exportCSV()">Excel (CSV) İndir</button>
+            <button class="btn btn-outline btn-sm" onclick="window.print()">Listeyi Yazdır</button>
+          </div>
+        </div>
+        <p class="card-sub no-print">150 TL katılım ücretini teslim aldığınız katılımcının satırındaki <strong>150 TL Tahsil Et & Onayla</strong> butonuna tıkladığınızda kayıt Google E-Tablo'da anında onaylanır.</p>
+
+        <div class="grid-2 no-print">
+          <div class="form-group">
+            <input type="text" id="adminSearch" class="form-control" placeholder="Ad soyad, okul no, veli veya telefon ara..." oninput="renderAdminTable()">
+          </div>
+          <div class="grid-2" style="margin-bottom:0;">
+            <select id="adminClassFilter" class="form-control" onchange="renderAdminTable()">
+              <option value="">Tüm Sınıflar / Türler</option>
+              <option value="Veli">Veli Katılımcılar</option>
+              <option value="Misafir">Misafir Öğrenciler</option>
+            </select>
+            <select id="adminPayFilter" class="form-control" onchange="renderAdminTable()">
+              <option value="">Tüm Onay Durumları</option>
+              <option value="paid">Sayman Onaylı (150 TL)</option>
+              <option value="pending">Onay Bekliyor</option>
             </select>
           </div>
-          <div>
-            <label for="studentSelect">Öğrenci (Okul No - Ad Soyad) *</label>
-            <select id="studentSelect" onchange="onStudentSelectChange()">
-              <option value="">Önce sınıf seçiniz...</option>
-            </select>
-          </div>
         </div>
-        <div class="grid-2">
-          <div>
-            <label for="parentNameStudent">Veli Adı Soyadı *</label>
-            <input type="text" id="parentNameStudent" placeholder="Veli adı soyadı" />
-          </div>
-          <div>
-            <label for="parentPhoneStudent">Veli Telefon Numarası *</label>
-            <input type="tel" id="parentPhoneStudent" placeholder="05xx xxx xx xx" />
-          </div>
-        </div>
-      </div>
 
-      <div id="veliFields" class="hidden">
-        <div class="grid-2">
-          <div>
-            <label for="veliAdSoyad">Veli Adı Soyadı *</label>
-            <input type="text" id="veliAdSoyad" placeholder="Veli adı soyadı" />
-          </div>
-          <div>
-            <label for="veliTelefon">Telefon Numarası *</label>
-            <input type="tel" id="veliTelefon" placeholder="05xx xxx xx xx" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div>
-            <label for="veliIlgiliSinif">İlgili Öğrenci Sınıfı (İsteğe Bağlı)</label>
-            <input type="text" id="veliIlgiliSinif" placeholder="Örn. 6/B" />
-          </div>
-          <div>
-            <label for="veliIlgiliNo">İlgili Öğrenci No / Adı (İsteğe Bağlı)</label>
-            <input type="text" id="veliIlgiliNo" placeholder="Örn. 460 - Öğrenci Adı" />
-          </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Tür / Sınıf</th>
+                <th>Okul No</th>
+                <th>Katılımcı Adı Soyadı</th>
+                <th>Seçilen 5 VR İçeriği</th>
+                <th>Veli & Telefon</th>
+                <th>Onay Durumu (150 TL)</th>
+                <th class="no-print">Sayman İşlemi</th>
+              </tr>
+            </thead>
+            <tbody id="adminTableBody">
+              <tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Kayıtlar yükleniyor...</td></tr>
+            </tbody>
+          </table>
         </div>
       </div>
+    </section>
 
-      <div id="misafirFields" class="hidden">
-        <div class="grid-2">
-          <div>
-            <label for="misafirAdSoyad">Misafir Öğrenci Adı Soyadı *</label>
-            <input type="text" id="misafirAdSoyad" placeholder="Misafir öğrenci adı soyadı" />
-          </div>
-          <div>
-            <label for="misafirTelefon">Veli / İletişim Telefonu *</label>
-            <input type="tel" id="misafirTelefon" placeholder="05xx xxx xx xx" />
-          </div>
-        </div>
-        <div class="grid-2">
-          <div>
-            <label for="misafirOkulSinif">Geldiği Okul / Sınıf Bilgisi</label>
-            <input type="text" id="misafirOkulSinif" placeholder="Örn. Misafir - 6. Sınıf" />
-          </div>
-          <div>
-            <label for="misafirVeliAd">Refakatçi / Veli Adı Soyadı</label>
-            <input type="text" id="misafirVeliAd" placeholder="Veli adı soyadı" />
-          </div>
-        </div>
-      </div>
+    <div class="footer-note no-print">
+      Saffet Çam Ortaokulu Müdürlüğü • Merkez / Yalova • Tahir Şahin (Okul Müdürü) • Sayman: Fatma Erdem
+    </div>
+  </main>
 
-      <label for="paymentNote">Açıklama / Not (İsteğe Bağlı)</label>
-      <textarea id="paymentNote" placeholder="Ödeme veya katılım ile ilgili eklemek istediğiniz not..."></textarea>
-
-      <h2>VR İçerik Seçimi (En fazla 5 seçim)</h2>
-      <div id="vrList" class="vr-grid"></div>
-
-      <div class="summary-bar">
-        <span id="selectedCountText">Seçilen İçerik: 0 / 5</span>
-        <span>Ücret: 150 TL</span>
-      </div>
-
-      <button type="submit" id="submitBtn" class="submit-btn">Başvuruyu Gönder</button>
-      <div id="formAlert" class="alert hidden"></div>
-    </form>
-  </div>
-
-  <script src="data.js"></script>
   <script>
-    let participantType = "ogrenci";
-    let registeredSet = new Set();
+    const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzMJPwVLPR283eURRXpmjPlrMh5FYAy1QwqwgVtl-sKBqUtC4mqieZoudz-KqyuFaL2/exec";
+    const SAYMAN_SIFRE = "fatma7952";
+    const SAYMAN_NAME = "Fatma Erdem";
+    const FEE_AMOUNT = 150;
+    const STORAGE_KEY = "saffet_cam_vr_records_v5";
 
-    function setParticipantType(type) {
-      participantType = type;
-      ["ogrenci", "veli", "misafir"].forEach(t => {
-        document.getElementById("btn-" + t).classList.toggle("active", t === type);
-      });
-      document.getElementById("studentFields").classList.toggle("hidden", type !== "ogrenci");
-      document.getElementById("veliFields").classList.toggle("hidden", type !== "veli");
-      document.getElementById("misafirFields").classList.toggle("hidden", type !== "misafir");
+    const STUDENTS_BY_CLASS = {"5/A": [{"no": "2", "name": "ABDULLAH AVCI"}, {"no": "4", "name": "AHMED ADAM HUSSEIN MASTOUR"}, {"no": "15", "name": "ALİ EYMEN GÜNER"}, {"no": "385", "name": "ARİN ÖZKAYA"}, {"no": "687", "name": "ASMİN EREN"}, {"no": "219", "name": "BELİS YILMAZ"}, {"no": "336", "name": "DEFNE AKPINAR"}, {"no": "59", "name": "ECEM SU YANAR"}, {"no": "64", "name": "EGE UĞUR"}, {"no": "379", "name": "ELİFSU APAYDIN"}, {"no": "87", "name": "ERTUĞRUL DELİCE"}, {"no": "90", "name": "ESLEM KAYMAK"}, {"no": "113", "name": "GHAITH ADAM HUSSEIN MASTOUR"}, {"no": "118", "name": "GÖKÇE TANRIKUL"}, {"no": "168", "name": "KEREM ALİ ŞİŞMAN"}, {"no": "367", "name": "LİNA KILIÇ"}, {"no": "398", "name": "MAEDEH MAHMOODI"}, {"no": "286", "name": "METİN OĞUZ ÜNAL"}, {"no": "212", "name": "MISHEL FAYZULINA"}, {"no": "375", "name": "MOHAMMAD MATIN MURADI"}, {"no": "387", "name": "MUHAMMED SIDIK YILDIRIM"}, {"no": "178", "name": "MUSTAFA KEMAL YİMSEK"}, {"no": "233", "name": "NEHİR EZER"}, {"no": "250", "name": "REVAN ECRİN ÖZİŞİ"}, {"no": "332", "name": "URAS ÖZ"}, {"no": "347", "name": "YAĞIZ YAPICI"}, {"no": "348", "name": "YAMAN YAKICI"}, {"no": "364", "name": "YUSUF EYMEN ERİK"}], "5/B": [{"no": "11", "name": "ABDULKADİR DEMİR"}, {"no": "189", "name": "AHMADJON ODINAEV"}, {"no": "953", "name": "AYTAÇ CAN ÇETİNTAŞ"}, {"no": "229", "name": "BAYRAM EFE KISA"}, {"no": "51", "name": "ÇINAR SEKİN"}, {"no": "381", "name": "DEMİRKAN ARAS GÖKDEMİR"}, {"no": "384", "name": "ECRİN HİRA ÇAPALI"}, {"no": "62", "name": "EFE BERK ÖKELİ"}, {"no": "226", "name": "EFEHAN GÖKDEMİR"}, {"no": "201", "name": "ELİF GÜLFEM ŞENGÖR"}, {"no": "75", "name": "EMİR AKSOY"}, {"no": "100", "name": "EYMEN KAYA"}, {"no": "137", "name": "HÜSEYİN ERDEM ALTUNBAY"}, {"no": "155", "name": "JUNAID AHMED ZIYAD KAREEM"}, {"no": "160", "name": "KADİR ALTUNBOĞA"}, {"no": "188", "name": "KEREM TUĞALP KOÇ"}, {"no": "181", "name": "LİYA KUMSAL MAVİŞ"}, {"no": "376", "name": "MELİS YILMAZ"}, {"no": "239", "name": "NİSANUR BAYRAK"}, {"no": "254", "name": "OSMAN ALALİ"}, {"no": "277", "name": "RÜMEYSA KADER NALBANT"}, {"no": "296", "name": "SELENA EREN"}, {"no": "307", "name": "SHEHRBANU FAKHIRI"}, {"no": "337", "name": "ÜLKÜM ASLI İLERİ"}, {"no": "391", "name": "YİĞİT KEREM GÜNGÖR"}, {"no": "392", "name": "YUSUF SERT"}, {"no": "374", "name": "ZİLAN YILMAZ"}], "5/C": [{"no": "13", "name": "ALEYNA TANRIVERDİ"}, {"no": "14", "name": "ALİ EYMEN GÖKDEMİR"}, {"no": "17", "name": "AYAZ ALİ FIRTINA"}, {"no": "28", "name": "BAŞAK ATALAY"}, {"no": "38", "name": "BUĞLEM ERSOY"}, {"no": "54", "name": "DAMLA NUR GÖÇER"}, {"no": "58", "name": "DURU YILDIRIM"}, {"no": "397", "name": "EROL KAYRA KARACA"}, {"no": "99", "name": "EYMEN EFE PAKIR"}, {"no": "108", "name": "GÖKTÜRK GÖKÇE TANRIVERDİ"}, {"no": "110", "name": "GÜNEŞ KOÇGÜNDÜZ"}, {"no": "119", "name": "HAMID SAFI"}, {"no": "131", "name": "HAYATİ AHMET ZEYTİN"}, {"no": "176", "name": "İPEK BERBEROĞLU"}, {"no": "156", "name": "KAAN ERGUVAN"}, {"no": "184", "name": "LYAN SEDEEQ SAFWAN ZAINULABDEEN"}, {"no": "295", "name": "MAADH MOHAMMED SHAKIR SHAKIR"}, {"no": "210", "name": "MERYEM ERDEM"}, {"no": "373", "name": "METE ÇETİN"}, {"no": "216", "name": "MOHAMMAD HAKIMI"}, {"no": "141", "name": "ÖMER SEVEN"}, {"no": "252", "name": "ÖMER ERDEM BAŞKURT"}, {"no": "388", "name": "POLINA IVANOVA"}, {"no": "353", "name": "YAREN YELBOĞA"}, {"no": "354", "name": "YİĞİT TALHA AKAY"}, {"no": "125", "name": "YUSUF EGE ERDOĞAN"}, {"no": "370", "name": "ZEYNEP KUYUCU"}], "5/D": [{"no": "21", "name": "ASAF AYDIN"}, {"no": "16", "name": "AYAH TAHSEEN MAHMOOD ALALI"}, {"no": "321", "name": "AZRA MİRA SUNGUR"}, {"no": "325", "name": "ÇINAR ONAN"}, {"no": "349", "name": "ELİF ECE ERGÜN"}, {"no": "78", "name": "EMİR MUZAFFER ADIGÜZEL"}, {"no": "95", "name": "EVREN DEHA ARSLANTÜRK"}, {"no": "98", "name": "EYLÜL BAL"}, {"no": "699", "name": "FATIMAH SADDAM KHUDHAIR ALMAYYAHI"}, {"no": "126", "name": "HAMZAH NABEEL ABDULAZEEZ AL-SUHAIL"}, {"no": "161", "name": "KAĞAN AYBARS BİKET"}, {"no": "163", "name": "KALED TAHA YASEEN ALAZOOZ"}, {"no": "169", "name": "KEREM MERİÇ"}, {"no": "200", "name": "MEHMET ŞAH CİHAN YILDIZ"}, {"no": "218", "name": "MUHAMMED ARDA KARAMAN"}, {"no": "238", "name": "NİSA ALTIN"}, {"no": "257", "name": "ÖMER FARUK YEŞİLDAĞ"}, {"no": "260", "name": "ÖZGÜ ERARSLAN"}, {"no": "261", "name": "PARIMA SALEHI"}, {"no": "270", "name": "REYYAN SEHER KARAHAN"}, {"no": "20181209", "name": "RUQAYAH NABEEL ABDULAZEEZ AL-SUHAIL"}, {"no": "304", "name": "SEVDE GÜLŞİN"}, {"no": "88", "name": "ŞEYMA KARAMAN"}, {"no": "310", "name": "TUANA NESİL"}, {"no": "322", "name": "UMUT ERARSLAN"}, {"no": "340", "name": "VEYSEL ÖZER"}, {"no": "360", "name": "YOUSEF ABDULKADR HINDI"}, {"no": "362", "name": "YUSUF ALİ TEKİN"}], "5/E": [{"no": "8", "name": "AHMET TUMGAN"}, {"no": "20", "name": "ALİ HÜSEYİN KAZ"}, {"no": "29", "name": "BATU BİÇER"}, {"no": "35", "name": "BEYZANUR BOZKURT"}, {"no": "293", "name": "BORACAN ATEŞ"}, {"no": "84", "name": "BURÇİN KARABULUT"}, {"no": "303", "name": "CİVAN AMED ÖZBEK"}, {"no": "56", "name": "DOĞA MÜJDE"}, {"no": "55", "name": "ELİF ŞURA ŞENER"}, {"no": "145", "name": "FATİH SELİM ALTAY"}, {"no": "198", "name": "GÖKSU BEYZA DEMİR"}, {"no": "132", "name": "HÜMA APAK"}, {"no": "153", "name": "İSMAİL TUMGAN"}, {"no": "164", "name": "KARTAL DENİZ KİMYAGER"}, {"no": "191", "name": "MASAL BİTER"}, {"no": "45", "name": "MİRAÇ SALİH TAŞDEMİR"}, {"no": "215", "name": "MİRAY GÜNLÜLER"}, {"no": "231", "name": "NAYAB WAJID"}, {"no": "246", "name": "OĞUZ KAĞAN MENGÜTAY"}, {"no": "253", "name": "OSAMA İDRIS"}, {"no": "309", "name": "ŞEVVAL DEMİRKAN"}, {"no": "341", "name": "WAEL ALMUAZEN"}, {"no": "356", "name": "YOLANDE ALSANOOSI"}, {"no": "361", "name": "YUNUS EMRE KAYA"}, {"no": "365", "name": "YUSUF KULAKLIKAYA"}, {"no": "363", "name": "YUSUF EMİR DEREÇİÇEK"}, {"no": "134", "name": "YUSUF İSLAM DAĞDEVİREN"}, {"no": "371", "name": "ZEYNEP YAŞA"}], "5/F": [{"no": "9", "name": "AHMET YAĞIZ SU"}, {"no": "30", "name": "BELİNAY BİRBEN"}, {"no": "42", "name": "BULUT TAŞKESER"}, {"no": "37", "name": "ÇAĞIL URAS GÜL"}, {"no": "76", "name": "DERİN MAVİ KÜÇÜKSU"}, {"no": "69", "name": "ELİF SU CEBEL"}, {"no": "102", "name": "FARAH SAYED"}, {"no": "208", "name": "FATİH EŞREF GÜRDAL"}, {"no": "112", "name": "FEYZA CEREN KOZ"}, {"no": "107", "name": "HABİB ATMAN"}, {"no": "368", "name": "KÜBRA ÇELİK"}, {"no": "187", "name": "MAKBULE MELTEM MİNA SAYINTA"}, {"no": "205", "name": "MEHMET ŞAHİN BULUT"}, {"no": "224", "name": "MOSTAFA HAKIMI"}, {"no": "290", "name": "MUHAMMED EMİN ÖZBEK"}, {"no": "213", "name": "MUSTAFA ALİ KARAKUŞ"}, {"no": "227", "name": "MÜZEYYEN ELİF TURAMAN"}, {"no": "232", "name": "NEHİR BAŞYİĞİT"}, {"no": "378", "name": "NİSANUR DEREÇİÇEK"}, {"no": "242", "name": "RÜZGAR ŞİMŞEK"}, {"no": "283", "name": "SAFA GHAFOORZAI"}, {"no": "287", "name": "SARE FIRTINA"}, {"no": "299", "name": "SEMA GENCER"}, {"no": "342", "name": "YAĞIZ OSMAN DÖLCEL"}], "6/A": [{"no": "463", "name": "AHMET YİĞİT KILINÇ"}, {"no": "471", "name": "ASLI HAVVA TARAKÇI"}, {"no": "6", "name": "AYAZ KONUKOĞLU"}, {"no": "473", "name": "BUĞLEM MİNA ŞAHİN"}, {"no": "675", "name": "BUĞRA EFE KÖKSOY"}, {"no": "609", "name": "CEMRE TURHAN"}, {"no": "477", "name": "CEVAT UYSAL"}, {"no": "589", "name": "CEYDA GÜR"}, {"no": "487", "name": "EGE KAAN AKYIL"}, {"no": "727", "name": "ELA MİRAY YILDIRIM"}, {"no": "498", "name": "ENES MALİK YİĞİT"}, {"no": "503", "name": "ESMA BUĞLEM BAŞASLAN"}, {"no": "505", "name": "EYLÜL ŞURA YILMAZ"}, {"no": "513", "name": "HARUN ENES MEMİŞ"}, {"no": "677", "name": "HİLAL ÇETİN"}, {"no": "678", "name": "HİRA ÇETİN"}, {"no": "593", "name": "MELİSA ORTAKAYA"}, {"no": "543", "name": "MİRSAD EGE EVGİN"}, {"no": "900", "name": "MURAD ISMAYIL"}, {"no": "538", "name": "MURAT BUĞRA GÜNDOĞDU"}, {"no": "186", "name": "NERMİN KARABULUT"}, {"no": "556", "name": "OBAIDA AMER BADER"}, {"no": "965", "name": "ÖMER FARUK İLYASOĞLU"}, {"no": "582", "name": "ROKAYAH TALIB"}, {"no": "823", "name": "SELİM REŞAT BEYAZ"}, {"no": "314", "name": "SIRAÇ EFE YILDIZ"}, {"no": "562", "name": "SUDENUR ÖZDEMİR"}, {"no": "382", "name": "UMUT YAZICI"}, {"no": "567", "name": "YADE DEREÇİÇEK"}, {"no": "715", "name": "YAHYO NABOTOV"}, {"no": "680", "name": "YİĞİT ÇETİN"}, {"no": "574", "name": "YUSUF TALHA PEDÜK"}], "6/B": [{"no": "460", "name": "ADA TÜRK"}, {"no": "313", "name": "ARDA KINALI"}, {"no": "685", "name": "ARDEN SEZER"}, {"no": "606", "name": "BEKİR IMAD"}, {"no": "485", "name": "EDA KINALI"}, {"no": "491", "name": "ELANUR ZEYBEK"}, {"no": "492", "name": "ELİF SUDE GÜL"}, {"no": "496", "name": "EMRE SARSILMAZ"}, {"no": "697", "name": "ERVA NUR TÜRKAN"}, {"no": "597", "name": "EYMEN ARAS KOÇYİĞİT"}, {"no": "676", "name": "EYÜP ÇETİN"}, {"no": "514", "name": "HARUN İLBAN"}, {"no": "821", "name": "IBRAHIM MALULLAH IBRAHIM ALAZZAWI"}, {"no": "282", "name": "İPEKNUR İKRA ÖZTÜRK"}, {"no": "584", "name": "MARWA GHAFOORZAI"}, {"no": "527", "name": "MEHMET ÇINAR ARICI"}, {"no": "529", "name": "MEHMET HAMZA HARTUÇ"}, {"no": "553", "name": "MELİSA ÇETİN"}, {"no": "549", "name": "MİNE DALKILIÇ"}, {"no": "546", "name": "MİRAÇ EFE BALIK"}, {"no": "599", "name": "MOHAMMAD TAMIM ASLAMI"}, {"no": "600", "name": "MUHAMMET TOKGÜN"}, {"no": "554", "name": "NUR RAHİME ÇELİK"}, {"no": "560", "name": "SARE ÖĞRENÇ"}, {"no": "590", "name": "TUBA MELİS DAĞDEVİREN"}, {"no": "230", "name": "TUNAHAN MUSTAFA ÇIRAK"}, {"no": "583", "name": "UMUT ORAK"}, {"no": "566", "name": "ÜMİTİSLAM BAYRAK"}, {"no": "570", "name": "YİĞİT AKKUŞ"}, {"no": "438", "name": "ZEHRA ÖNCÜL"}, {"no": "575", "name": "ZEYNEB UĞUR"}], "6/C": [{"no": "461", "name": "AHMET ÇINAR BİTER"}, {"no": "577", "name": "ALİ KEREM BAYRAKTAR"}, {"no": "320", "name": "ARDA UĞUR"}, {"no": "797", "name": "ARMİNA ESİLA ŞENGÖR"}, {"no": "690", "name": "AYZA SÖNMEZ"}, {"no": "469", "name": "BARIŞ FİDAN"}, {"no": "359", "name": "BERAY KABAN"}, {"no": "448", "name": "BEREN YAZICI"}, {"no": "476", "name": "CEYLİN HİRA PAŞA"}, {"no": "480", "name": "DENİZ YILDIZOĞLU"}, {"no": "482", "name": "DOĞAN TUNCA"}, {"no": "484", "name": "ECRİN EVRAN"}, {"no": "607", "name": "EMİR MOHAMMED HOSSEINI"}, {"no": "502", "name": "ESLEM SU KÜTÜKCÜOĞLU"}, {"no": "504", "name": "EYLÜL OK"}, {"no": "700", "name": "FATMA ZEHRA BORA"}, {"no": "608", "name": "HİRA NUR TUNÇ"}, {"no": "517", "name": "HİRA SU AZMAN"}, {"no": "519", "name": "IRMAK FİDAN"}, {"no": "710", "name": "MERT ÇINAR YILDIRIM"}, {"no": "540", "name": "MUHAMMET BERAT TAŞTAN"}, {"no": "541", "name": "MUSTAFA KEREM KARAŞ"}, {"no": "585", "name": "NOUH MOHAMED HUSSEIN MOHAMED HUSSEIN SALEH"}, {"no": "18", "name": "ÖMER KOÇ"}, {"no": "714", "name": "POYRAZ SEZER"}, {"no": "601", "name": "SAFIA ASLAMI"}, {"no": "61", "name": "SERVET EMİR KAYA"}, {"no": "822", "name": "SUMAYA MALULLAH IBRAHIM ALAZZAWI"}, {"no": "390", "name": "ŞAHİN TUĞRA ŞAHİN"}, {"no": "565", "name": "TUBA EFSA YILDIZ"}, {"no": "568", "name": "YAĞIZ EREN KARAKUŞ"}, {"no": "613", "name": "YASİN CAN MARTİ"}, {"no": "569", "name": "YAVUZ SELİM SOLMAZ"}], "6/D": [{"no": "464", "name": "ALİ ENHAR GÜLERYÜZ"}, {"no": "470", "name": "AYAZ MAHİR CENGİZ"}, {"no": "595", "name": "BERAT SAFA SAYAR"}, {"no": "728", "name": "BERRE YARAR"}, {"no": "472", "name": "BETÜL KOÇAL"}, {"no": "596", "name": "CANAN AKKUŞ"}, {"no": "105", "name": "EBRAR KARATAŞ"}, {"no": "490", "name": "ECEM LİNA ÖMÜR"}, {"no": "730", "name": "ELANUR DOĞAN"}, {"no": "494", "name": "EMİNE NUR MUTANOĞLU"}, {"no": "352", "name": "EYLÜL KESKİN"}, {"no": "506", "name": "EYMEN ÖZDEMİR"}, {"no": "510", "name": "GÜLCE DÜLGER"}, {"no": "725", "name": "GÜLEN ASEL ŞİŞİK"}, {"no": "511", "name": "HAMZA BİLAL DURAN"}, {"no": "516", "name": "HASAN UKKAŞE SEZER"}, {"no": "520", "name": "IRMAK KAYA"}, {"no": "580", "name": "MEHMED HİLMİ SEZGİN"}, {"no": "552", "name": "MENDUHE REYHAN CEYLAN"}, {"no": "550", "name": "MİNA ERCAN"}, {"no": "542", "name": "MOHAMMED ABDULLAH ABDULHAFEDH ALHASSAN"}, {"no": "537", "name": "MUSAB AYCAN"}, {"no": "679", "name": "MUSTAFA ÇETİN"}, {"no": "808", "name": "NURSİMA NEHİR YAĞIZ"}, {"no": "711", "name": "ONURALP KOÇ"}, {"no": "557", "name": "POYRAZ ALİ DURMUŞ"}, {"no": "692", "name": "YAĞMUR DURNA"}, {"no": "573", "name": "YUSUF EFE ÇAKIR"}, {"no": "766", "name": "YÜSRA NUR TOKGÜN"}], "6/E": [{"no": "611", "name": "ALİ KEREM KAVURKALI"}, {"no": "278", "name": "ALİ YUSUF YILMAZ"}, {"no": "684", "name": "ALMIYA ZIYAVEDINOVA"}, {"no": "688", "name": "ASMİN KAYA"}, {"no": "465", "name": "AYŞE GÜLCE BİRİNCİ"}, {"no": "686", "name": "BARAN DURNA"}, {"no": "339", "name": "BERAT AYDIN"}, {"no": "594", "name": "BERK SIRAT BAT"}, {"no": "693", "name": "DİCLE ERTURAN"}, {"no": "377", "name": "EFE BAYAZID GÜVEN"}, {"no": "486", "name": "EGE ÇAĞLAR DURMUŞ"}, {"no": "591", "name": "ELİF ECE BAĞKIRAN"}, {"no": "610", "name": "ENES YİLDIRIM"}, {"no": "746", "name": "EYMEN GÜÇLÜ"}, {"no": "262", "name": "FAWZIA WAZIR MUHAMMAD"}, {"no": "794", "name": "FEYZA SEVİM"}, {"no": "820", "name": "HAJIR MALULLAH IBRAHIM ALAZZAWI"}, {"no": "518", "name": "HÜSNÜ YUSUF SARGINALP"}, {"no": "726", "name": "INDIRA MİLLA BAL"}, {"no": "521", "name": "IŞIL MİNA ARSLANHAN"}, {"no": "522", "name": "İLAYDA CEYLAN"}, {"no": "807", "name": "JOUD HATIM SAFWAT AWAD"}, {"no": "524", "name": "KİBRA NUR ÖZDEMİR"}, {"no": "531", "name": "MELEKNUR BAKIŞ"}, {"no": "545", "name": "MİRAÇ MUSTAFA DOĞRU"}, {"no": "544", "name": "MİRAY İLHAN"}, {"no": "586", "name": "MOHAMMED ELONE"}, {"no": "657", "name": "MUHAMMED EYMEN KINAY"}, {"no": "536", "name": "MUSAP TAŞTAN"}, {"no": "535", "name": "MUSTAFA METEHAN SARIYILDIZ"}, {"no": "532", "name": "NAZLI MİRAY MÜJDE"}, {"no": "581", "name": "NİL SU ÜSTÜN"}, {"no": "674", "name": "NUR ŞENGÜN"}, {"no": "555", "name": "ÖMER FARUK BEŞLER"}, {"no": "559", "name": "SALİH ZİYA KARTAL"}, {"no": "458", "name": "UMUT ORUÇLİ"}, {"no": "804", "name": "YUSUF BARAN ÖZBEK"}, {"no": "576", "name": "ZEYNEP YILMAZ"}], "6/F": [{"no": "682", "name": "ABDULLAH NABOTOV"}, {"no": "462", "name": "AHMET SELİM GÜNGÖR"}, {"no": "128", "name": "AHMET ŞİYAR KAYA"}, {"no": "279", "name": "ALMİRA DAMLA NAMLI"}, {"no": "467", "name": "AYŞE NİL SEVER"}, {"no": "468", "name": "AZRA ÖNDER"}, {"no": "691", "name": "BARAN ÇAPALI"}, {"no": "475", "name": "CELÂL ERDEM"}, {"no": "479", "name": "DANIZ GURBANOVA"}, {"no": "489", "name": "EDA DOĞA BİTİRİM"}, {"no": "488", "name": "EGEHAN GÜRBÜZ"}, {"no": "694", "name": "ELİF ŞENER"}, {"no": "500", "name": "ERTUĞRUL NALÇAKAR"}, {"no": "501", "name": "ERVA PEHLİVAN"}, {"no": "139", "name": "EYLÜL TAŞKÖMÜR"}, {"no": "508", "name": "FAHRETTİN BORA COŞKUN"}, {"no": "515", "name": "HASAN JAWISH"}, {"no": "704", "name": "HÜMEYRA PARSAK"}, {"no": "587", "name": "KAYS ELONE"}, {"no": "525", "name": "KUMSAL AKYILDIZ"}, {"no": "526", "name": "KUZEY EMİR SADIK ATABEK"}, {"no": "598", "name": "MARYANA ALAA HUSSEIN ALLAMI"}, {"no": "551", "name": "METE MİRAÇ BALCI"}, {"no": "548", "name": "MİNEL AYDIN"}, {"no": "547", "name": "MİRA AVİN SAYINTA"}, {"no": "708", "name": "MOHAMMED SHIHAB AHMED AL NUAIMI"}, {"no": "533", "name": "MUHAMMED ARDA KARAGÖZ"}, {"no": "592", "name": "SANA AMİNİ"}, {"no": "563", "name": "SÜLEYMAN FATİH YILDIZ"}, {"no": "94", "name": "SÜMEYYE NAZ AYDOĞAN"}, {"no": "572", "name": "YİĞİT ARIKAN"}, {"no": "121", "name": "YİĞİT ENSAR KABADAYI"}, {"no": "791", "name": "YUSUF MERT KILIÇ"}, {"no": "578", "name": "ZİHNİ DEMİR"}, {"no": "579", "name": "ZÜBEYİR ER"}], "7/A": [{"no": "617", "name": "ALTAY YILMAZ"}, {"no": "603", "name": "AYŞE DİNCER"}, {"no": "622", "name": "BERAT ÇELİK"}, {"no": "190", "name": "CEMRE SANİYE KOCAELİ"}, {"no": "628", "name": "DENİZ DURMUŞ"}, {"no": "627", "name": "DERİN AZRA ÇAMURCU"}, {"no": "954", "name": "ELA REYYAN ÇÖZELİ"}, {"no": "630", "name": "ELİF KARACA MENGÜTAY"}, {"no": "776", "name": "EMRE ÇAKMAK"}, {"no": "782", "name": "ERVA TUTKAL"}, {"no": "777", "name": "FATİH SULTAN MEHMET BAKİ"}, {"no": "642", "name": "GÖKAY ALİ UYGUN"}, {"no": "961", "name": "JANAH AHMED ZIYAD ZIYAD"}, {"no": "653", "name": "KUZEY SAFA BAŞKAN"}, {"no": "962", "name": "MEHMET BİTER"}, {"no": "787", "name": "MİRAÇ MERT ÖZÇOMAK"}, {"no": "665", "name": "MOHAMMAD MERSAD FAZLI"}, {"no": "298", "name": "MOJDEH ASLEMI"}, {"no": "768", "name": "MUSTAFA KAYRA KABAY"}, {"no": "659", "name": "MÜHLİŞAN ÖKÇE"}, {"no": "673", "name": "NEHİR BİTER"}, {"no": "493", "name": "ÖMER EMBİYA ERTURAN"}, {"no": "220", "name": "SAADET BEGÜM TORUN"}, {"no": "783", "name": "SARE DERİN SU"}, {"no": "738", "name": "SOMYA MOHAMED HUSSEIN MOHAMED HUSSEIN SALEH"}, {"no": "602", "name": "TUĞBA ÇALIKOĞLU"}, {"no": "818", "name": "YAKUB HAMZA SÖYLER"}, {"no": "750", "name": "YUSUF YAZICI"}, {"no": "760", "name": "ZAINAB NABEEL ABDULAZEEZ ALSUHAIL"}, {"no": "759", "name": "ZEYNEP GÜLSEVER"}], "7/B": [{"no": "950", "name": "ABDUVAIT TURDIYEV"}, {"no": "89", "name": "AHMET ALİ URAS"}, {"no": "803", "name": "BERAT TANRIVERDİ"}, {"no": "621", "name": "BETÜL BAŞERLİ"}, {"no": "638", "name": "EMİRHAN EKMEKÇİ"}, {"no": "958", "name": "ESMANUR BAYRAM"}, {"no": "959", "name": "EYLÜL ELA SÖNMEZ"}, {"no": "806", "name": "HAMZA MERT ARSLAN"}, {"no": "764", "name": "HASAN MERT KANDEMİR"}, {"no": "647", "name": "HAVVA ÇELİK"}, {"no": "648", "name": "HÜSEYİN YAŞAR"}, {"no": "815", "name": "İLKNUR AYHAN"}, {"no": "650", "name": "KÜBRA DEMİR"}, {"no": "784", "name": "MEHMET ÇELİK"}, {"no": "656", "name": "MELDA AKÇAY"}, {"no": "669", "name": "MİRAÇ GÖKHAN BORAK"}, {"no": "661", "name": "MUSAB ENSAR KAYMAZ"}, {"no": "300", "name": "NAZ MİRA KISA"}, {"no": "671", "name": "NEHİR BAŞ"}, {"no": "785", "name": "OMER ABEDİ"}, {"no": "57", "name": "POYRAZ ALİ ARSLAN"}, {"no": "651", "name": "RAVZA KABADAYI"}, {"no": "82", "name": "SAMET EGE YILDIRIM"}, {"no": "781", "name": "SATILMIŞ BERAT CEYLAN"}, {"no": "969", "name": "SULAIMAN SEDEEQ S. ZAIN ALABIDEEN"}, {"no": "707", "name": "TALHA TOPRAK DİLER"}, {"no": "755", "name": "ZEHRA DEMİR"}, {"no": "396", "name": "ZEYNEP DESTEK"}, {"no": "743", "name": "ZEYNEP İLBUĞA"}], "7/C": [{"no": "618", "name": "AHMED ENSAR AKDENİZ"}, {"no": "193", "name": "AMER TAKLAS"}, {"no": "267", "name": "CEMRE BOZKURT"}, {"no": "588", "name": "ENES HAYRİ KONYA"}, {"no": "632", "name": "ESMA SEVEN"}, {"no": "706", "name": "EYLÜL MERVE KORKUT"}, {"no": "778", "name": "EYMEN YÜCE"}, {"no": "960", "name": "HAMZA KAYA"}, {"no": "338", "name": "HAMZA LEVENT SARIKAYA"}, {"no": "649", "name": "İNCİ NUR ÇAPALI"}, {"no": "245", "name": "İSMAİL ÇOBAN"}, {"no": "652", "name": "KUZEY BURAK KIVANÇ"}, {"no": "96", "name": "LİVANUR ÖZBEK"}, {"no": "681", "name": "MALAK TAHSEEN MAHMOOD ALALI"}, {"no": "383", "name": "MEHMET BİLAL OKAN"}, {"no": "810", "name": "MİHRİMAH ATEŞ"}, {"no": "667", "name": "MİRAÇ EFE BAYRAK"}, {"no": "664", "name": "MUHAMMED POYRAZ TATAŞ"}, {"no": "793", "name": "MUHAMMED RECEP PARSAK"}, {"no": "660", "name": "MUHAMMET EMİR ÖZTÜRK"}, {"no": "963", "name": "MUHAMMET İSLAM SEZGİN"}, {"no": "658", "name": "MURSAL SAYDI"}, {"no": "672", "name": "NİSA NUR TAZEGÜL"}, {"no": "742", "name": "SELEN MERİÇ"}, {"no": "967", "name": "SELEN ARZU BARAN"}, {"no": "745", "name": "TUANA HİRA ÖNCÜL"}, {"no": "751", "name": "YUNUS EMRE ÖZTÜRK"}, {"no": "317", "name": "YUSUF ATABAY"}, {"no": "319", "name": "YUSUF ENSAR GÜLERYÜZ"}, {"no": "972", "name": "ZEHRA İZCİ"}, {"no": "331", "name": "ZEHRA MİRAY EGE"}], "7/E": [{"no": "311", "name": "ADA MOSAWI"}, {"no": "22", "name": "BULUT TAN KAPTI"}, {"no": "624", "name": "CEREN ÜNSAL"}, {"no": "91", "name": "DERİN NİSA YİMSEK"}, {"no": "637", "name": "EGEMEN ÇOLAK"}, {"no": "631", "name": "EKİN GÜNDÜZ"}, {"no": "633", "name": "ELA SÜLÜN"}, {"no": "639", "name": "EMİR ERGUVAN"}, {"no": "241", "name": "EMİR KIVANÇ KARGIN"}, {"no": "765", "name": "ERVA KARATAŞ"}, {"no": "3", "name": "FATEMA ANSARI"}, {"no": "645", "name": "HİRA NUR VAROL"}, {"no": "148", "name": "KUZEY GÜMÜŞLER"}, {"no": "736", "name": "MİNA MOSAWI"}, {"no": "809", "name": "MUHAMMED EFE AVŞAR"}, {"no": "666", "name": "NİSANUR YÜCE"}, {"no": "732", "name": "OĞUZHAN YAĞMUR"}, {"no": "719", "name": "ORHAN ALİ ÇELİK"}, {"no": "733", "name": "OSMAN EROL"}, {"no": "734", "name": "ÖZLEM CEMRE DEMİR"}, {"no": "244", "name": "ÖZÜM DURU AYDIN"}, {"no": "739", "name": "SERRA NUR ÇOLAK"}, {"no": "747", "name": "UMUT ALP ADIGÜZEL"}, {"no": "748", "name": "UTKU KAÇAK"}, {"no": "749", "name": "VEYSEL AYRAL"}, {"no": "752", "name": "YUNUS EMRE ÖZDEMİR"}, {"no": "81", "name": "YUSRA İLDİZ"}, {"no": "754", "name": "YUSUF ÇALIŞIRİŞÇİ"}, {"no": "757", "name": "ZÜHRE NUR POLAT"}], "7/F": [{"no": "619", "name": "ALİ HAMZA ŞİMŞEK"}, {"no": "173", "name": "ALİ ÖMER ACIOĞLU"}, {"no": "951", "name": "ARAS KEREM KARADAMAR"}, {"no": "626", "name": "CELAL ÇETİN YILDIZ"}, {"no": "625", "name": "CEYLİN GÜR"}, {"no": "640", "name": "EGEKADİR TOPRAK"}, {"no": "636", "name": "EGEMEN TEZVARAN"}, {"no": "634", "name": "ELİF İNCE"}, {"no": "629", "name": "ELİF ECE ÖZKAN"}, {"no": "635", "name": "ENES TALHA İŞ"}, {"no": "761", "name": "EYLÜL BAKAN"}, {"no": "771", "name": "EYMEN AYAZ CORA"}, {"no": "762", "name": "FATİMA NUR BAL"}, {"no": "641", "name": "GAMZENUR ATASOY"}, {"no": "644", "name": "HAZAL YILMAZ"}, {"no": "646", "name": "HÜLYA ŞİLE"}, {"no": "654", "name": "KEREM ÇELİK"}, {"no": "662", "name": "MEHMET BERAN ÖZTEMEL"}, {"no": "655", "name": "MİHRİMAH ZEREN"}, {"no": "663", "name": "MOHAMMED YAHYA BUSHRA MOHAMMED"}, {"no": "668", "name": "MUSTAFA UZUN"}, {"no": "670", "name": "NİSA UÇARKUŞ"}, {"no": "259", "name": "ÖMER TARHAN"}, {"no": "735", "name": "ÖZGÜR SABRİ İNCE"}, {"no": "763", "name": "SARP TEBER"}, {"no": "741", "name": "SENA EMİNE DEMİROK"}, {"no": "740", "name": "ŞURA BAKIŞ"}, {"no": "265", "name": "YASİR TAHA KIZILIRMAK"}, {"no": "753", "name": "YUSUF REBER ÖZİŞİ"}, {"no": "758", "name": "ZEKİ GÜNGÖR"}, {"no": "756", "name": "ZEYNEP ASEL ÇAKALASMA"}], "8/A": [{"no": "258", "name": "AHMED YASİN ÖZASLAN"}, {"no": "68", "name": "AMIRSAM EBRAHIMIMOSHTAGHI"}, {"no": "357", "name": "ASIR MOHAMMED THAER ALMAHDAWI"}, {"no": "801", "name": "AYŞENUR PARSAK"}, {"no": "887", "name": "BENGİSU YILMAZ"}, {"no": "183", "name": "BEREN CÖMET"}, {"no": "333", "name": "BURAK KUTLU"}, {"no": "103", "name": "ÇAĞRI MERT AYGİRAY"}, {"no": "73", "name": "DERİN SU CEYLAN"}, {"no": "225", "name": "EFE BERK KURT"}, {"no": "196", "name": "EYMEN SAFA DEMİRTAŞ"}, {"no": "285", "name": "FAIZ ALI MOHAMMADI"}, {"no": "346", "name": "JUMAGUL ZIYAVEDINOVA"}, {"no": "71", "name": "KÜBRA NUR BALİ"}, {"no": "266", "name": "MEHMET EREN GÖRER"}, {"no": "237", "name": "MERVE SU BAL"}, {"no": "268", "name": "MİRAY GENCER"}, {"no": "273", "name": "MUHAMMED BERAT ÇETİN"}, {"no": "146", "name": "NEHİR DURU KARAHASAN"}, {"no": "93", "name": "ÖMER ÜSTBAŞ"}, {"no": "312", "name": "RAVZA KALABALIK"}, {"no": "315", "name": "STAYESH YOUSUFI"}, {"no": "221", "name": "SUDE AZRA LOKMACI"}, {"no": "136", "name": "TANEM GÜR"}, {"no": "316", "name": "TUNAHAN KESKİN"}, {"no": "276", "name": "UĞUR BERKE IŞIK"}, {"no": "366", "name": "YAHYA HUSHAM JASIM GALMASH"}, {"no": "195", "name": "YASMIN HUSHAM JASIM GALMASH"}, {"no": "180", "name": "ZEYNEP ÇİÇEK"}, {"no": "289", "name": "ZEYNEP RANA AKAN"}], "8/B": [{"no": "26", "name": "ABDULLAH MQAYOM"}, {"no": "235", "name": "AHMET SARİKAYA"}, {"no": "202", "name": "ALI GHAZWAN ISMAIL TABOONA"}, {"no": "773", "name": "ALPEREN CEYLAN"}, {"no": "92", "name": "ASMİN TİNÇ"}, {"no": "158", "name": "AZRA NUR VURDU"}, {"no": "106", "name": "BERFİN SÖZER"}, {"no": "172", "name": "CALINE GHANDOUR"}, {"no": "174", "name": "ECRİN ÇAĞLI"}, {"no": "199", "name": "ENES ER"}, {"no": "334", "name": "ENSAR İPEKÇİ"}, {"no": "154", "name": "ESİLA HİLAL TOSUN"}, {"no": "123", "name": "EYMEN ÖZTURAN"}, {"no": "116", "name": "MEHMET EFE KARAOĞLU"}, {"no": "209", "name": "MERAL ALİOĞLU"}, {"no": "236", "name": "MERT ÖMER KORKMAZ"}, {"no": "80", "name": "MİRAY AK"}, {"no": "263", "name": "MUHAMMET ALİ ÖZER"}, {"no": "499", "name": "MUSTAFA EMİR ÖZÇELİK"}, {"no": "77", "name": "NAZLI GÖBEN"}, {"no": "408", "name": "OMAR OTHMAN TALIB"}, {"no": "780", "name": "ÖMÜR UZUNLAR"}, {"no": "217", "name": "RUQAYAH GHASSAN AAWAEED AAWAEED"}, {"no": "177", "name": "SERIEN MOHAMED HUSSEIN MOHAMED HUSSEIN SALEH"}, {"no": "86", "name": "SUPHİYE NUR GÜLSEVER"}, {"no": "447", "name": "YAĞMUR KOÇGÜNDÜZ"}, {"no": "101", "name": "YAĞMUR ORAL"}, {"no": "50", "name": "YASAMEEN AHMED ABDULRAZZAQ ALHACHAMI"}, {"no": "104", "name": "YAŞAR DENİZ BAL"}, {"no": "329", "name": "YUNUS YILDIRIM"}, {"no": "280", "name": "YUSUF KAYRA ARSLAN"}], "8/C": [{"no": "127", "name": "ABDULLAH YALAZ"}, {"no": "67", "name": "ALPEREN CENGİZ"}, {"no": "228", "name": "ATİLLA DENİZ GÜNEY"}, {"no": "150", "name": "BERAT BAT"}, {"no": "248", "name": "BEYZA BECERMEN"}, {"no": "222", "name": "BÜŞRA TOPCU"}, {"no": "269", "name": "DAMLA ÖZCAN"}, {"no": "249", "name": "DUA TAŞKIRAN"}, {"no": "507", "name": "EFE GÜÇLÜ"}, {"no": "889", "name": "FİKRET ESEN"}, {"no": "860", "name": "HAVİN ÖZKAYA"}, {"no": "271", "name": "HAYAL ÇETİN"}, {"no": "326", "name": "HAYDER AHMED FAEQ AL GBURI"}, {"no": "284", "name": "HELENA KAMJOO"}, {"no": "70", "name": "HİRA NUR MEMKEZE"}, {"no": "291", "name": "IBRAHIM MOHAMED IBRAHIM ELNOUR"}, {"no": "130", "name": "JOLYANA AYAD MOHAMMED ALMAEENI"}, {"no": "192", "name": "MEHMET EMİN DUMAN"}, {"no": "234", "name": "MUHAMMED ENES EKİÇİ"}, {"no": "124", "name": "MUHAMMED TUĞRUL YILMAZ"}, {"no": "214", "name": "MUHAMMET ALİ DEMİR"}, {"no": "120", "name": "NİSA EYLÜL SELVİ"}, {"no": "223", "name": "POYRAZ ÇINAR TUNÇER"}, {"no": "72", "name": "RAIHANAH YASIR HASAN ALGBURI"}, {"no": "133", "name": "ROJHAT ÖZKAYA"}, {"no": "140", "name": "RUAA SAAD ABDULHAQ ABDULHAQ"}, {"no": "274", "name": "SEMA ÇETİN"}, {"no": "114", "name": "TAHA KAYRA AZMAN"}, {"no": "288", "name": "TUĞÇE ÖCAL"}, {"no": "83", "name": "YAHYA İBRAHİM DEMİRDEN"}, {"no": "117", "name": "YOUSIF MOHAMMED ZABEN ZABEN"}], "8/D": [{"no": "170", "name": "AESHA ABDUL LATIF"}, {"no": "197", "name": "AHMET EMİR DEMİR"}, {"no": "135", "name": "AHMET OĞUZHAN SEZGİN"}, {"no": "152", "name": "ASLIHAN URGAÇ"}, {"no": "79", "name": "AYBÜKE KARAÇAM"}, {"no": "816", "name": "BEYZANUR ÇAMURLU"}, {"no": "162", "name": "BİLAL UMUT YÜCEDAĞ"}, {"no": "306", "name": "DEMİR KAAN ANDAÇ"}, {"no": "194", "name": "DERİN BÜYÜKKAYA"}, {"no": "206", "name": "ELİFNUR KAYIŞDAĞ"}, {"no": "151", "name": "ESMA BERİL ÇEVİK"}, {"no": "109", "name": "EYMEN KUYUCU"}, {"no": "165", "name": "FURKAN EFE SARAÇ"}, {"no": "74", "name": "HAMZA GÖKDEMİR"}, {"no": "142", "name": "HÜSEYİN EMİN YILDIZ"}, {"no": "796", "name": "İSMAİL GEZER"}, {"no": "335", "name": "MALAK MOHAMMAD Y. ALBETSHAWEESH"}, {"no": "211", "name": "MERT NEFİS"}, {"no": "251", "name": "METEHAN KALKAN"}, {"no": "372", "name": "MİRAY ÇELİK"}, {"no": "66", "name": "POYRAZ KAHRAMANOĞLU"}, {"no": "297", "name": "RAHİME AVCI"}, {"no": "129", "name": "RECEP RÜZGAR ÖĞ"}, {"no": "179", "name": "RÜYA ADA BAYBAŞ"}, {"no": "144", "name": "SEMİH KAHYA"}, {"no": "240", "name": "SIRAÇ FESİH ÇİÇEK"}, {"no": "389", "name": "SUDENAZ DEMİR"}, {"no": "328", "name": "VEYSEL SEYDA KAYGUSUZ"}, {"no": "616", "name": "YUSUF AVCI"}, {"no": "775", "name": "YUSUF KORKUT"}], "8/E": [{"no": "167", "name": "AKİF EGE YAVUZ"}, {"no": "10", "name": "ALİ UTKU MUTLU"}, {"no": "301", "name": "ASRA BAGHAEINIA"}, {"no": "36", "name": "CEMRE ŞAKAR"}, {"no": "5", "name": "DURU ÖĞRENÇ"}, {"no": "1", "name": "ELİF ÖZTÜRK"}, {"no": "166", "name": "ELVİN ZEREN"}, {"no": "34", "name": "EYMEN ÇINAR"}, {"no": "204", "name": "FATMA ELA TARAKÇI"}, {"no": "33", "name": "FEYZA ÖZTÜRK"}, {"no": "24", "name": "GİZEM ŞEN"}, {"no": "281", "name": "GÜLBAHAR BAYSOY"}, {"no": "32", "name": "HASAN BORA UZUN"}, {"no": "393", "name": "KAYRA DEMİR BAYKA"}, {"no": "12", "name": "LİVA GÜL ŞAR"}, {"no": "731", "name": "MERYEM SUDE SANCAR"}, {"no": "65", "name": "MİRAY KARAKUZU"}, {"no": "147", "name": "ÖYKÜ DURU ÇAĞLAR"}, {"no": "203", "name": "RÜZGAR ENES AKBAŞ"}, {"no": "615", "name": "SERDAR YAVUZ"}, {"no": "394", "name": "SHAHNAZ MURADI"}, {"no": "97", "name": "TUANA LAYAN BAYTÜRK"}, {"no": "318", "name": "YUNUS EMRE TAŞDEMİR"}, {"no": "466", "name": "YUSUF EREN KUTAN"}, {"no": "175", "name": "YUSUF TOPRAK KOCADEMİR"}, {"no": "39", "name": "ZEYNEP BAŞERLİ"}], "8/F": [{"no": "7", "name": "AHMET METE KANDEMİR"}, {"no": "47", "name": "AHMET TOPRAK GÜZEL"}, {"no": "800", "name": "ALEKSA MELİSA KANDEĞER"}, {"no": "323", "name": "AYBİKE AKDOĞAN"}, {"no": "40", "name": "AYŞE ASYA YEREBASMAZ"}, {"no": "53", "name": "AYŞE ESLEM GÜNER"}, {"no": "207", "name": "DURU ZEHRA ERTAN"}, {"no": "49", "name": "ECE ÇAVUŞOĞLU"}, {"no": "111", "name": "ERVA ÖZTURAN"}, {"no": "60", "name": "ESİLA İLKİM KIVANÇ"}, {"no": "27", "name": "EYÜP EMİR YAPICI"}, {"no": "44", "name": "FURKAN GÜNER"}, {"no": "122", "name": "IŞIL ATALAY"}, {"no": "143", "name": "MELAHAT EDA ÇABUK"}, {"no": "52", "name": "MİRAY ŞENEL"}, {"no": "247", "name": "NİSANUR ÖZPEKTÜRK"}, {"no": "115", "name": "RÜZGAR ŞAHİN"}, {"no": "43", "name": "RÜZGAR UĞUR"}, {"no": "171", "name": "SERRA NUR YILMAZ"}, {"no": "813", "name": "SUDE NAZ ARTAN"}, {"no": "256", "name": "VASFİYE CEYLİN ASLAN"}, {"no": "149", "name": "YAREN ZEHRA BİRBEN"}, {"no": "46", "name": "YİĞİT ALP KÜÇÜKER"}, {"no": "63", "name": "YUSUF ÇAKIR"}, {"no": "343", "name": "YUSUF EYMEN BULUT"}, {"no": "48", "name": "ZEYNEP HARTUÇ"}, {"no": "41", "name": "ZEYNEP NAZ GÜNDÜZAY"}]};
+    const VR_CONTENTS = [{"id": 1, "title": "Uzayın Tanıtımı", "desc": "Gezegenler, yıldızlar ve derin uzay yolculuğu (Animasyon)"}, {"id": 2, "title": "Anıtkabir Tanıtımı", "desc": "Gerçek çekimlerle 360° Anıtkabir ziyareti"}, {"id": 3, "title": "Topkapı Sarayı Turu", "desc": "Tarihî mekânların gerçek görüntülerle keşfi"}, {"id": 4, "title": "Kapadokya Balon Turu", "desc": "Peri bacaları üzerinde gerçek uçuş deneyimi"}, {"id": 5, "title": "Göbekli Tepe Tanıtımı", "desc": "Tarihin sıfır noktasına 360° sanal gezi"}, {"id": 6, "title": "Helikopter ile Everest Turu", "desc": "Dünyanın zirvesinde gerçek helikopter çekimi"}, {"id": 7, "title": "Alaska’da Dört Mevsim Turu", "desc": "Buzullar ve vahşi doğa manzaraları"}, {"id": 8, "title": "Çin Gezisi ve Çin Seddi Gezisi", "desc": "Çin Seddi üzerinde gerçek panoramik tur"}, {"id": 9, "title": "Mısır Piramitleri ve Tac Mahal Turu", "desc": "Dünya harikalarına yerinde 360° bakış"}, {"id": 10, "title": "İsviçre Turu ve Kuzey Işıkları Görsel Şöleni", "desc": "Alpler ve Aurora Borealis ışık gösterisi"}, {"id": 11, "title": "Denizaltı Turu", "desc": "Okyanus derinliklerinde su altı keşfi"}, {"id": 12, "title": "Hız Treni (Roller Coaster) Deneyimi", "desc": "Adrenalin dolu gerçek 360° tren yolculuğu"}, {"id": 13, "title": "Tom ve Jerry Animasyon Filmi", "desc": "Eğlenceli 360° sanal gerçeklik deneyimi"}];
 
-      const titles = {
-        ogrenci: "Öğrenci Bilgileri",
-        veli: "Veli Başvuru Bilgileri",
-        misafir: "Misafir Öğrenci Bilgileri"
-      };
-      document.getElementById("formSectionTitle").textContent = titles[type];
-      hideAlert();
+    let currentRecordType = "ogrenci";
+    let selectedVrIds = [];
+    let records = [];
+    let registeredKeys = [];
+    let isAdminUnlocked = false;
+    let activeAdminPin = "";
+
+    document.addEventListener("DOMContentLoaded", () => {
+      initClassDropdowns();
+      renderVrGrid();
+      loadLocalRecords();
+      fetchPublicCheck();
+    });
+
+    function setRecordType(type) {
+      currentRecordType = type;
+      document.getElementById("typeBtnOgrenci").classList.toggle("active", type === "ogrenci");
+      document.getElementById("typeBtnVeli").classList.toggle("active", type === "veli");
+      document.getElementById("typeBtnMisafir").classList.toggle("active", type === "misafir");
+
+      const isStudent = type === "ogrenci";
+      document.getElementById("studentFieldsWrap").classList.toggle("hidden", !isStudent);
+      document.getElementById("extraParticipantWrap").classList.toggle("hidden", isStudent);
+
+      if (!isStudent) {
+        document.getElementById("extraNameLabel").textContent =
+          type === "veli" ? "Veli Adı Soyadı *" : "Misafir Öğrenci Adı Soyadı *";
+        document.getElementById("extraParentGroup").classList.toggle("hidden", type === "veli");
+      }
+      document.getElementById("formAlert").className = "alert";
     }
 
-    function showAlert(msg, isOk) {
-      const el = document.getElementById("formAlert");
-      el.textContent = msg;
-      el.className = "alert " + (isOk ? "alert-ok" : "alert-err");
-      el.classList.remove("hidden");
-    }
+    function initClassDropdowns() {
+      const classSelect = document.getElementById("classSelect");
+      const adminFilter = document.getElementById("adminClassFilter");
+      Object.keys(STUDENTS_BY_CLASS).forEach(cls => {
+        const count = STUDENTS_BY_CLASS[cls].length;
+        const opt1 = document.createElement("option");
+        opt1.value = cls;
+        opt1.textContent = `${cls} Şubesi (${count} Öğrenci)`;
+        classSelect.appendChild(opt1);
 
-    function hideAlert() {
-      document.getElementById("formAlert").classList.add("hidden");
-    }
-
-    function populateClasses() {
-      const clsSel = document.getElementById("classSelect");
-      const classes = Array.isArray(window.SCHOOL_DATA) ? window.SCHOOL_DATA : [];
-      classes.forEach(c => {
-        const opt = document.createElement("option");
-        opt.value = c.className;
-        opt.textContent = c.className + " (" + c.teacher + ")";
-        clsSel.appendChild(opt);
-      });
-    }
-
-    function onClassChange() {
-      const clsName = document.getElementById("classSelect").value;
-      const stuSel = document.getElementById("studentSelect");
-      stuSel.innerHTML = '<option value="">Öğrenci seçiniz...</option>';
-      const clsObj = (window.SCHOOL_DATA || []).find(c => c.className === clsName);
-      if (!clsObj) return;
-
-      clsObj.students.forEach(st => {
-        const key = clsName + "_" + String(st.no);
-        const opt = document.createElement("option");
-        opt.value = JSON.stringify({ no: String(st.no), name: String(st.name) });
-        const already = registeredSet.has(key);
-        opt.textContent = st.no + " - " + st.name + (already ? " (Kayıtlı)" : "");
-        stuSel.appendChild(opt);
+        const opt2 = document.createElement("option");
+        opt2.value = cls;
+        opt2.textContent = `${cls} Şubesi`;
+        adminFilter.appendChild(opt2);
       });
     }
 
-    function onStudentSelectChange() {
-      hideAlert();
-    }
+    function onClassChange(preselectNo = "") {
+      const cls = document.getElementById("classSelect").value;
+      const studentSelect = document.getElementById("studentSelect");
+      studentSelect.innerHTML = "";
 
-    function populateVrContents() {
-      const container = document.getElementById("vrList");
-      const items = Array.isArray(window.VR_CONTENTS) ? window.VR_CONTENTS : [];
-      container.innerHTML = items.map(item => `
-        <label class="vr-item" id="vr-card-${item.id}">
-          <input type="checkbox" value="${item.id}" data-title="${item.title}" onchange="onVrToggle(this)" />
-          <div>
-            <div class="vr-title">${item.icon || ""} ${item.title}</div>
-            <div class="vr-tag">${item.tag || ""}</div>
-          </div>
-        </label>
-      `).join("");
-    }
-
-    function onVrToggle(checkbox) {
-      const checked = Array.from(document.querySelectorAll('#vrList input[type="checkbox"]:checked'));
-      if (checked.length > 5) {
-        checkbox.checked = false;
-        alert("En fazla 5 adet VR içeriği seçebilirsiniz.");
+      if (!cls || !STUDENTS_BY_CLASS[cls]) {
+        studentSelect.innerHTML = '<option value="">-- Önce Sınıf/Şube Seçiniz --</option>';
         return;
       }
-      document.querySelectorAll(".vr-item").forEach(el => el.classList.remove("selected"));
-      Array.from(document.querySelectorAll('#vrList input[type="checkbox"]:checked')).forEach(cb => {
-        const card = document.getElementById("vr-card-" + cb.value);
-        if (card) card.classList.add("selected");
+
+      const defaultOpt = document.createElement("option");
+      defaultOpt.value = "";
+      defaultOpt.textContent = `-- ${cls} Sınıfından Öğrenci Seçiniz --`;
+      studentSelect.appendChild(defaultOpt);
+
+      STUDENTS_BY_CLASS[cls].forEach(st => {
+        const opt = document.createElement("option");
+        opt.value = st.no;
+        opt.dataset.name = st.name;
+        const key = `${cls}_${st.no}`;
+        const existing = records.find(r => r.className === cls && String(r.studentNo) === String(st.no));
+        const isRegistered = registeredKeys.includes(key) || Boolean(existing);
+        let statusTag = "";
+        if (existing) {
+          statusTag = existing.paymentStatus === "paid" ? " (Sayman Onaylı - 150 TL)" : " (Onay Bekliyor)";
+        } else if (isRegistered) {
+          statusTag = " (Kayıtlı)";
+        }
+        opt.textContent = `${st.no} - ${st.name}${statusTag}`;
+        if (String(st.no) === String(preselectNo)) opt.selected = true;
+        studentSelect.appendChild(opt);
       });
-      const currentCount = document.querySelectorAll('#vrList input[type="checkbox"]:checked').length;
-      document.getElementById("selectedCountText").textContent = "Seçilen İçerik: " + currentCount + " / 5";
+
+      if (preselectNo) onStudentSelected();
     }
 
-    function fetchRegisteredKeysJsonp() {
-      const baseUrl = String(window.APPS_SCRIPT_URL || "").trim();
-      if (!baseUrl) return;
-      const cbName = "vrPublicCheck_" + Date.now();
-      window[cbName] = function(data) {
-        if (data && data.ok && Array.isArray(data.registeredKeys)) {
-          registeredSet = new Set(data.registeredKeys);
+    function handleQuickSearch(query) {
+      const q = query.trim().toLocaleUpperCase("tr-TR");
+      if (q.length < 2) return;
+
+      for (const [cls, list] of Object.entries(STUDENTS_BY_CLASS)) {
+        const found = list.find(st =>
+          st.name.toLocaleUpperCase("tr-TR").includes(q) || String(st.no) === q
+        );
+        if (found) {
+          document.getElementById("classSelect").value = cls;
+          onClassChange(found.no);
+          break;
         }
-        delete window[cbName];
-      };
-      const sep = baseUrl.indexOf("?") === -1 ? "?" : "&";
-      const s = document.createElement("script");
-      s.src = baseUrl + sep + "action=public_check&callback=" + cbName;
-      document.body.appendChild(s);
+      }
     }
 
-    function submitApplication(event) {
-      event.preventDefault();
-      hideAlert();
+    function onStudentSelected() {
+      const cls = document.getElementById("classSelect").value;
+      const stNo = document.getElementById("studentSelect").value;
+      if (!cls || !stNo) return;
 
-      const scriptUrl = String(window.APPS_SCRIPT_URL || "").trim();
-      if (!scriptUrl) {
-        return showAlert("Bağlantı adresi (APPS_SCRIPT_URL) bulunamadı.", false);
+      const key = `${cls}_${stNo}`;
+      const existing = records.find(r => r.className === cls && String(r.studentNo) === String(stNo));
+      if (existing) {
+        document.getElementById("parentName").value = existing.parentName || "";
+        document.getElementById("parentPhone").value = existing.parentPhone || "";
+        document.getElementById("paymentNote").value = existing.paymentNote || "";
+        selectedVrIds = VR_CONTENTS
+          .filter(v => (existing.vrTitles || []).includes(v.title))
+          .map(v => v.id);
+        renderVrGrid();
+        const durumText = existing.paymentStatus === "paid"
+          ? `Sayman (${SAYMAN_NAME}) tarafından 150 TL ödeme onaylanmıştır.`
+          : `Başvurunuz alınmış olup Sayman (${SAYMAN_NAME}) onayını beklemektedir.`;
+        showAlert(`Bu öğrencinin mevcut kaydı yüklendi. ${durumText}`, "success");
+      } else if (registeredKeys.includes(key)) {
+        showAlert("Bu öğrenci için sistemde daha önce başvuru oluşturulmuştur. Değişiklik için Okul Aile Birliği Saymanı Fatma Erdem ile iletişime geçiniz.", "error");
+      } else {
+        document.getElementById("formAlert").className = "alert";
+      }
+    }
+
+    function renderVrGrid() {
+      const grid = document.getElementById("vrGrid");
+      grid.innerHTML = "";
+      const maxReached = selectedVrIds.length >= 5;
+
+      VR_CONTENTS.forEach(item => {
+        const isSelected = selectedVrIds.includes(item.id);
+        const isDisabled = !isSelected && maxReached;
+
+        const div = document.createElement("div");
+        div.className = `vr-item ${isSelected ? "selected" : ""} ${isDisabled ? "disabled" : ""}`;
+        div.onclick = () => toggleVrItem(item.id);
+
+        div.innerHTML = `
+          <input type="checkbox" ${isSelected ? "checked" : ""} ${isDisabled ? "disabled" : ""} onclick="event.stopPropagation(); toggleVrItem(${item.id})">
+          <div>
+            <div class="vr-title">${item.id}. ${item.title}</div>
+            <div class="vr-desc">${item.desc}</div>
+          </div>
+        `;
+        grid.appendChild(div);
+      });
+
+      const counter = document.getElementById("vrCounter");
+      counter.textContent = `${selectedVrIds.length} / 5 Seçildi`;
+      counter.className = `counter-pill ${selectedVrIds.length === 5 ? "ready" : ""}`;
+    }
+
+    function toggleVrItem(id) {
+      if (selectedVrIds.includes(id)) {
+        selectedVrIds = selectedVrIds.filter(x => x !== id);
+      } else {
+        if (selectedVrIds.length >= 5) return;
+        selectedVrIds.push(id);
+      }
+      renderVrGrid();
+    }
+
+    function showAlert(msg, type) {
+      const el = document.getElementById("formAlert");
+      el.textContent = msg;
+      el.className = `alert show ${type === "success" ? "alert-success" : "alert-error"}`;
+    }
+
+    function resetForm() {
+      document.getElementById("quickSearch").value = "";
+      document.getElementById("classSelect").value = "";
+      document.getElementById("studentSelect").innerHTML = '<option value="">-- Önce Sınıf/Şube Seçiniz --</option>';
+      document.getElementById("parentName").value = "";
+      document.getElementById("extraParticipantName").value = "";
+      document.getElementById("extraParentName").value = "";
+      document.getElementById("parentPhone").value = "";
+      document.getElementById("paymentNote").value = "";
+      selectedVrIds = [];
+      renderVrGrid();
+      document.getElementById("formAlert").className = "alert";
+    }
+
+    async function submitApplication() {
+      const parentPhone = document.getElementById("parentPhone").value.trim();
+      const paymentNote = document.getElementById("paymentNote").value.trim();
+
+      let cls = "";
+      let stNo = "";
+      let stName = "";
+      let parentName = "";
+
+      if (currentRecordType === "ogrenci") {
+        cls = document.getElementById("classSelect").value;
+        const stSelect = document.getElementById("studentSelect");
+        stNo = stSelect.value;
+        stName = stSelect.options[stSelect.selectedIndex]?.dataset?.name || "";
+        parentName = document.getElementById("parentName").value.trim();
+
+        if (!cls || !stNo) {
+          showAlert("Lütfen öğrencinin sınıfını ve adını seçiniz.", "error");
+          return;
+        }
+        if (!parentName) {
+          showAlert("Lütfen veli adı soyadını giriniz.", "error");
+          return;
+        }
+      } else if (currentRecordType === "veli") {
+        stName = document.getElementById("extraParticipantName").value.trim();
+        parentName = stName;
+        cls = "Veli";
+        stNo = "-";
+        if (!stName) {
+          showAlert("Lütfen veli adı soyadını giriniz.", "error");
+          return;
+        }
+      } else {
+        stName = document.getElementById("extraParticipantName").value.trim();
+        parentName = document.getElementById("extraParentName").value.trim();
+        cls = "Misafir";
+        stNo = "-";
+        if (!stName || !parentName) {
+          showAlert("Lütfen misafir öğrenci ve veli adı soyadını giriniz.", "error");
+          return;
+        }
       }
 
-      const checkedBoxes = Array.from(document.querySelectorAll('#vrList input[type="checkbox"]:checked'));
-      if (checkedBoxes.length === 0) {
-        return showAlert("Lütfen en az 1 adet VR içeriği seçiniz.", false);
+      if (!parentPhone) {
+        showAlert("Lütfen iletişim telefonunu giriniz.", "error");
+        return;
+      }
+      if (selectedVrIds.length !== 5) {
+        showAlert(`Lütfen tam 5 adet VR içeriği seçiniz (Şu an ${selectedVrIds.length} adet seçili).`, "error");
+        return;
       }
 
-      const vrIds = checkedBoxes.map(cb => Number(cb.value));
-      const vrTitles = checkedBoxes.map(cb => String(cb.getAttribute("data-title") || ""));
-      let baseNote = document.getElementById("paymentNote").value.trim();
+      const vrTitles = selectedVrIds.map(id => VR_CONTENTS.find(v => v.id === id).title);
+      const existing = currentRecordType === "ogrenci"
+        ? records.find(r => r.className === cls && String(r.studentNo) === String(stNo))
+        : null;
 
-      let recordPayload = {
-        id: "rec_" + Date.now(),
-        recordType: participantType,
+      const recordId = existing ? existing.id : ("rec_" + Date.now());
+      const nowStr = new Date().toLocaleString("tr-TR");
+
+      const recordObj = {
+        id: recordId,
+        updatedAt: nowStr,
+        recordType: currentRecordType,
+        recordTypeLabel: currentRecordType === "veli" ? "Veli" : (currentRecordType === "misafir" ? "Misafir Öğrenci" : "Öğrenci"),
+        className: cls,
+        studentNo: stNo,
+        studentName: stName,
         vrTitles: vrTitles,
-        vrIds: vrIds,
-        paymentStatus: "pending"
+        vrIds: [...selectedVrIds],
+        paymentStatus: "pending",
+        amount: 0,
+        parentName: parentName,
+        parentPhone: parentPhone,
+        paymentNote: paymentNote
       };
 
-      if (participantType === "ogrenci") {
-        const className = document.getElementById("classSelect").value.trim();
-        const studentRaw = document.getElementById("studentSelect").value;
-        const parentName = document.getElementById("parentNameStudent").value.trim();
-        const parentPhone = document.getElementById("parentPhoneStudent").value.trim();
-
-        if (!className || !studentRaw) {
-          return showAlert("Lütfen sınıf/şube ve öğrenci seçiniz.", false);
-        }
-        if (!parentName || !parentPhone) {
-          return showAlert("Lütfen veli adı soyadı ve telefon numarasını giriniz.", false);
-        }
-
-        const stObj = JSON.parse(studentRaw);
-        recordPayload.className = className;
-        recordPayload.studentNo = stObj.no;
-        recordPayload.studentName = stObj.name;
-        recordPayload.parentName = parentName;
-        recordPayload.parentPhone = parentPhone;
-        recordPayload.paymentNote = baseNote;
-      } else if (participantType === "veli") {
-        const veliAd = document.getElementById("veliAdSoyad").value.trim();
-        const veliTel = document.getElementById("veliTelefon").value.trim();
-        const ilgiliSinif = document.getElementById("veliIlgiliSinif").value.trim();
-        const ilgiliNo = document.getElementById("veliIlgiliNo").value.trim();
-
-        if (!veliAd || !veliTel) {
-          return showAlert("Lütfen veli adı soyadı ve telefon numarasını giriniz.", false);
-        }
-
-        const extraInfo = [ilgiliSinif, ilgiliNo].filter(Boolean).join(" - ");
-        const combinedNote = ["Veli Başvurusu", extraInfo ? "Öğrenci: " + extraInfo : "", baseNote]
-          .filter(Boolean)
-          .join(" | ");
-
-        recordPayload.className = ilgiliSinif || "Veli";
-        recordPayload.studentNo = ilgiliNo || "-";
-        recordPayload.studentName = veliAd;
-        recordPayload.parentName = veliAd;
-        recordPayload.parentPhone = veliTel;
-        recordPayload.paymentNote = combinedNote;
-      } else if (participantType === "misafir") {
-        const misafirAd = document.getElementById("misafirAdSoyad").value.trim();
-        const misafirTel = document.getElementById("misafirTelefon").value.trim();
-        const misafirOkulSinif = document.getElementById("misafirOkulSinif").value.trim();
-        const misafirVeli = document.getElementById("misafirVeliAd").value.trim();
-
-        if (!misafirAd || !misafirTel) {
-          return showAlert("Lütfen misafir öğrenci adı soyadı ve telefon numarasını giriniz.", false);
-        }
-
-        const combinedNote = ["Misafir Öğrenci", misafirVeli ? "Veli: " + misafirVeli : "", baseNote]
-          .filter(Boolean)
-          .join(" | ");
-
-        recordPayload.className = misafirOkulSinif || "Misafir";
-        recordPayload.studentNo = "-";
-        recordPayload.studentName = misafirAd;
-        recordPayload.parentName = misafirVeli || misafirAd;
-        recordPayload.parentPhone = misafirTel;
-        recordPayload.paymentNote = combinedNote;
-      }
+      const requestBody = {
+        action: "upsert",
+        isEdit: Boolean(existing),
+        record: recordObj
+      };
 
       const btn = document.getElementById("submitBtn");
       btn.disabled = true;
-      btn.textContent = "Gönderiliyor...";
+      btn.textContent = "Google E-Tablo'ya Kaydediliyor...";
 
-      fetch(scriptUrl, {
-        method: "POST",
-        mode: "no-cors",
-        body: JSON.stringify({
-          action: "upsert",
-          record: recordPayload
-        })
-      })
-        .then(() => {
-          showAlert("Başvurunuz alınmıştır. Ödeme onayı sayman paneli üzerinden yapılacaktır.", true);
-          document.getElementById("vrForm").reset();
-          document.querySelectorAll(".vr-item").forEach(el => el.classList.remove("selected"));
-          document.getElementById("selectedCountText").textContent = "Seçilen İçerik: 0 / 5";
-          if (participantType === "ogrenci" && recordPayload.className && recordPayload.studentNo) {
-            registeredSet.add(recordPayload.className + "_" + recordPayload.studentNo);
-          }
-        })
-        .catch(err => {
-          showAlert("Gönderim sırasında hata oluştu: " + err.message, false);
-        })
-        .finally(() => {
-          btn.disabled = false;
-          btn.textContent = "Başvuruyu Gönder";
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify(requestBody)
         });
+        const result = await response.json();
+
+        if (result && result.ok) {
+          upsertLocalRecord(recordObj);
+          if (currentRecordType === "ogrenci" && !registeredKeys.includes(`${cls}_${stNo}`)) {
+            registeredKeys.push(`${cls}_${stNo}`);
+          }
+          showAlert(
+            `Ön başvurunuz kaydedildi (${cls} - ${stName}). 150 TL katılım ücretini Okul Aile Birliği Saymanı ${SAYMAN_NAME}'e teslim ettiğinizde sayman panelinden onaylanarak kaydınız kesinleşecektir.`,
+            "success"
+          );
+          if (cls && currentRecordType === "ogrenci") onClassChange(stNo);
+        } else {
+          showAlert((result && result.mesaj) || "Kayıt sırasında bir uyarı oluştu.", "error");
+        }
+      } catch (err) {
+        try {
+          await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            mode: "no-cors",
+            headers: { "Content-Type": "text/plain;charset=utf-8" },
+            body: JSON.stringify(requestBody)
+          });
+          upsertLocalRecord(recordObj);
+          showAlert(
+            `Başvurunuz iletildi (${cls} - ${stName}). 150 TL katılım ücretini Sayman ${SAYMAN_NAME}'e teslim ettiğinizde kaydınız onaylanacaktır.`,
+            "success"
+          );
+        } catch (fallbackErr) {
+          showAlert("Bağlantı hatası oluştu: " + fallbackErr.message, "error");
+        }
+      } finally {
+        btn.disabled = false;
+        btn.textContent = "Başvuruyu ve 5 VR Seçimini Gönder (Sayman Onayına Sun)";
+      }
     }
 
-    populateClasses();
-    populateVrContents();
-    fetchRegisteredKeysJsonp();
+    function upsertLocalRecord(rec) {
+      const idx = records.findIndex(r => r.id === rec.id || (rec.recordType === "ogrenci" && r.className === rec.className && String(r.studentNo) === String(rec.studentNo)));
+      if (idx >= 0) records[idx] = rec;
+      else records.unshift(rec);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+      if (isAdminUnlocked) renderAdminTable();
+    }
+
+    function loadLocalRecords() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) records = JSON.parse(raw);
+      } catch (e) {}
+    }
+
+    async function fetchPublicCheck() {
+      const badge = document.getElementById("syncStatusBadge");
+      badge.textContent = "E-Tablo Kontrol Ediliyor...";
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=public_check`);
+        const json = await res.json();
+        if (json && json.ok && Array.isArray(json.registeredKeys)) {
+          registeredKeys = json.registeredKeys;
+          const cls = document.getElementById("classSelect").value;
+          if (cls) onClassChange(document.getElementById("studentSelect").value);
+          badge.textContent = `Google E-Tablo Bağlı (${registeredKeys.length} Öğrenci Kayıtlı)`;
+        } else {
+          badge.textContent = "Google E-Tablo Hazır";
+        }
+      } catch (err) {
+        badge.textContent = "Google E-Tablo Bağlantısı Aktif";
+      }
+    }
+
+    async function fetchAdminRecords() {
+      if (!activeAdminPin) return;
+      const badge = document.getElementById("syncStatusBadge");
+      badge.textContent = "Sayman Listesi Güncelleniyor...";
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=list&sifre=${encodeURIComponent(activeAdminPin)}`);
+        const json = await res.json();
+        if (json && json.ok && Array.isArray(json.records)) {
+          records = json.records;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          renderAdminTable();
+          badge.textContent = `Google E-Tablo Senkron (${records.length} Toplam Kayıt)`;
+        } else {
+          alert((json && json.mesaj) || "Kayıtlar alınamadı.");
+        }
+      } catch (err) {
+        alert("Sunucudan kayıtlar çekilirken hata oluştu: " + err.message);
+      }
+    }
+
+    function switchView(view) {
+      document.getElementById("parentView").classList.toggle("hidden", view !== "parent");
+      document.getElementById("adminView").classList.toggle("hidden", view !== "admin");
+      document.getElementById("tabParentBtn").classList.toggle("active", view === "parent");
+      document.getElementById("tabAdminBtn").classList.toggle("active", view === "admin");
+    }
+
+    async function openAdminModal() {
+      if (isAdminUnlocked && activeAdminPin) {
+        switchView("admin");
+        await fetchAdminRecords();
+        return;
+      }
+      const pin = prompt(`Sayman (${SAYMAN_NAME}) Onay & Yönetim Paneli Şifresini Giriniz:`);
+      if (pin === null) return;
+      const cleanPin = pin.trim();
+      if (!cleanPin) return;
+
+      try {
+        const res = await fetch(`${GOOGLE_SCRIPT_URL}?action=list&sifre=${encodeURIComponent(cleanPin)}`);
+        const json = await res.json();
+        if (json && json.ok && Array.isArray(json.records)) {
+          isAdminUnlocked = true;
+          activeAdminPin = cleanPin;
+          records = json.records;
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          switchView("admin");
+          renderAdminTable();
+          document.getElementById("syncStatusBadge").textContent = `Google E-Tablo Senkron (${records.length} Toplam Kayıt)`;
+        } else {
+          alert((json && json.mesaj) || "Hatalı sayman şifresi girdiniz.");
+        }
+      } catch (err) {
+        if (cleanPin === SAYMAN_SIFRE) {
+          isAdminUnlocked = true;
+          activeAdminPin = cleanPin;
+          switchView("admin");
+          renderAdminTable();
+        } else {
+          alert("Bağlantı veya şifre doğrulama hatası.");
+        }
+      }
+    }
+
+    async function togglePaymentStatus(recordId) {
+      const rec = records.find(r => String(r.id) === String(recordId));
+      if (!rec) return;
+
+      const nextStatus = rec.paymentStatus === "paid" ? "pending" : "paid";
+      const confirmMsg = nextStatus === "paid"
+        ? `${rec.className} - ${rec.studentName} için ${FEE_AMOUNT} TL katılım ücretini teslim aldığınızı ve başvuruyu Sayman (${SAYMAN_NAME}) olarak onayladığınızı doğruluyor musunuz?`
+        : `${rec.className} - ${rec.studentName} kaydının onayını kaldırıp 'Onay Bekliyor' durumuna almak istiyor musunuz?`;
+
+      if (!confirm(confirmMsg)) return;
+
+      const prevStatus = rec.paymentStatus;
+      const prevAmount = rec.amount;
+      rec.paymentStatus = nextStatus;
+      rec.amount = nextStatus === "paid" ? FEE_AMOUNT : 0;
+      rec.updatedAt = new Date().toLocaleString("tr-TR");
+      renderAdminTable();
+
+      try {
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "toggle_payment",
+            sifre: activeAdminPin,
+            id: recordId,
+            paymentStatus: nextStatus
+          })
+        });
+        const json = await res.json();
+        if (!json || !json.ok) {
+          rec.paymentStatus = prevStatus;
+          rec.amount = prevAmount;
+          renderAdminTable();
+          alert((json && json.mesaj) || "Ödeme onayı sunucuya işlenemedi.");
+        } else {
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+        }
+      } catch (err) {
+        alert("Sunucu güncelleme uyarısı: " + err.message);
+      }
+    }
+
+    async function deleteRecord(recordId) {
+      const rec = records.find(r => String(r.id) === String(recordId));
+      if (!rec) return;
+      if (!confirm(`${rec.className} - ${rec.studentName} kaydını kalıcı olarak silmek istediğinize emin misiniz?`)) return;
+
+      try {
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "delete",
+            sifre: activeAdminPin,
+            id: recordId
+          })
+        });
+        const json = await res.json();
+        if (json && json.ok) {
+          records = records.filter(r => String(r.id) !== String(recordId));
+          localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+          renderAdminTable();
+        } else {
+          alert((json && json.mesaj) || "Kayıt silinemedi.");
+        }
+      } catch (err) {
+        alert("Silme hatası: " + err.message);
+      }
+    }
+
+    async function backupDrive() {
+      try {
+        const res = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          headers: { "Content-Type": "text/plain;charset=utf-8" },
+          body: JSON.stringify({
+            action: "backup_drive",
+            sifre: activeAdminPin
+          })
+        });
+        const json = await res.json();
+        alert((json && json.mesaj) || "Drive yedekleme tamamlandı.");
+      } catch (err) {
+        alert("Drive yedekleme hatası: " + err.message);
+      }
+    }
+
+    function renderAdminTable() {
+      const tbody = document.getElementById("adminTableBody");
+      const q = (document.getElementById("adminSearch")?.value || "").trim().toLocaleUpperCase("tr-TR");
+      const clsFilter = document.getElementById("adminClassFilter")?.value || "";
+      const payFilter = document.getElementById("adminPayFilter")?.value || "";
+
+      const paidCount = records.filter(r => r.paymentStatus === "paid").length;
+      const pendingCount = records.length - paidCount;
+
+      document.getElementById("statTotal").textContent = records.length;
+      document.getElementById("statPaid").textContent = paidCount;
+      document.getElementById("statPending").textContent = pendingCount;
+      document.getElementById("statRevenue").textContent = `${paidCount * FEE_AMOUNT} TL`;
+
+      const filtered = records.filter(r => {
+        if (clsFilter && r.className !== clsFilter) return false;
+        if (payFilter && r.paymentStatus !== payFilter) return false;
+        if (q) {
+          const hay = `${r.studentName} ${r.studentNo} ${r.parentName} ${r.parentPhone} ${r.className}`.toLocaleUpperCase("tr-TR");
+          if (!hay.includes(q)) return false;
+        }
+        return true;
+      });
+
+      if (filtered.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" style="text-align:center; padding:24px; color:#64748b;">Gösterilecek kayıt bulunamadı.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = filtered.map((r, idx) => {
+        const isPaid = r.paymentStatus === "paid";
+        const vrListHtml = (r.vrTitles || []).map((t, i) => `<div>${i + 1}. ${t}</div>`).join("");
+        const typeLabel = r.recordTypeLabel || "Öğrenci";
+
+        return `
+          <tr>
+            <td>${idx + 1}</td>
+            <td>
+              <strong>${r.className}</strong>
+              <div><span class="badge badge-type">${typeLabel}</span></div>
+            </td>
+            <td>${r.studentNo || "-"}</td>
+            <td>
+              <strong>${r.studentName}</strong>
+              <div style="font-size:0.74rem;color:#64748b;">${r.updatedAt || ""}</div>
+            </td>
+            <td style="font-size:0.78rem; line-height:1.4;">${vrListHtml}</td>
+            <td>
+              <strong>${r.parentName || "-"}</strong>
+              <div>${r.parentPhone || "-"}</div>
+              ${r.paymentNote ? `<div style="font-size:0.74rem;color:#475569;">Not: ${r.paymentNote}</div>` : ""}
+            </td>
+            <td>
+              <span class="badge ${isPaid ? "badge-paid" : "badge-pending"}">
+                ${isPaid ? "Sayman Onaylı (150 TL)" : "Onay Bekliyor"}
+              </span>
+            </td>
+            <td class="no-print">
+              <div style="display:flex; flex-direction:column; gap:6px;">
+                <button class="btn ${isPaid ? "btn-outline" : "btn-success"} btn-sm" onclick="togglePaymentStatus('${r.id}')">
+                  ${isPaid ? "Onayı Kaldır" : "150 TL Tahsil Et & Onayla"}
+                </button>
+                <button class="btn btn-outline btn-sm" style="color:#dc2626; border-color:#fecaca;" onclick="deleteRecord('${r.id}')">
+                  Sil
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join("");
+    }
+
+    function exportCSV() {
+      const headers = ["Sıra", "Kayıt ID", "Tarih", "Tür", "Sınıf", "Okul No", "Katılımcı Adı Soyadı", "VR 1", "VR 2", "VR 3", "VR 4", "VR 5", "Ödeme Durumu", "Tutar (TL)", "Veli Adı", "Veli Tel", "Not"];
+      const rows = records.map((r, i) => [
+        i + 1,
+        r.id || "",
+        r.updatedAt || "",
+        r.recordTypeLabel || "Öğrenci",
+        r.className || "",
+        r.studentNo || "-",
+        r.studentName || "",
+        (r.vrTitles && r.vrTitles[0]) || "",
+        (r.vrTitles && r.vrTitles[1]) || "",
+        (r.vrTitles && r.vrTitles[2]) || "",
+        (r.vrTitles && r.vrTitles[3]) || "",
+        (r.vrTitles && r.vrTitles[4]) || "",
+        r.paymentStatus === "paid" ? "Sayman Onaylı (150 TL)" : "Onay Bekliyor",
+        r.paymentStatus === "paid" ? FEE_AMOUNT : 0,
+        r.parentName || "",
+        r.parentPhone || "",
+        r.paymentNote || ""
+      ]);
+
+      const csv = "﻿" + [headers, ...rows]
+        .map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(";"))
+        .join("
+");
+
+      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "Saffet_Cam_VR_Etkinligi_Kayitlari.csv";
+      a.click();
+      URL.revokeObjectURL(url);
+    }
   </script>
 </body>
 </html>
